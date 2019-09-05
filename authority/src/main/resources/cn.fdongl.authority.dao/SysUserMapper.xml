@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fdongl.authority.dao.SysUserMapper">
+  <resultMap id="BaseResultMap" type="cn.fdongl.authority.vo.SysUser">
+    <!--@mbg.generated-->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+    <result column="work_id" jdbcType="VARCHAR" property="workId" />
+    <result column="user_type" jdbcType="VARCHAR" property="userType" />
+    <result column="user_pwd" jdbcType="VARCHAR" property="userPwd" />
+    <result column="user_department" jdbcType="VARCHAR" property="userDepartment" />
+    <result column="class_name" jdbcType="VARCHAR" property="className" />
+    <result column="start_year" jdbcType="VARCHAR" property="startYear" />
+    <result column="education_system" jdbcType="INTEGER" property="educationSystem" />
+    <result column="train_level" jdbcType="VARCHAR" property="trainLevel" />
+    <result column="user_title" jdbcType="VARCHAR" property="userTitle" />
+    <result column="lastPasswordResetDate" jdbcType="TIMESTAMP" property="lastpasswordresetdate" />
+    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_user_id" jdbcType="VARCHAR" property="modifyUserId" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+
+  <resultMap id="UserWithRoleAndPower" type="cn.fdongl.authority.vo.SysUser">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+    <result column="work_id" jdbcType="VARCHAR" property="workId" />
+    <result column="user_type" jdbcType="VARCHAR" property="userType" />
+    <result column="user_pwd" jdbcType="VARCHAR" property="userPwd" />
+    <result column="user_department" jdbcType="VARCHAR" property="userDepartment" />
+    <result column="class_name" jdbcType="VARCHAR" property="className" />
+    <result column="start_year" jdbcType="VARCHAR" property="startYear" />
+    <result column="education_system" jdbcType="INTEGER" property="educationSystem" />
+    <result column="train_level" jdbcType="VARCHAR" property="trainLevel" />
+    <result column="user_title" jdbcType="VARCHAR" property="userTitle" />
+    <result column="lastPasswordResetDate" jdbcType="TIMESTAMP" property="lastpasswordresetdate" />
+    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="modify_user_id" jdbcType="VARCHAR" property="modifyUserId" />
+    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <collection property="roleList" ofType="cn.fdongl.authority.vo.SysRole">
+      <id column="r_id" property="id"/>
+      <result column="role_name" property="roleName"/>
+      <result column="role_code" property="roleCode"/>
+      <collection property="powerList" ofType="cn.fdongl.authority.vo.SysPower">
+        <id column="p_id" property="id"/>
+        <result column="power_name" property="powerName"/>
+        <result column="power_code" property="powerCode"/>
+      </collection>
+    </collection>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, user_name, real_name, work_id, user_type, user_pwd, user_department, class_name, 
+    start_year, education_system, train_level, user_title, lastPasswordResetDate, create_user_id, 
+    create_date, modify_user_id, modify_date, `status`
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <!--@mbg.generated-->
+    delete from sys_user
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.fdongl.authority.vo.SysUser">
+    <!--@mbg.generated-->
+    insert into sys_user (id, user_name, real_name, 
+      work_id, user_type, user_pwd, 
+      user_department, class_name, start_year, 
+      education_system, train_level, user_title, 
+      lastPasswordResetDate, create_user_id, 
+      create_date, modify_user_id, modify_date, 
+      `status`)
+    values (#{id,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, 
+      #{workId,jdbcType=VARCHAR}, #{userType,jdbcType=VARCHAR}, #{userPwd,jdbcType=VARCHAR}, 
+      #{userDepartment,jdbcType=VARCHAR}, #{className,jdbcType=VARCHAR}, #{startYear,jdbcType=VARCHAR}, 
+      #{educationSystem,jdbcType=INTEGER}, #{trainLevel,jdbcType=VARCHAR}, #{userTitle,jdbcType=VARCHAR}, 
+      #{lastpasswordresetdate,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=VARCHAR}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.fdongl.authority.vo.SysUser">
+    <!--@mbg.generated-->
+    insert into sys_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="realName != null">
+        real_name,
+      </if>
+      <if test="workId != null">
+        work_id,
+      </if>
+      <if test="userType != null">
+        user_type,
+      </if>
+      <if test="userPwd != null">
+        user_pwd,
+      </if>
+      <if test="userDepartment != null">
+        user_department,
+      </if>
+      <if test="className != null">
+        class_name,
+      </if>
+      <if test="startYear != null">
+        start_year,
+      </if>
+      <if test="educationSystem != null">
+        education_system,
+      </if>
+      <if test="trainLevel != null">
+        train_level,
+      </if>
+      <if test="userTitle != null">
+        user_title,
+      </if>
+      <if test="lastpasswordresetdate != null">
+        lastPasswordResetDate,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="modifyUserId != null">
+        modify_user_id,
+      </if>
+      <if test="modifyDate != null">
+        modify_date,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null">
+        #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="workId != null">
+        #{workId,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null">
+        #{userType,jdbcType=VARCHAR},
+      </if>
+      <if test="userPwd != null">
+        #{userPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="userDepartment != null">
+        #{userDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null">
+        #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="startYear != null">
+        #{startYear,jdbcType=VARCHAR},
+      </if>
+      <if test="educationSystem != null">
+        #{educationSystem,jdbcType=INTEGER},
+      </if>
+      <if test="trainLevel != null">
+        #{trainLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="userTitle != null">
+        #{userTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="lastpasswordresetdate != null">
+        #{lastpasswordresetdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyUserId != null">
+        #{modifyUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.fdongl.authority.vo.SysUser">
+    <!--@mbg.generated-->
+    update sys_user
+    <set>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="realName != null">
+        real_name = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="workId != null">
+        work_id = #{workId,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null">
+        user_type = #{userType,jdbcType=VARCHAR},
+      </if>
+      <if test="userPwd != null">
+        user_pwd = #{userPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="userDepartment != null">
+        user_department = #{userDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null">
+        class_name = #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="startYear != null">
+        start_year = #{startYear,jdbcType=VARCHAR},
+      </if>
+      <if test="educationSystem != null">
+        education_system = #{educationSystem,jdbcType=INTEGER},
+      </if>
+      <if test="trainLevel != null">
+        train_level = #{trainLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="userTitle != null">
+        user_title = #{userTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="lastpasswordresetdate != null">
+        lastPasswordResetDate = #{lastpasswordresetdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null">
+        create_user_id = #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyUserId != null">
+        modify_user_id = #{modifyUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyDate != null">
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.fdongl.authority.vo.SysUser">
+    <!--@mbg.generated-->
+    update sys_user
+    set user_name = #{userName,jdbcType=VARCHAR},
+      real_name = #{realName,jdbcType=VARCHAR},
+      work_id = #{workId,jdbcType=VARCHAR},
+      user_type = #{userType,jdbcType=VARCHAR},
+      user_pwd = #{userPwd,jdbcType=VARCHAR},
+      user_department = #{userDepartment,jdbcType=VARCHAR},
+      class_name = #{className,jdbcType=VARCHAR},
+      start_year = #{startYear,jdbcType=VARCHAR},
+      education_system = #{educationSystem,jdbcType=INTEGER},
+      train_level = #{trainLevel,jdbcType=VARCHAR},
+      user_title = #{userTitle,jdbcType=VARCHAR},
+      lastPasswordResetDate = #{lastpasswordresetdate,jdbcType=TIMESTAMP},
+      create_user_id = #{createUserId,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_user_id = #{modifyUserId,jdbcType=VARCHAR},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      `status` = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="findUserByRealName" resultMap="UserWithRoleAndPower">
+    select
+        a.*,
+        rp.id r_id,
+        rp.role_name,
+        rp.role_code
+    from
+        (
+          select *
+          from
+              index_point.sys_user u
+          where
+              u.real_name = #{realName,jdbcType=VARCHAR}
+        ) a
+        left join index_point.map_user_role mur on mur.user_id = a.id
+        left join
+        (
+          select
+            r.id,
+            r.role_name,
+            r.role_code,
+            p.power_name,
+            p.power_code
+          from
+            index_point.sys_role r
+            left join index_point.map_role_power mrp on mrp.role_id = r.id
+            left join index_point.sys_power p on p.id = mrp.power_id
+        ) rp on rp.id = mur.role_id
+  </select>
+</mapper>

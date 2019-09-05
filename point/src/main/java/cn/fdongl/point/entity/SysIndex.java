@@ -13,6 +13,11 @@ public class SysIndex {
     private String id;
 
     /**
+     * 指标点要求序号(4.1,4.2)
+     */
+    private String indexNumber;
+
+    /**
     * 指标要求内容
     */
     private String indexContent;

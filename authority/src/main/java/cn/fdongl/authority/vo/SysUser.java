@@ -9,28 +9,102 @@ import java.util.List;
 @Data
 public class SysUser {
     /**
-     * need implement 需要定义自己的属性
+     * 主键
      */
     private String id;
+
+    /**
+     * 用户名
+     */
     private String userName;
+
+    /**
+     * 用户密码
+     */
     private String userPwd;
+
+    /**
+     * 最后一次密码修改时间
+     **/
     private Date lastPasswordResetDate;
 
+    /**
+     * 真实姓名
+     */
     private String realName;
+
+    /**
+     * 学号/工号
+     */
     private String workId;
+
+    /**
+     * 用户类型/账号类型
+     */
     private String userType;
+
+    /**
+     * 所属部门/学院
+     */
     private String userDepartment;
+
+    /**
+     * 班级名称
+     */
     private String className;
+
+    /**
+     * 入学年份
+     */
     private String startYear;
-    private int educationSystem;
+
+    /**
+     * 学生学制
+     */
+    private Integer educationSystem;
+
+    /**
+     * 培养层次
+     */
     private String trainLevel;
+
+    /**
+     * 教师职称
+     */
     private String userTitle;
 
-    private String createUserId;
-    private Date createDate;
-    private String modifyUserId;
-    private Date modifyDate;
-    private int status;
+    /**
+     * 最后一次修改密码时间
+     */
+    private Date lastpasswordresetdate;
 
-    private List<String> roles;
+    /**
+     * 创建人id
+     */
+    private String createUserId;
+
+    /**
+     * 创建时间
+     */
+    private Date createDate;
+
+    /**
+     * 修改人id
+     */
+    private String modifyUserId;
+
+    /**
+     * 修改时间
+     */
+    private Date modifyDate;
+
+    /**
+     * 状态值(-1失效，0默认值)
+     */
+    private Integer status;
+
+    /**
+     * 该用户对应的权限
+     **/
+    private List<String> roleList;
 }
