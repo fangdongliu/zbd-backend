@@ -1,6 +1,6 @@
 package cn.fdongl.authority.service;
 
-import cn.fdongl.authority.dao.UserDao;
+import cn.fdongl.authority.dao.SysUserMapper;
 import cn.fdongl.authority.util.JwtUserFactory;
 import cn.fdongl.authority.vo.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +14,11 @@ import org.springframework.stereotype.Service;
 @Primary
 public class JwtUserDetailServiceImpl implements UserDetailsService {
     @Autowired
-    private UserDao userRepository;
+    private SysUserMapper userMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        SysUser sysUser = userRepository.findByUsername(username);
+        SysUser sysUser = userMapper.findUserByRealName(username);
 
         if (sysUser == null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));

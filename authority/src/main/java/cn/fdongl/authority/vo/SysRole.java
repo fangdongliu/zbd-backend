@@ -3,6 +3,7 @@ package cn.fdongl.authority.vo;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class SysRole {
@@ -45,4 +46,9 @@ public class SysRole {
      * 状态值(-1失效，0默认值)
      */
     private Integer status;
+
+    /**
+     * 该角色下的权限
+     */
+    private List<SysPower> powerList;
 }
