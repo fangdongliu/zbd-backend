@@ -1,5 +1,6 @@
 package cn.fdongl.point.service;
 
+import org.apache.ibatis.annotations.Select;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
@@ -11,6 +12,7 @@ public interface ClassPointService {
      * @param classId 课程ID
      * @param file 上传的excel文件
      */
+
     void savePoint(Integer classId, MultipartFile file);
 
     /**
