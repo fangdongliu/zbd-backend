@@ -14,13 +14,13 @@ public interface ClassPointService {
      * @param file 上传的excel文件
      */
 
-    void savePoint(String classId, MultipartFile file) throws IOException;
+    void savePoint(String classId, MultipartFile file) throws  Exception;
 
     /**
      * 学生评教
      * @param course_select_number 选课课号(from map_teacher_course)
      * @param data map对象，key为指标点ID，value为分数（1-4）
      */
-    void savePoint(Integer classId, Map<Integer, Integer> data);
+    void savePoint(String classId, Map<String, Integer> data,String studentId);
 
 }
