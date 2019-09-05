@@ -14,7 +14,7 @@ public interface ClassPointService {
      * @param file 上传的excel文件
      */
 
-    void savePoint(Integer classId, MultipartFile file) throws IOException;
+    void savePoint(String classId, MultipartFile file) throws IOException;
 
     /**
      * 学生评教
