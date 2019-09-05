@@ -3,6 +3,7 @@ package cn.fdongl.point.service;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
 
 public interface ClassPointService {
@@ -13,7 +14,7 @@ public interface ClassPointService {
      * @param file 上传的excel文件
      */
 
-    void savePoint(Integer classId, MultipartFile file);
+    void savePoint(Integer classId, MultipartFile file) throws IOException;
 
     /**
      * 学生评教

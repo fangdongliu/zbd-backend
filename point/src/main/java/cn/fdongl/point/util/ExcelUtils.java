@@ -3,22 +3,20 @@ package cn.fdongl.point.util;
 
 import net.sf.json.JSONArray;
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.util.List;
 
 public class ExcelUtils {
 
     public final String XLSX = ".xlsx";
     public final String XLS=".xls";
-
 
     public int checkFile(MultipartFile file){
         if (file==null) {
@@ -34,40 +32,21 @@ public class ExcelUtils {
         return 3;
     }
 
-    /*//读取xlsx文件
-    public JSONArray readXLSX(File file,int sheetNum) throws InvalidFormatException, IOException{
-        Workbook book = new XSSFWorkbook(file);
-        Sheet sheet = book.getSheetAt(sheetNum);
-        return read(sheet, book);
-    }
-
-    //读取xls文件
-    public JSONArray readXLS(File file,int sheetNum ) throws FileNotFoundException, IOException{
-        POIFSFileSystem poifsFileSystem = new POIFSFileSystem(new FileInputStream(file));
-        Workbook book = new HSSFWorkbook(poifsFileSystem);
-        Sheet sheet = book.getSheetAt(sheetNum);
-        return read(sheet, book);
-    }
-*/
-
-
-
 
     // 获取excel文件中指定sheet
-    public static Sheet getSheet(MultipartFile excel, int sheetIndex) throws IOException {
+    public static HSSFSheet getSheet(MultipartFile excel, int sheetIndex) throws IOException {
         HSSFWorkbook wb = null;
+        wb = new HSSFWorkbook(excel.getInputStream());
 
-        InputStream is;
-        Workbook workbook;
-//        is = new FileInputStream(excel.getPath());
-//        workbook = new XSSFWorkbook(is);
-        // 只取第一个sheet
-//        return workbook.getSheetAt(sheetIndex);
-        return null;
+        //获取sheet
+        HSSFSheet sheet = wb.getSheetAt(sheetIndex);
+        System.out.println("sheet name = "+wb.getSheetName(0));
+
+        return sheet;
     }
 
     // 通过table中的字段类型获取对应excel类型值
-    public static Object getCellValueByFieldType(Cell cell, String fieldType) {
+    public static Object getCellValueByFieldType(HSSFCell cell, String fieldType) {
         Object val = null;
         try {
             switch (fieldType) {
@@ -104,7 +83,7 @@ public class ExcelUtils {
     }
 
     // 获取excel行中的指定列中的值
-    public static Object getCellValue(Cell cell) {
+    public static Object getCellValue(HSSFCell cell) {
         Object val;
         try {
             if (cell != null) {
@@ -134,4 +113,8 @@ public class ExcelUtils {
         }
         return val;
     }
+
+
+
+
 }
