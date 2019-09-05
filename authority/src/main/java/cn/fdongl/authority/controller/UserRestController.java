@@ -24,6 +24,7 @@ public class UserRestController {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    /*获取用户认证信息*/
     @RequestMapping(value = "user", method = RequestMethod.GET)
     public JwtUser getAuthenticatedUser(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader).substring(7);

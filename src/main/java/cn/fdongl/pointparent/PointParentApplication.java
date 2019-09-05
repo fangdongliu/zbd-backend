@@ -12,7 +12,7 @@ public class PointParentApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(PointParentApplication.class, args);
-        Collections
+        //Collections
     }
 
 }

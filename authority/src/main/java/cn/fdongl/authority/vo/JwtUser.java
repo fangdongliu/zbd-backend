@@ -10,12 +10,26 @@ import java.util.Date;
 
 @AllArgsConstructor
 public class JwtUser implements UserDetails {
-    private final String id;
-    private final String username;
-    private final String password;
-    //private final String email;
+    private String id;
+    private String userName;
+    private String userPwd;
+    private Date lastPasswordResetDate;
+    private String realName;
+    private String workId;
+    private String userType;
+    private String userDepartment;
+    private String className;
+    private String startYear;
+    private int educationSystem;
+    private String trainLevel;
+    private String userTitle;
+    private String createUserId;
+    private Date createDate;
+    private String modifyUserId;
+    private Date modifyDate;
+    private int status;
+
     private final Collection<? extends GrantedAuthority> authorities;
-    private final Date lastPasswordResetDate;
 
     //返回分配给用户的角色列表
     @Override
@@ -31,12 +45,12 @@ public class JwtUser implements UserDetails {
     @JsonIgnore
     @Override
     public String getPassword() {
-        return password;
+        return userPwd;
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return userName;
     }
     // 账户是否未过期
     @JsonIgnore
