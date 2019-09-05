@@ -1,7 +1,7 @@
 package cn.fdongl.authority.util;
 
 import cn.fdongl.authority.vo.JwtUser;
-import cn.fdongl.authority.vo.User;
+import cn.fdongl.authority.vo.SysUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -14,27 +14,27 @@ public final class JwtUserFactory {
     private JwtUserFactory() {
     }
 
-    public static JwtUser create(User user) {
+    public static JwtUser create(SysUser sysUser) {
         return new JwtUser(
-                user.getId(),
-                user.getUserName(),
-                user.getUserPwd(),
-                user.getLastPasswordResetDate(),
-                user.getRealName(),
-                user.getWorkId(),
-                user.getUserType(),
-                user.getUserDepartment(),
-                user.getClassName(),
-                user.getStartYear(),
-                user.getEducationSystem(),
-                user.getTrainLevel(),
-                user.getUserTitle(),
-                user.getCreateUserId(),
-                user.getCreateDate(),
-                user.getModifyUserId(),
-                user.getModifyDate(),
-                user.getStatus(),
-                mapToGrantedAuthorities(user.getRoles())
+                sysUser.getId(),
+                sysUser.getUserName(),
+                sysUser.getUserPwd(),
+                sysUser.getLastPasswordResetDate(),
+                sysUser.getRealName(),
+                sysUser.getWorkId(),
+                sysUser.getUserType(),
+                sysUser.getUserDepartment(),
+                sysUser.getClassName(),
+                sysUser.getStartYear(),
+                sysUser.getEducationSystem(),
+                sysUser.getTrainLevel(),
+                sysUser.getUserTitle(),
+                sysUser.getCreateUserId(),
+                sysUser.getCreateDate(),
+                sysUser.getModifyUserId(),
+                sysUser.getModifyDate(),
+                sysUser.getStatus(),
+                mapToGrantedAuthorities(sysUser.getRoles())
         );
     }
 

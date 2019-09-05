@@ -1,10 +1,27 @@
+create table map_course_evaluation
+(
+    id                     varchar(100)  not null comment '主键id'
+        primary key,
+    student_grade          varchar(100)  null comment '学生年级',
+    school_year            datetime      null comment '学年',
+    index_number           varchar(100)  null comment '指标点number(e.g.4.2, 4.3)',
+    index_proportion_value double        null comment '达成目标值(指标点系数)',
+    evaluation_value       double        null comment '评价值(某课程针对其所需达成目标的实际评价值)',
+    create_user_id         varchar(100)  null comment '创建人id',
+    create_date            datetime      null comment '创建时间',
+    modify_user_id         varchar(100)  null comment '修改人id',
+    modify_date            datetime      null comment '修改日期',
+    status                 int default 0 null comment '状态值(-1失效，0默认值)'
+)
+    comment '课程-指标点-评价值关联表';
+
 create table map_course_index
 (
     id               varchar(100)              not null comment '主键id'
         primary key,
     course_id        varchar(100)              null comment '课程id，from sys_course 表',
     index_id         varchar(100)              null comment '指标要求id ，from sys_index 表',
-    proportion_value double                    null comment '该课程占该指标要求的 系数比重，指标系数之和=1',
+    proportion_value double                    null comment '达成目标值，指标系数之和=1',
     statistic_year   varchar(100)              null comment '统计年份(示例：2014-2015学年)',
     create_user_id   varchar(100)              null comment '创建人id',
     create_date      datetime                  null comment '创建时间',
@@ -77,7 +94,7 @@ create table map_student_credit
     modify_date    datetime                  null comment '修改时间',
     status         int(11) unsigned zerofill null comment '状态值(-1失效，0默认值)'
 )
-    comment '学生-课程小分(某课程每一题)关联表';
+    comment '学生-课程小分(弃用)';
 
 create table map_student_evaluation
 (
@@ -282,24 +299,25 @@ create table sys_role
 
 create table sys_user
 (
-    id               varchar(100)              not null comment '主键'
+    id                    varchar(100)              not null comment '主键'
         primary key,
-    user_name        varchar(100)              null comment '用户名',
-    real_name        varchar(100)              null comment '真实姓名',
-    work_id          varchar(100)              null comment '学号/工号',
-    user_type        varchar(100)              null comment '用户类型/账号类型',
-    user_pwd         varchar(100)              null comment '用户密码',
-    user_department  varchar(100)              null comment '所属部门/学院',
-    class_name       varchar(100)              null comment '班级名称',
-    start_year       varchar(100)              null comment '入学年份',
-    education_system int                       null comment '学生学制',
-    train_level      varchar(100)              null comment '培养层次',
-    user_title       varchar(100)              null comment '教师职称',
-    create_user_id   varchar(100)              null comment '创建人id',
-    create_date      datetime                  null comment '创建时间',
-    modify_user_id   varchar(100)              null comment '修改人id',
-    modify_date      datetime                  null comment '修改时间',
-    status           int(11) unsigned zerofill null comment '状态值(-1失效，0默认值)'
+    user_name             varchar(100)              null comment '用户名',
+    real_name             varchar(100)              null comment '真实姓名',
+    work_id               varchar(100)              null comment '学号/工号',
+    user_type             varchar(100)              null comment '用户类型/账号类型',
+    user_pwd              varchar(100)              null comment '用户密码',
+    user_department       varchar(100)              null comment '所属部门/学院',
+    class_name            varchar(100)              null comment '班级名称',
+    start_year            varchar(100)              null comment '入学年份',
+    education_system      int                       null comment '学生学制',
+    train_level           varchar(100)              null comment '培养层次',
+    user_title            varchar(100)              null comment '教师职称',
+    lastPasswordResetDate datetime                  null comment '最后一次修改密码时间',
+    create_user_id        varchar(100)              null comment '创建人id',
+    create_date           datetime                  null comment '创建时间',
+    modify_user_id        varchar(100)              null comment '修改人id',
+    modify_date           datetime                  null comment '修改时间',
+    status                int(11) unsigned zerofill null comment '状态值(-1失效，0默认值)'
 )
     comment '系统用户表';
 

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fdongl.log.mapper.SysLogMapper">
+  <resultMap id="BaseResultMap" type="cn.fdongl.log.entity.SysLog">
+    <!--@mbg.generated-->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="log_module" jdbcType="VARCHAR" property="logModule" />
+    <result column="request_ip" jdbcType="VARCHAR" property="requestIp" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="log_action" jdbcType="VARCHAR" property="logAction" />
+    <result column="log_result" jdbcType="VARCHAR" property="logResult" />
+    <result column="log_time" jdbcType="TIMESTAMP" property="logTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, log_module, request_ip, user_id, role_name, user_name, log_action, log_result, 
+    log_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select 
+    <include refid="Base_Column_List" />
+    from sys_log
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <!--@mbg.generated-->
+    delete from sys_log
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.fdongl.log.entity.SysLog">
+    <!--@mbg.generated-->
+    insert into sys_log (id, log_module, request_ip, 
+      user_id, role_name, user_name, 
+      log_action, log_result, log_time
+      )
+    values (#{id,jdbcType=VARCHAR}, #{logModule,jdbcType=VARCHAR}, #{requestIp,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{logAction,jdbcType=VARCHAR}, #{logResult,jdbcType=VARCHAR}, #{logTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.fdongl.log.entity.SysLog">
+    <!--@mbg.generated-->
+    insert into sys_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="logModule != null">
+        log_module,
+      </if>
+      <if test="requestIp != null">
+        request_ip,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="roleName != null">
+        role_name,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="logAction != null">
+        log_action,
+      </if>
+      <if test="logResult != null">
+        log_result,
+      </if>
+      <if test="logTime != null">
+        log_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="logModule != null">
+        #{logModule,jdbcType=VARCHAR},
+      </if>
+      <if test="requestIp != null">
+        #{requestIp,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null">
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="logAction != null">
+        #{logAction,jdbcType=VARCHAR},
+      </if>
+      <if test="logResult != null">
+        #{logResult,jdbcType=VARCHAR},
+      </if>
+      <if test="logTime != null">
+        #{logTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.fdongl.log.entity.SysLog">
+    <!--@mbg.generated-->
+    update sys_log
+    <set>
+      <if test="logModule != null">
+        log_module = #{logModule,jdbcType=VARCHAR},
+      </if>
+      <if test="requestIp != null">
+        request_ip = #{requestIp,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null">
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="logAction != null">
+        log_action = #{logAction,jdbcType=VARCHAR},
+      </if>
+      <if test="logResult != null">
+        log_result = #{logResult,jdbcType=VARCHAR},
+      </if>
+      <if test="logTime != null">
+        log_time = #{logTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.fdongl.log.entity.SysLog">
+    <!--@mbg.generated-->
+    update sys_log
+    set log_module = #{logModule,jdbcType=VARCHAR},
+      request_ip = #{requestIp,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      role_name = #{roleName,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      log_action = #{logAction,jdbcType=VARCHAR},
+      log_result = #{logResult,jdbcType=VARCHAR},
+      log_time = #{logTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

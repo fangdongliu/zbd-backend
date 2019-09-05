@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.LongAdder;
 public class PointApplication {
 
     public static void main(String[] args) {
-        LongAdder
+        //LongAdder
         SpringApplication.run(PointApplication.class, args);
     }
 

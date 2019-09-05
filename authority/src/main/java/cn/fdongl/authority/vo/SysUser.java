@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class User {
+public class SysUser {
     /**
      * need implement 需要定义自己的属性
      */

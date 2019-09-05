@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fdongl.log.mapper.SysLogActionMapper">
+  <resultMap id="BaseResultMap" type="cn.fdongl.log.entity.SysLogAction">
+    <!--@mbg.generated-->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="action_url" jdbcType="VARCHAR" property="actionUrl" />
+    <result column="action_module" jdbcType="VARCHAR" property="actionModule" />
+    <result column="action_desc" jdbcType="VARCHAR" property="actionDesc" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, action_url, action_module, action_desc
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select 
+    <include refid="Base_Column_List" />
+    from sys_log_action
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <!--@mbg.generated-->
+    delete from sys_log_action
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.fdongl.log.entity.SysLogAction">
+    <!--@mbg.generated-->
+    insert into sys_log_action (id, action_url, action_module, 
+      action_desc)
+    values (#{id,jdbcType=VARCHAR}, #{actionUrl,jdbcType=VARCHAR}, #{actionModule,jdbcType=VARCHAR}, 
+      #{actionDesc,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.fdongl.log.entity.SysLogAction">
+    <!--@mbg.generated-->
+    insert into sys_log_action
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="actionUrl != null">
+        action_url,
+      </if>
+      <if test="actionModule != null">
+        action_module,
+      </if>
+      <if test="actionDesc != null">
+        action_desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="actionUrl != null">
+        #{actionUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="actionModule != null">
+        #{actionModule,jdbcType=VARCHAR},
+      </if>
+      <if test="actionDesc != null">
+        #{actionDesc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.fdongl.log.entity.SysLogAction">
+    <!--@mbg.generated-->
+    update sys_log_action
+    <set>
+      <if test="actionUrl != null">
+        action_url = #{actionUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="actionModule != null">
+        action_module = #{actionModule,jdbcType=VARCHAR},
+      </if>
+      <if test="actionDesc != null">
+        action_desc = #{actionDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.fdongl.log.entity.SysLogAction">
+    <!--@mbg.generated-->
+    update sys_log_action
+    set action_url = #{actionUrl,jdbcType=VARCHAR},
+      action_module = #{actionModule,jdbcType=VARCHAR},
+      action_desc = #{actionDesc,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
