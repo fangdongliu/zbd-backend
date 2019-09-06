@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 @Mapper
 public interface SysUserMapper {
     /**
-     * @param realName 用户名
+     * @param userName 用户名
      * @return 查找用户的所有数据，二次查询(基础信息+角色+权限)
      */
-    SysUser findUserByRealName(String realName);
+    SysUser findUserByUserName(String userName);
 
     int deleteByPrimaryKey(String id);
 

@@ -23,7 +23,7 @@
     <result column="status" jdbcType="INTEGER" property="status" />
   </resultMap>
 
-  <resultMap id="UserWithRoleAndPower" type="cn.fdongl.authority.vo.SysUser">
+  <resultMap id="UserWithRoleCodes" type="cn.fdongl.authority.vo.SysUser">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="real_name" jdbcType="VARCHAR" property="realName" />
@@ -42,15 +42,8 @@
     <result column="modify_user_id" jdbcType="VARCHAR" property="modifyUserId" />
     <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
     <result column="status" jdbcType="INTEGER" property="status" />
-    <collection property="roleList" ofType="cn.fdongl.authority.vo.SysRole">
-      <id column="r_id" property="id"/>
-      <result column="role_name" property="roleName"/>
-      <result column="role_code" property="roleCode"/>
-      <collection property="powerList" ofType="cn.fdongl.authority.vo.SysPower">
-        <id column="p_id" property="id"/>
-        <result column="power_name" property="powerName"/>
-        <result column="power_code" property="powerCode"/>
-      </collection>
+    <collection property="roles" column="id" javaType="list" ofType="String"
+                select="selectRoleCodesByUserName">
     </collection>
   </resultMap>
 
@@ -286,33 +279,26 @@
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
-  <select id="findUserByRealName" resultMap="UserWithRoleAndPower">
-    select
-        a.*,
-        rp.id r_id,
-        rp.role_name,
-        rp.role_code
-    from
-        (
-          select *
-          from
-              index_point.sys_user u
-          where
-              u.real_name = #{realName,jdbcType=VARCHAR}
-        ) a
-        left join index_point.map_user_role mur on mur.user_id = a.id
-        left join
-        (
-          select
-            r.id,
-            r.role_name,
-            r.role_code,
-            p.power_name,
-            p.power_code
-          from
-            index_point.sys_role r
-            left join index_point.map_role_power mrp on mrp.role_id = r.id
-            left join index_point.sys_power p on p.id = mrp.power_id
-        ) rp on rp.id = mur.role_id
+  <select id="findUserByUserName" resultMap="UserWithRoleCodes">
+    select *
+    from sys_user
+    where
+        user_name = #{userName,jdbcType=VARCHAR}
+        and status != -1
+  </select>
+
+  <select id="selectRoleCodesByUserName" resultType="java.lang.String">
+    select role_code
+    from sys_role
+    where id in (
+      select role_id
+      from map_user_role
+      where user_id = (
+        select sys_user.id
+        from sys_user
+        where user_name = #{userName,jdbcType=VARCHAR}
+        limit 1
+      )
+    )
   </select>
 </mapper>

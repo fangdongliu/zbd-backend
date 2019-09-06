@@ -106,5 +106,5 @@ public class SysUser {
     /**
      * 该用户对应的权限
      **/
-    private List<String> roleList;
+    private List<String> roles;
 }

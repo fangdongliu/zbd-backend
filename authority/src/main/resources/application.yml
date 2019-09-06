@@ -1,0 +1,22 @@
+jwt:
+  header: Authorization
+  secret: mySecret
+  expiration: 604800
+  tokenHead: bearer
+  route:
+    authentication:
+      path: /auth
+      refresh: /refresh
+
+spring:
+  datasource:
+    url: jdbc:mysql://114.115.180.42:3306/index_point?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+
+mybatis:
+  mapper-locations: cn.fdongl.**/*Mapper.xml
+  type-aliases-package: cn.fdongl
+  configuration:
+    map-underscore-to-camel-case: true

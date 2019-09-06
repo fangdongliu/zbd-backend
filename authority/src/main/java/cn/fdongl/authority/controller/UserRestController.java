@@ -29,8 +29,8 @@ public class UserRestController {
     public JwtUser getAuthenticatedUser(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader).substring(7);
         String username = jwtTokenUtil.getUsernameFromToken(token);
-        JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
-        return user;
+        JwtUser jwtUser = (JwtUser) userDetailsService.loadUserByUsername(username);
+        return jwtUser;
     }
 
 }
