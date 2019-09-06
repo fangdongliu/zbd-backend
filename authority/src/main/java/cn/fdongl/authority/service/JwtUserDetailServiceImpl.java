@@ -19,8 +19,6 @@ public class JwtUserDetailServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         SysUser sysUser = userMapper.findUserByUserName(username);
-        System.out.println("------------------loadUserByUsername---------------");
-        System.out.println(sysUser);
         if (sysUser == null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
         } else {

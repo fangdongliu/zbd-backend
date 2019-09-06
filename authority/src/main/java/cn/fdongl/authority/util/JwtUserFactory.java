@@ -34,7 +34,7 @@ public final class JwtUserFactory {
                 sysUser.getModifyUserId(),
                 sysUser.getModifyDate(),
                 sysUser.getStatus(),
-                mapToGrantedAuthorities(sysUser.getRoleList())
+                mapToGrantedAuthorities(sysUser.getRoles())
         );
     }
 

@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface SysRoleMapper {
 
-    List<SysRole> selectAllRolesByUserName(String userName2);
-
     int deleteByPrimaryKey(String id);
 
     int insert(SysRole record);

@@ -134,28 +134,4 @@
         `status` = #{status,jdbcType=INTEGER}
         where id = #{id,jdbcType=VARCHAR}
     </update>
-    <select id="selectAllRolesByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
-        select
-            id, role_name,role_code
-        from
-            index_point.sys_role
-        where
-            id in (
-              select
-                role_id
-              from
-                index_point.map_user_role
-              where
-                user_id = (
-                  select
-                    id
-                  from
-                    index_point.sys_user
-                  where
-                    user_name = #{userName2}
-                    and sys_user.status != -1
-                  limit 1
-              )
-            )
-    </select>
 </mapper>
