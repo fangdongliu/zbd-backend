@@ -1,19 +1,19 @@
 package cn.fdongl.point.controller;
 
+import cn.fdongl.authority.tool.BaseController;
+import cn.fdongl.authority.tool.MsgType;
 import cn.fdongl.point.service.ClassPointService;
 import cn.fdongl.point.service.UploadFrameService;
-import cn.fdongl.point.tool.BaseController;
-import cn.fdongl.point.tool.MsgType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Map;
 
-@Controller
+@RequestMapping("/upload")
+@RestController
 public class UploadController extends BaseController {
 
     @Autowired
@@ -23,7 +23,7 @@ public class UploadController extends BaseController {
 
 
     //老师上传评价表
-    @RequestMapping("")
+    @RequestMapping(value = "/uploadTeacherCom",method = RequestMethod.POST)
     public Object uploadTeacherCom(@RequestParam("classId")String classId,
                                    @RequestParam("file")MultipartFile file){
         try{
@@ -36,7 +36,7 @@ public class UploadController extends BaseController {
 
 
     //学生评教
-    @RequestMapping("")
+    @RequestMapping(value = "studentCom",method = RequestMethod.POST)
     public Object uploadStudentCom(@RequestParam("classId") String classId,
                                    @RequestParam("map") Map<String,Integer> map,
                                    @RequestParam("studentId") String studentId
@@ -52,8 +52,9 @@ public class UploadController extends BaseController {
 
 
     //上传培养方案
-    @RequestMapping("")
-    public Object uploadCultivatePlan( @RequestParam("file")MultipartFile file){
+    @RequestMapping("/cultivatePlan")
+    @ResponseBody
+    public Object uploadCultivatePlan(@RequestParam("file")MultipartFile file){
         try{
             uploadFrameService.uploadProject(file);
             return retMsg.Set(MsgType.SUCCESS);
@@ -64,7 +65,7 @@ public class UploadController extends BaseController {
 
 
     //上传培养矩阵
-    @RequestMapping("")
+    @RequestMapping("/cultivateMatrix")
     public Object uploadCultivateMatrix(@RequestParam("file") MultipartFile file){
         String msg=null;
         try{

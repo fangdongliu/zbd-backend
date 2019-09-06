@@ -1,8 +1,8 @@
 package cn.fdongl.point.service.impl;
 
-import cn.fdongl.point.dao.MapCourseIndexMapper;
-import cn.fdongl.point.dao.SysCourseMapper;
-import cn.fdongl.point.dao.SysIndexMapper;
+import cn.fdongl.point.mapper.MapCourseIndexMapper;
+import cn.fdongl.point.mapper.SysCourseMapper;
+import cn.fdongl.point.mapper.SysIndexMapper;
 import cn.fdongl.point.entity.MapCourseIndex;
 import cn.fdongl.point.entity.SysCourse;
 import cn.fdongl.point.entity.SysIndex;
@@ -15,7 +15,6 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -1,18 +1,27 @@
 package cn.fdongl.point;
 
+import cn.fdongl.authority.tool.AppUserDetailArgumentResolver;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.LongAdder;
+import java.util.List;
 
 @SpringBootApplication
-public class PointApplication {
+@ComponentScan(value = "cn.fdongl")
+@MapperScan("cn.fdongl.point.mapper")
+public class PointApplication implements WebMvcConfigurer {
 
     public static void main(String[] args) {
         //LongAdder
         SpringApplication.run(PointApplication.class, args);
     }
 
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(new AppUserDetailArgumentResolver());
+    }
 }

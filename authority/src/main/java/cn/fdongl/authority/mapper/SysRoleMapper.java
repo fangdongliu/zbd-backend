@@ -1,10 +1,7 @@
-package cn.fdongl.authority.dao;
+package cn.fdongl.authority.mapper;
 
 
 import cn.fdongl.authority.vo.SysRole;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 public interface SysRoleMapper {
 

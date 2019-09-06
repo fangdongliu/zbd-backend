@@ -1,6 +1,6 @@
 package cn.fdongl.authority.service;
 
-import cn.fdongl.authority.dao.SysRoleMapper;
+import cn.fdongl.authority.mapper.SysRoleMapper;
 import cn.fdongl.authority.vo.SysRole;
 import org.springframework.stereotype.Service;
 

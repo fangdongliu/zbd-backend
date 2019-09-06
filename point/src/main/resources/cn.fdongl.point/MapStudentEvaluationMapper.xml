@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.fdongl.point.dao.SysIndexMapper">
-  <resultMap id="BaseResultMap" type="cn.fdongl.point.entity.SysIndex">
+<mapper namespace="cn.fdongl.point.mapper.MapStudentEvaluationMapper">
+  <resultMap id="BaseResultMap" type="cn.fdongl.point.entity.MapStudentEvaluation">
     <!--@mbg.generated-->
     <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="work_id" jdbcType="VARCHAR" property="workId" />
+    <result column="index_id" jdbcType="VARCHAR" property="indexId" />
+    <result column="course_select_number" jdbcType="VARCHAR" property="courseSelectNumber" />
     <result column="index_number" jdbcType="VARCHAR" property="indexNumber" />
-    <result column="index_title" jdbcType="VARCHAR" property="indexTitle" />
-    <result column="index_content" jdbcType="VARCHAR" property="indexContent" />
-    <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
-    <result column="sort" jdbcType="INTEGER" property="sort" />
+    <result column="comment_value" jdbcType="INTEGER" property="commentValue" />
     <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="modify_user_id" jdbcType="VARCHAR" property="modifyUserId" />
@@ -17,53 +17,53 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, index_number, index_title, index_content, parent_id, sort, create_user_id, create_date, 
-    modify_user_id, modify_date, `status`
+    id, work_id, index_id, course_select_number, index_number, comment_value, create_user_id, 
+    create_date, modify_user_id, modify_date, `status`
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     <!--@mbg.generated-->
     select 
     <include refid="Base_Column_List" />
-    from sys_index
+    from map_student_evaluation
     where id = #{id,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     <!--@mbg.generated-->
-    delete from sys_index
+    delete from map_student_evaluation
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="cn.fdongl.point.entity.SysIndex">
+  <insert id="insert" parameterType="cn.fdongl.point.entity.MapStudentEvaluation">
     <!--@mbg.generated-->
-    insert into sys_index (id, index_number, index_title, 
-      index_content, parent_id, sort, 
+    insert into map_student_evaluation (id, work_id, index_id, 
+      course_select_number, index_number, comment_value, 
       create_user_id, create_date, modify_user_id, 
       modify_date, `status`)
-    values (#{id,jdbcType=VARCHAR}, #{indexNumber,jdbcType=VARCHAR}, #{indexTitle,jdbcType=VARCHAR}, 
-      #{indexContent,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=VARCHAR}, #{workId,jdbcType=VARCHAR}, #{indexId,jdbcType=VARCHAR}, 
+      #{courseSelectNumber,jdbcType=VARCHAR}, #{indexNumber,jdbcType=VARCHAR}, #{commentValue,jdbcType=INTEGER}, 
       #{createUserId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=VARCHAR}, 
       #{modifyDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="cn.fdongl.point.entity.SysIndex">
+  <insert id="insertSelective" parameterType="cn.fdongl.point.entity.MapStudentEvaluation">
     <!--@mbg.generated-->
-    insert into sys_index
+    insert into map_student_evaluation
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
+      <if test="workId != null">
+        work_id,
+      </if>
+      <if test="indexId != null">
+        index_id,
+      </if>
+      <if test="courseSelectNumber != null">
+        course_select_number,
+      </if>
       <if test="indexNumber != null">
         index_number,
       </if>
-      <if test="indexTitle != null">
-        index_title,
-      </if>
-      <if test="indexContent != null">
-        index_content,
-      </if>
-      <if test="parentId != null">
-        parent_id,
-      </if>
-      <if test="sort != null">
-        sort,
+      <if test="commentValue != null">
+        comment_value,
       </if>
       <if test="createUserId != null">
         create_user_id,
@@ -85,20 +85,20 @@
       <if test="id != null">
         #{id,jdbcType=VARCHAR},
       </if>
+      <if test="workId != null">
+        #{workId,jdbcType=VARCHAR},
+      </if>
+      <if test="indexId != null">
+        #{indexId,jdbcType=VARCHAR},
+      </if>
+      <if test="courseSelectNumber != null">
+        #{courseSelectNumber,jdbcType=VARCHAR},
+      </if>
       <if test="indexNumber != null">
         #{indexNumber,jdbcType=VARCHAR},
       </if>
-      <if test="indexTitle != null">
-        #{indexTitle,jdbcType=VARCHAR},
-      </if>
-      <if test="indexContent != null">
-        #{indexContent,jdbcType=VARCHAR},
-      </if>
-      <if test="parentId != null">
-        #{parentId,jdbcType=VARCHAR},
-      </if>
-      <if test="sort != null">
-        #{sort,jdbcType=INTEGER},
+      <if test="commentValue != null">
+        #{commentValue,jdbcType=INTEGER},
       </if>
       <if test="createUserId != null">
         #{createUserId,jdbcType=VARCHAR},
@@ -117,24 +117,24 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.fdongl.point.entity.SysIndex">
+  <update id="updateByPrimaryKeySelective" parameterType="cn.fdongl.point.entity.MapStudentEvaluation">
     <!--@mbg.generated-->
-    update sys_index
+    update map_student_evaluation
     <set>
+      <if test="workId != null">
+        work_id = #{workId,jdbcType=VARCHAR},
+      </if>
+      <if test="indexId != null">
+        index_id = #{indexId,jdbcType=VARCHAR},
+      </if>
+      <if test="courseSelectNumber != null">
+        course_select_number = #{courseSelectNumber,jdbcType=VARCHAR},
+      </if>
       <if test="indexNumber != null">
         index_number = #{indexNumber,jdbcType=VARCHAR},
       </if>
-      <if test="indexTitle != null">
-        index_title = #{indexTitle,jdbcType=VARCHAR},
-      </if>
-      <if test="indexContent != null">
-        index_content = #{indexContent,jdbcType=VARCHAR},
-      </if>
-      <if test="parentId != null">
-        parent_id = #{parentId,jdbcType=VARCHAR},
-      </if>
-      <if test="sort != null">
-        sort = #{sort,jdbcType=INTEGER},
+      <if test="commentValue != null">
+        comment_value = #{commentValue,jdbcType=INTEGER},
       </if>
       <if test="createUserId != null">
         create_user_id = #{createUserId,jdbcType=VARCHAR},
@@ -154,14 +154,14 @@
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="cn.fdongl.point.entity.SysIndex">
+  <update id="updateByPrimaryKey" parameterType="cn.fdongl.point.entity.MapStudentEvaluation">
     <!--@mbg.generated-->
-    update sys_index
-    set index_number = #{indexNumber,jdbcType=VARCHAR},
-      index_title = #{indexTitle,jdbcType=VARCHAR},
-      index_content = #{indexContent,jdbcType=VARCHAR},
-      parent_id = #{parentId,jdbcType=VARCHAR},
-      sort = #{sort,jdbcType=INTEGER},
+    update map_student_evaluation
+    set work_id = #{workId,jdbcType=VARCHAR},
+      index_id = #{indexId,jdbcType=VARCHAR},
+      course_select_number = #{courseSelectNumber,jdbcType=VARCHAR},
+      index_number = #{indexNumber,jdbcType=VARCHAR},
+      comment_value = #{commentValue,jdbcType=INTEGER},
       create_user_id = #{createUserId,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       modify_user_id = #{modifyUserId,jdbcType=VARCHAR},
@@ -169,22 +169,17 @@
       `status` = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <select id="selectByIdAndDate" resultMap="BaseResultMap">
-    select * from sys_index where index_number=${0} order by create_date asc limit 1
-  </select>
-  <insert id="insertList" parameterType="cn.fdongl.point.entity.SysIndex">
-     insert into sys_index (id, index_number, index_title,
-      index_content, parent_id, sort,
-      create_user_id, create_date, modify_user_id,
-      modify_date, `status`)
+  <insert id="insertList">
+    insert into map_student_evaluation (id, work_id, index_id,
+    course_select_number, index_number, comment_value,
+    create_user_id, create_date, modify_user_id,
+    modify_date, `status`)
     values
     <foreach collection="list" item="item" separator=",">
-    (#{id,jdbcType=VARCHAR}, #{indexNumber,jdbcType=VARCHAR}, #{indexTitle,jdbcType=VARCHAR},
-      #{indexContent,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER},
-      #{createUserId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=VARCHAR},
-      #{modifyDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER})
+    (#{id,jdbcType=VARCHAR}, #{workId,jdbcType=VARCHAR}, #{indexId,jdbcType=VARCHAR},
+    #{courseSelectNumber,jdbcType=VARCHAR}, #{indexNumber,jdbcType=VARCHAR}, #{commentValue,jdbcType=INTEGER},
+    #{createUserId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=VARCHAR},
+    #{modifyDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER})
     </foreach>
   </insert>
-
-
 </mapper>
