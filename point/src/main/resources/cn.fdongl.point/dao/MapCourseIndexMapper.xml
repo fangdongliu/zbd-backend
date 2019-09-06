@@ -16,7 +16,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, course_id, index_id, proportion_value, statistic_year, create_user_id, create_date, 
+    id, course_id, index_id, proportion_value, statistic_year, create_user_id, create_date,
     modify_user_id, modify_date, `status`
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -33,7 +33,7 @@
   </delete>
   <insert id="insert" parameterType="cn.fdongl.point.entity.MapCourseIndex">
     <!--@mbg.generated-->
-    insert into map_course_index (id, course_id, index_id, 
+    insert into map_course_index (id, course_id, index_id,
       proportion_value, statistic_year, create_user_id, 
       create_date, modify_user_id, modify_date, 
       `status`)

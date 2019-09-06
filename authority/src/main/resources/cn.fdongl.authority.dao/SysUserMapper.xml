@@ -286,7 +286,7 @@
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
-  <select id="findUserByRealName" resultMap="UserWithRoleAndPower">
+  <select id="findUserByUserName" resultMap="UserWithRoleAndPower">
     select
         a.*,
         rp.id r_id,
@@ -298,7 +298,7 @@
           from
               index_point.sys_user u
           where
-              u.real_name = #{realName,jdbcType=VARCHAR}
+              u.user_name = #{userName,jdbcType=VARCHAR}
         ) a
         left join index_point.map_user_role mur on mur.user_id = a.id
         left join

@@ -27,10 +27,11 @@ public class UserRestController {
     /*获取用户认证信息*/
     @RequestMapping(value = "user", method = RequestMethod.GET)
     public JwtUser getAuthenticatedUser(HttpServletRequest request) {
+        System.out.println("-----------------ok");
         String token = request.getHeader(tokenHeader).substring(7);
         String username = jwtTokenUtil.getUsernameFromToken(token);
-        JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
-        return user;
+        JwtUser jwtUser = (JwtUser) userDetailsService.loadUserByUsername(username);
+        return jwtUser;
     }
 
 }
