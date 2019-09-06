@@ -1,6 +1,5 @@
-package cn.fdongl.point.dao;
+package cn.fdongl.point.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
 @Component

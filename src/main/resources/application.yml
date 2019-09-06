@@ -16,6 +16,7 @@ spring:
     password: root
 
 mybatis:
-  mapper-locations: classpath*:mapper/*Mapper.xml
+  mapper-locations: cn.fdongl.**/*Mapper.xml
+  type-aliases-package: cn.fdongl
   configuration:
     map-underscore-to-camel-case: true

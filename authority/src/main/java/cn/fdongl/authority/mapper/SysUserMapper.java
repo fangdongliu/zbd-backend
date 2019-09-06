@@ -1,4 +1,4 @@
-package cn.fdongl.authority.dao;
+package cn.fdongl.authority.mapper;
 
 
 import cn.fdongl.authority.vo.SysUser;

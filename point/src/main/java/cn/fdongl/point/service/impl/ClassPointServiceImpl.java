@@ -1,11 +1,9 @@
 package cn.fdongl.point.service.impl;
 
-import cn.fdongl.point.dao.MapCourseEvaluationMapper;
-import cn.fdongl.point.dao.MapCourseIndexMapper;
-import cn.fdongl.point.dao.MapStudentEvaluationMapper;
-import cn.fdongl.point.dao.SysIndexMapper;
+import cn.fdongl.point.mapper.MapCourseEvaluationMapper;
+import cn.fdongl.point.mapper.MapStudentEvaluationMapper;
+import cn.fdongl.point.mapper.SysIndexMapper;
 import cn.fdongl.point.entity.MapCourseEvaluation;
-import cn.fdongl.point.entity.MapCourseIndex;
 import cn.fdongl.point.entity.MapStudentEvaluation;
 import cn.fdongl.point.service.ClassPointService;
 import cn.fdongl.point.util.AcademicYear;

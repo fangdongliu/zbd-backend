@@ -1,7 +1,7 @@
 package cn.fdongl.authority.service;
 
 
-import cn.fdongl.authority.dao.SysPowerMapper;
+import cn.fdongl.authority.mapper.SysPowerMapper;
 import cn.fdongl.authority.vo.SysPower;
 import org.springframework.stereotype.Service;
 

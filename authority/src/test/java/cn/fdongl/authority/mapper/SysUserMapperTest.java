@@ -1,6 +1,5 @@
-package cn.fdongl.authority.dao;
+package cn.fdongl.authority.mapper;
 
-import cn.fdongl.authority.vo.SysRole;
 import cn.fdongl.authority.vo.SysUser;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;

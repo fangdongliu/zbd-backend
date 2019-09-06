@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 
 @SpringBootApplication
-@MapperScan("cn.fdongl.authority.dao")
+@MapperScan("cn.fdongl.authority.mapper")
 public class AuthorityApplication implements WebMvcConfigurer {
 
     public static void main(String[] args) {

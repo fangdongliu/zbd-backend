@@ -1,6 +1,6 @@
 package cn.fdongl.authority.service;
 
-import cn.fdongl.authority.dao.SysUserMapper;
+import cn.fdongl.authority.mapper.SysUserMapper;
 import cn.fdongl.authority.vo.SysUser;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;

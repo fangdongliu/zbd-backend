@@ -1,4 +1,4 @@
-package cn.fdongl.point.dao;
+package cn.fdongl.point.mapper;
 
 import cn.fdongl.point.entity.MapStudentEvaluation;
 import org.apache.ibatis.annotations.Mapper;
