@@ -8,6 +8,7 @@ import cn.fdongl.authority.vo.SysUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -30,7 +31,7 @@ public class SysUserController {
     private SysUserService userService;
 
     @ApiOperation(value = "获取用户信息")
-    @RequestMapping(value = "getInfo")
+    @RequestMapping(value = "getInfo",method = RequestMethod.POST)
     @ResponseBody
     public Object getInfo(@RequestParam(value = "userId") String userId){
         SysUser theUser = userService.selectByPrimaryKey(userId);
@@ -41,12 +42,25 @@ public class SysUserController {
         }
     }
 
-    @ApiOperation(value = "更新用户信息")
-    @RequestMapping(value = "updateInfo")
+    @ApiOperation(value = "更新用户密码")
+    @RequestMapping(value = "updateInfo",method = RequestMethod.POST)
     @ResponseBody
-    public Object updateInfo(@RequestBody SysUser updateUser){
-        if(userService.updateByPrimaryKeySelective(updateUser) == 1){
-            return retMsg.Set(MsgType.SUCCESS, userService.selectByPrimaryKey(updateUser.getId()),
+    public Object updateInfo(
+            JwtUser jwtUser,
+            @RequestParam("userId") String userId,
+            @RequestParam("newPassword") String newPassword
+    ){
+        Date dateNow = new Date();
+
+        SysUser theUser = userService.selectByPrimaryKey(userId);
+        theUser.setLastPasswordResetDate(dateNow);
+        theUser.setModifyDate(dateNow);
+        theUser.setModifyUserId(jwtUser.getId());
+
+        theUser.setUserPwd(newPassword);
+
+        if(userService.updateByPrimaryKeySelective(theUser) == 1){
+            return retMsg.Set(MsgType.SUCCESS, theUser,
                     "更新用户信息成功");
         }else{
             return retMsg.Set(MsgType.ERROR,null, "更新用户信息失败");
@@ -54,20 +68,22 @@ public class SysUserController {
     }
 
     @ApiOperation(value = "管理员添加新用户")
-    @RequestMapping(value = "addNew")
+    @RequestMapping(value = "addNew", method = RequestMethod.POST)
     @ResponseBody
     public Object addNew(
             JwtUser userNow,
             @RequestParam("userName") String userName,
             @RequestParam("userType") String userType,
-            @RequestParam("userDepartment") String userDepartment
+            @RequestParam("departmentId") String departmentId
     ){
         Date tmpDate = new Date();
         SysUser newUser = new SysUser();
         newUser.setId(UUID.randomUUID().toString());
         newUser.setUserName(userName);
         newUser.setUserType(userType);
-        newUser.setUserDepartment(userDepartment);
+        newUser.setUserDepartment(departmentId);
+        /*设置默认密码为：123456*/
+        newUser.setUserPwd(new BCryptPasswordEncoder().encode("123456"));
         newUser.setCreateDate(tmpDate);
         newUser.setModifyDate(tmpDate);
         newUser.setCreateUserId(userNow.getId());

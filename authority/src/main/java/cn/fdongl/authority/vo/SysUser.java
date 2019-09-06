@@ -74,11 +74,6 @@ public class SysUser {
     private String userTitle;
 
     /**
-     * 最后一次修改密码时间
-     */
-    private Date lastpasswordresetdate;
-
-    /**
      * 创建人id
      */
     private String createUserId;
