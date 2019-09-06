@@ -16,13 +16,15 @@ public class MapStudentEvaluation {
     */
     private String workId;
 
+    private String indexId;
+
     /**
     * 选课课号(学期-课程编号-教师工号-该师该学期第几门课)
     */
     private String courseSelectNumber;
 
     /**
-    * 指标要求id ，from sys_index 表
+    * 指标要求number
     */
     private String indexNumber;
 

@@ -5,36 +5,38 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class SysIndex {
+public class MapCourseEvaluation {
     /**
     * 主键id
     */
     private String id;
 
+    private String indexId;
+
     /**
-    * 指标点要求序号 (4.1/4.2)
+    * 学生年级
+    */
+    private String studentGrade;
+
+    /**
+    * 学年
+    */
+    private String schoolYear;
+
+    /**
+    * 指标点number(e.g.4.2, 4.3)
     */
     private String indexNumber;
 
     /**
-    * 指标点大项标题
+    * 达成目标值(指标点系数)
     */
-    private String indexTitle;
+    private Double indexProportionValue;
 
     /**
-    * 指标要求内容
+    * 评价值(某课程针对其所需达成目标的实际评价值)
     */
-    private String indexContent;
-
-    /**
-    * 指标要求父类型 - from sys_index 表
-    */
-    private String parentId;
-
-    /**
-    * 指标要求序号
-    */
-    private Integer sort;
+    private Double evaluationValue;
 
     /**
     * 创建人id
@@ -52,7 +54,7 @@ public class SysIndex {
     private String modifyUserId;
 
     /**
-    * 修改时间
+    * 修改日期
     */
     private Date modifyDate;
 
@@ -60,4 +62,6 @@ public class SysIndex {
     * 状态值(-1失效，0默认值)
     */
     private Integer status;
+
+    private String courseId;
 }

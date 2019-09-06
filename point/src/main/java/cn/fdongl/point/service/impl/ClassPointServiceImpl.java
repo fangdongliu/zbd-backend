@@ -1,28 +1,25 @@
 package cn.fdongl.point.service.impl;
 
+import cn.fdongl.point.dao.MapCourseEvaluationMapper;
 import cn.fdongl.point.dao.MapCourseIndexMapper;
 import cn.fdongl.point.dao.MapStudentEvaluationMapper;
+import cn.fdongl.point.dao.SysIndexMapper;
+import cn.fdongl.point.entity.MapCourseEvaluation;
 import cn.fdongl.point.entity.MapCourseIndex;
 import cn.fdongl.point.entity.MapStudentEvaluation;
-import cn.fdongl.point.entity.SysIndex;
 import cn.fdongl.point.service.ClassPointService;
 import cn.fdongl.point.util.AcademicYear;
 import cn.fdongl.point.util.ExcelUtils;
 
 import cn.fdongl.point.util.IdGen;
-import net.sf.json.JSONArray;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,11 +29,19 @@ import java.util.Map;
 public class ClassPointServiceImpl implements ClassPointService {
 
 
-    @Autowired
-    private MapCourseIndexMapper mapCourseIndexMapper;
+
 
     @Autowired
     private MapStudentEvaluationMapper mapStudentEvaluationMapper;
+
+    @Autowired
+    private SysIndexMapper sysIndexMapper;
+
+    @Autowired
+    private MapCourseEvaluationMapper mapCourseEvaluationMapper;
+
+
+
 
 
     @Override
@@ -62,7 +67,7 @@ public class ClassPointServiceImpl implements ClassPointService {
 
         if(s!=null){
             int s_col=s.getColumnIndex();//评价值所在列的列号
-            List<MapCourseIndex> courseIndices=new ArrayList<>();
+            List<MapCourseEvaluation> courseIndices=new ArrayList<>();
             int count=0;
             String indexName=null;//当前指标点的名称
             Double indexValue=null;//当前指标点的值
@@ -81,11 +86,13 @@ public class ClassPointServiceImpl implements ClassPointService {
                         if(f!=null){
                             indexValue=f;
                             //将对应的值填写到类再添加到数据库中
-                            MapCourseIndex newCourseIndex=new MapCourseIndex();
+                            MapCourseEvaluation newCourseIndex=new MapCourseEvaluation();
                             newCourseIndex.setCourseId(classId);
-                            newCourseIndex.setStatisticYear(AcademicYear.getStartYear());
-                            newCourseIndex.setProportionValue(indexValue);
+                            newCourseIndex.setSchoolYear(AcademicYear.getStartYear());
+                            newCourseIndex.setEvaluationValue(indexValue);
                             newCourseIndex.setId(IdGen.uuid());
+                            newCourseIndex.setIndexNumber(val);
+                            newCourseIndex.setStudentGrade(stuYear);
                             courseIndices.add(newCourseIndex);
                             i=j;
                             break;
@@ -100,7 +107,13 @@ public class ClassPointServiceImpl implements ClassPointService {
                     }
                 }
             }
-            mapCourseIndexMapper.insertList(courseIndices);
+            for(int i=0;i<courseIndices.size();i++){
+                String number=courseIndices.get(i).getIndexNumber();
+                MapCourseEvaluation mapCourseIndex=courseIndices.get(i);
+                String indexId=sysIndexMapper.selectByIdAndDate(number).getId();
+                mapCourseIndex.setIndexId(indexId);
+            }
+            mapCourseEvaluationMapper.insertList(courseIndices);
         }
 
     }
@@ -117,7 +130,7 @@ public class ClassPointServiceImpl implements ClassPointService {
             mapStudentEvaluation.setWorkId(studentId);
             mapStudentEvaluation.setCourseSelectNumber(classId);
             mapStudentEvaluations.add(mapStudentEvaluation);
-
+            mapStudentEvaluation.setIndexId(sysIndexMapper.selectByIdAndDate(entry.getKey()).getId());
             System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
         }
 

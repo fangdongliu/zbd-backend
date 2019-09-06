@@ -4,7 +4,8 @@
   <resultMap id="BaseResultMap" type="cn.fdongl.point.entity.SysIndex">
     <!--@mbg.generated-->
     <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="index_number" jdbcType="VARCHAR" property="indexNumber"/>
+    <result column="index_number" jdbcType="VARCHAR" property="indexNumber" />
+    <result column="index_title" jdbcType="VARCHAR" property="indexTitle" />
     <result column="index_content" jdbcType="VARCHAR" property="indexContent" />
     <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
     <result column="sort" jdbcType="INTEGER" property="sort" />
@@ -16,8 +17,8 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, index_number, index_content, parent_id, sort, create_user_id, create_date, modify_user_id,
-    modify_date, `status`
+    id, index_number, index_title, index_content, parent_id, sort, create_user_id, create_date, 
+    modify_user_id, modify_date, `status`
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     <!--@mbg.generated-->
@@ -33,14 +34,14 @@
   </delete>
   <insert id="insert" parameterType="cn.fdongl.point.entity.SysIndex">
     <!--@mbg.generated-->
-    insert into sys_index (id, index_number, index_content, parent_id,
-      sort, create_user_id, create_date, 
-      modify_user_id, modify_date, `status`
-      )
-    values (#{id,jdbcType=VARCHAR}, #{indexContent,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, 
-      #{sort,jdbcType=INTEGER}, #{createUserId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
-      #{modifyUserId,jdbcType=VARCHAR}, #{modifyDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}
-      )
+    insert into sys_index (id, index_number, index_title, 
+      index_content, parent_id, sort, 
+      create_user_id, create_date, modify_user_id, 
+      modify_date, `status`)
+    values (#{id,jdbcType=VARCHAR}, #{indexNumber,jdbcType=VARCHAR}, #{indexTitle,jdbcType=VARCHAR}, 
+      #{indexContent,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, 
+      #{createUserId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=VARCHAR}, 
+      #{modifyDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="cn.fdongl.point.entity.SysIndex">
     <!--@mbg.generated-->
@@ -51,6 +52,9 @@
       </if>
       <if test="indexNumber != null">
         index_number,
+      </if>
+      <if test="indexTitle != null">
+        index_title,
       </if>
       <if test="indexContent != null">
         index_content,
@@ -80,6 +84,12 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="indexNumber != null">
+        #{indexNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="indexTitle != null">
+        #{indexTitle,jdbcType=VARCHAR},
       </if>
       <if test="indexContent != null">
         #{indexContent,jdbcType=VARCHAR},
@@ -114,6 +124,9 @@
       <if test="indexNumber != null">
         index_number = #{indexNumber,jdbcType=VARCHAR},
       </if>
+      <if test="indexTitle != null">
+        index_title = #{indexTitle,jdbcType=VARCHAR},
+      </if>
       <if test="indexContent != null">
         index_content = #{indexContent,jdbcType=VARCHAR},
       </if>
@@ -144,16 +157,34 @@
   <update id="updateByPrimaryKey" parameterType="cn.fdongl.point.entity.SysIndex">
     <!--@mbg.generated-->
     update sys_index
-    set
-        index_number = #{indexNumber,jdbcType=VARCHAR},
-        index_content = #{indexContent,jdbcType=VARCHAR},
-        parent_id = #{parentId,jdbcType=VARCHAR},
-        sort = #{sort,jdbcType=INTEGER},
-        create_user_id = #{createUserId,jdbcType=VARCHAR},
-        create_date = #{createDate,jdbcType=TIMESTAMP},
-        modify_user_id = #{modifyUserId,jdbcType=VARCHAR},
-        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
-        `status` = #{status,jdbcType=INTEGER}
+    set index_number = #{indexNumber,jdbcType=VARCHAR},
+      index_title = #{indexTitle,jdbcType=VARCHAR},
+      index_content = #{indexContent,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      create_user_id = #{createUserId,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      modify_user_id = #{modifyUserId,jdbcType=VARCHAR},
+      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      `status` = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+  <select id="selectByIdAndDate" resultMap="BaseResultMap">
+    select * from sys_index where index_number=${0} order by create_date asc limit 1
+  </select>
+  <insert id="insertList" parameterType="cn.fdongl.point.entity.SysIndex">
+     insert into sys_index (id, index_number, index_title,
+      index_content, parent_id, sort,
+      create_user_id, create_date, modify_user_id,
+      modify_date, `status`)
+    values
+    <foreach collection="list" item="item" separator=",">
+    (#{id,jdbcType=VARCHAR}, #{indexNumber,jdbcType=VARCHAR}, #{indexTitle,jdbcType=VARCHAR},
+      #{indexContent,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER},
+      #{createUserId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=VARCHAR},
+      #{modifyDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER})
+    </foreach>
+  </insert>
+
+
 </mapper>

@@ -2,7 +2,6 @@ package cn.fdongl.point.dao;
 
 import cn.fdongl.point.entity.MapStudentEvaluation;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.type.MappedJdbcTypes;
 
 import java.util.List;
 

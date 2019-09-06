@@ -1,6 +1,7 @@
 package cn.fdongl.point.controller;
 
 import cn.fdongl.point.service.ClassPointService;
+import cn.fdongl.point.service.UploadFrameService;
 import cn.fdongl.point.tool.BaseController;
 import cn.fdongl.point.tool.MsgType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ public class UploadController extends BaseController {
 
     @Autowired
     private ClassPointService classPointService;
+    @Autowired
+    private UploadFrameService uploadFrameService ;
 
 
     //老师上传评价表
@@ -46,4 +49,34 @@ public class UploadController extends BaseController {
         }
 
     }
+
+
+    //上传培养方案
+    @RequestMapping("")
+    public Object uploadCultivatePlan( @RequestParam("file")MultipartFile file){
+        try{
+            uploadFrameService.uploadProject(file);
+            return retMsg.Set(MsgType.SUCCESS);
+        }catch (Exception e){
+            return retMsg.Set(MsgType.ERROR);
+        }
+    }
+
+
+    //上传培养矩阵
+    @RequestMapping("")
+    public Object uploadCultivateMatrix(@RequestParam("file") MultipartFile file){
+        String msg=null;
+        try{
+            msg=uploadFrameService.uploadClassPoint(file);
+            if(msg==null){
+                return retMsg.Set(MsgType.SUCCESS);
+            }else{
+                return retMsg.Set(MsgType.ERROR,null,msg);
+            }
+        }catch(Exception e){
+            return retMsg.Set(MsgType.SUCCESS);
+        }
+    }
+
 }

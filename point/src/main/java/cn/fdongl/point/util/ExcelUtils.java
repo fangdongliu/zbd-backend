@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.util.Iterator;
 import java.util.List;
 
 public class ExcelUtils {
@@ -37,12 +38,19 @@ public class ExcelUtils {
     public static HSSFSheet getSheet(MultipartFile excel, int sheetIndex) throws IOException {
         HSSFWorkbook wb = null;
         wb = new HSSFWorkbook(excel.getInputStream());
-
         //获取sheet
         HSSFSheet sheet = wb.getSheetAt(sheetIndex);
+
         System.out.println("sheet name = "+wb.getSheetName(0));
 
         return sheet;
+    }
+
+    //获取表格总的sheet数
+    public static int  getSheetNum(MultipartFile excel) throws IOException {
+        HSSFWorkbook wb = null;
+        wb = new HSSFWorkbook(excel.getInputStream());
+        return wb.getNumberOfSheets();
     }
 
     // 通过table中的字段类型获取对应excel类型值
@@ -114,6 +122,23 @@ public class ExcelUtils {
         return val;
     }
 
+    //返回指定的行中哪一列等于特定的值
+    public static int getSpeCol(HSSFSheet sheet,String content,int rowNum){
+        HSSFRow row = sheet.getRow(rowNum);
+        Iterator cells = row.cellIterator();
+        HSSFCell s=null;
+        int coLNum=-1;
+        while(cells.hasNext()){
+            HSSFCell cell = (HSSFCell) cells.next();
+            String val=cell.getStringCellValue();
+            if(content.equals(val)){
+                s=cell;
+                coLNum=s.getColumnIndex();
+                break;
+            }
+        }
+        return coLNum;
+    }
 
 
 
