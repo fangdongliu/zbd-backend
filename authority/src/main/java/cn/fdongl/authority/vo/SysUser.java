@@ -2,6 +2,7 @@ package cn.fdongl.authority.vo;
 
 import cn.fdongl.authority.util.Page;
 import lombok.Data;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Date;
 import java.util.List;
@@ -107,4 +108,8 @@ public class SysUser {
      * 用户分页
      **/
     private Page<SysUser> page;
+
+    public void setUserPwd(String userPwd) {
+        this.userPwd = new BCryptPasswordEncoder().encode(userPwd);
+    }
 }

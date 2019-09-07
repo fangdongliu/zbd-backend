@@ -1,10 +1,10 @@
 package cn.fdongl.point.service.impl;
 
+import cn.fdongl.authority.util.IdGen;
 import cn.fdongl.point.entity.SysCourse;
 import cn.fdongl.point.mapper.SysCourseMapper;
 import cn.fdongl.point.service.CourseUploadService;
 import cn.fdongl.point.util.ExcelUtils;
-import cn.fdongl.point.util.IdGen;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
