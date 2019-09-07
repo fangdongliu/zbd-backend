@@ -12,6 +12,9 @@ import cn.fdongl.point.util.IdGen;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,7 +42,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         if(sheetNum!=0){
             //循环遍历每个表中的sheet，将每个sheet中的课程信息录入
             for(int i=0;i<sheetNum;i++){
-                HSSFSheet nowSheet=ExcelUtils.getSheet(projectFile,i);
+                Sheet nowSheet=ExcelUtils.getSheet(projectFile,i);
                 int firstCol=ExcelUtils.getSpeCol(nowSheet,"课程代码",1);
                 if(firstCol!=-1){
                     //在第二行中存在课程代码列
@@ -48,9 +51,9 @@ public class UploadFrameServiceImpl implements UploadFrameService {
                         //在第二行中存在课程名称项
                         for(int j= 2;j<=nowSheet.getLastRowNum();j++){
                             //从第二行开始遍历表中所有课程
-                            HSSFRow row = nowSheet.getRow(j);
-                            HSSFCell courseCodeCell=row.getCell(firstCol);
-                            HSSFCell courseNameCell=row.getCell(secondCol);
+                            Row row = nowSheet.getRow(j);
+                            Cell courseCodeCell=row.getCell(firstCol);
+                            Cell courseNameCell=row.getCell(secondCol);
                             SysCourse newCourse=new SysCourse();
                             newCourse.setCourseNumber((String) ExcelUtils.getCellValue(courseCodeCell));
                             newCourse.setCourseName((String) ExcelUtils.getCellValue(courseNameCell));
@@ -71,14 +74,14 @@ public class UploadFrameServiceImpl implements UploadFrameService {
     @Override
     public String uploadClassPoint(MultipartFile classPointFile) throws IOException {
         List<SysIndex> indexList=new ArrayList<>();
-        HSSFSheet nowSheet=ExcelUtils.getSheet(classPointFile,0);
-        HSSFRow row = nowSheet.getRow(3);
+        Sheet nowSheet=ExcelUtils.getSheet(classPointFile,0);
+        Row row = nowSheet.getRow(3);
         Iterator cells = row.cellIterator();
         List<Double> flagValues=new ArrayList<>();
         String msg=null;//返回的结果信息
         //创建指标点
         while(cells.hasNext()){
-            HSSFCell cell = (HSSFCell) cells.next();
+            Cell cell = (Cell) cells.next();
             String val=cell.getStringCellValue();
             if(val!=null){
                 int colNum=cell.getColumnIndex();
@@ -99,7 +102,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
 
         //课程和指标点对应
         for(int i= 4;i<=nowSheet.getLastRowNum();i++){
-            HSSFRow r=nowSheet.getRow(i);//获取行元素
+            Row r=nowSheet.getRow(i);//获取行元素
             Iterator cs = row.cellIterator();
             //遍历每一行的值
             int j=0;

@@ -7,7 +7,9 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -35,11 +37,11 @@ public class ExcelUtils {
 
 
     // 获取excel文件中指定sheet
-    public static HSSFSheet getSheet(MultipartFile excel, int sheetIndex) throws IOException {
-        HSSFWorkbook wb = null;
-        wb = new HSSFWorkbook(excel.getInputStream());
+    public static Sheet getSheet(MultipartFile excel, int sheetIndex) throws IOException {
+        XSSFWorkbook wb = null;
+        wb = new XSSFWorkbook (excel.getInputStream());
         //获取sheet
-        HSSFSheet sheet = wb.getSheetAt(sheetIndex);
+        Sheet sheet = wb.getSheetAt(sheetIndex);
 
         System.out.println("sheet name = "+wb.getSheetName(0));
 
@@ -48,18 +50,18 @@ public class ExcelUtils {
 
     //获取表格总的sheet数
     public static int  getSheetNum(MultipartFile excel) throws IOException {
-        HSSFWorkbook wb = null;
-        wb = new HSSFWorkbook(excel.getInputStream());
+        XSSFWorkbook wb = null;
+        wb = new XSSFWorkbook(excel.getInputStream());
         return wb.getNumberOfSheets();
     }
 
     // 通过table中的字段类型获取对应excel类型值
-    public static Object getCellValueByFieldType(HSSFCell cell, String fieldType) {
+    public static Object getCellValueByFieldType(Cell cell, String fieldType) {
         Object val = null;
         try {
             switch (fieldType) {
                 case "varchar":
-                    cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+                    cell.setCellType(Cell.CELL_TYPE_STRING);
                     val = cell.getStringCellValue();
                     break;
                 case "int":
@@ -91,7 +93,7 @@ public class ExcelUtils {
     }
 
     // 获取excel行中的指定列中的值
-    public static Object getCellValue(HSSFCell cell) {
+    public static Object getCellValue(Cell cell) {
         Object val;
         try {
             if (cell != null) {
@@ -123,13 +125,13 @@ public class ExcelUtils {
     }
 
     //返回指定的行中哪一列等于特定的值
-    public static int getSpeCol(HSSFSheet sheet,String content,int rowNum){
-        HSSFRow row = sheet.getRow(rowNum);
+    public static int getSpeCol(Sheet sheet,String content,int rowNum){
+        Row row = sheet.getRow(rowNum);
         Iterator cells = row.cellIterator();
-        HSSFCell s=null;
+        Cell s=null;
         int coLNum=-1;
         while(cells.hasNext()){
-            HSSFCell cell = (HSSFCell) cells.next();
+            Cell cell = (Cell) cells.next();
             String val=cell.getStringCellValue();
             if(content.equals(val)){
                 s=cell;

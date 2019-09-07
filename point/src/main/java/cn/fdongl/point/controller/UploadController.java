@@ -52,10 +52,11 @@ public class UploadController extends BaseController {
 
 
     //上传培养方案
-    @RequestMapping("/cultivatePlan")
+    @RequestMapping(value = "cultivatePlan",method=RequestMethod.POST)
     @ResponseBody
     public Object uploadCultivatePlan(@RequestParam("file")MultipartFile file){
         try{
+            System.out.println("上传培养方案");
             uploadFrameService.uploadProject(file);
             return retMsg.Set(MsgType.SUCCESS);
         }catch (Exception e){
@@ -65,7 +66,7 @@ public class UploadController extends BaseController {
 
 
     //上传培养矩阵
-    @RequestMapping("/cultivateMatrix")
+    @RequestMapping(value = "/cultivateMatrix",method=RequestMethod.POST)
     public Object uploadCultivateMatrix(@RequestParam("file") MultipartFile file){
         String msg=null;
         try{
