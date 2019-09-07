@@ -1,6 +1,8 @@
 package cn.fdongl.point.service.impl;
 
+import cn.fdongl.authority.mapper.SysUserMapper;
 import cn.fdongl.authority.util.IdGen;
+import cn.fdongl.authority.vo.SysUser;
 import cn.fdongl.point.mapper.MapCourseIndexMapper;
 import cn.fdongl.point.mapper.SysCourseMapper;
 import cn.fdongl.point.mapper.SysIndexMapper;
@@ -41,6 +43,8 @@ public class UploadFrameServiceImpl implements UploadFrameService {
     private SysIndexMapper sysIndexMapper;
     @Autowired
     private MapCourseIndexMapper mapCourseIndexMapper;
+    @Autowired
+    private SysUserMapper sysUserMapper;
 
     @Override
     public void uploadProject(MultipartFile projectFile) throws IOException {
@@ -189,8 +193,9 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         Sheet sheet = null;
         Row row = null;
         Cell cell = null;
-        // 定义读取的容器
+        // 定义读取的容器 行集合
         List list = new ArrayList<>();
+        //循环 sheet
         for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
             sheet = workbook.getSheetAt(i);
             if (sheet == null) {
@@ -213,11 +218,30 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         // 关闭流
         workbook.close();
         inputStream.close();
-        for (int i = 0; i < list.size(); i++) {
-            List<Object> lo = (List<Object>) list.get(i);
-            // TODO 随意发挥
-            System.out.println(lo);
 
+        //新建待插入的用户
+        SysUser newTeacher = new SysUser();
+
+        // 前两行是表头
+        for (int i = 2; i < list.size(); i++) {
+            //lo 是一行
+            List<Object> lo = (List<Object>) list.get(i);
+            newTeacher.setId(IdGen.uuid());
+            //0行是工号
+            HSSFCell workIdCell = (HSSFCell) lo.get(0);
+            HSSFCell realNameCell = (HSSFCell) lo.get(2);
+            HSSFCell departmentCell = (HSSFCell) lo.get(3);
+            newTeacher.setUserName(workIdCell.getRichStringCellValue().getString());
+            newTeacher.setUserPwd("123456");
+            newTeacher.setWorkId(workIdCell.getRichStringCellValue().getString());
+            //2行是姓名
+            newTeacher.setRealName(realNameCell.getRichStringCellValue().getString());
+            //3行是学院信息
+            newTeacher.setUserDepartment(departmentCell.getRichStringCellValue().getString());
+            //4行是教师身份
+            newTeacher.setUserType("teacher");
+
+            sysUserMapper.insertSelective(newTeacher);
         }
         return "上传成功";
     }
