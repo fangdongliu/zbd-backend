@@ -24,7 +24,14 @@ public class UserRestController {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    /*获取用户认证信息*/
+    /**
+     * 获取用户认证信息
+     *
+     * @author zm
+     * @param1 request
+     * @return cn.fdongl.authority.vo.JwtUser        
+     * @date 2019/9/7 13:30
+     **/
     @RequestMapping(value = "user", method = RequestMethod.GET)
     public JwtUser getAuthenticatedUser(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader).substring(7);
@@ -32,5 +39,4 @@ public class UserRestController {
         JwtUser jwtUser = (JwtUser) userDetailsService.loadUserByUsername(username);
         return jwtUser;
     }
-
 }

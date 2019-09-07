@@ -4,6 +4,7 @@ import cn.fdongl.authority.util.BaseController;
 import cn.fdongl.authority.util.MsgType;
 import cn.fdongl.point.service.ClassPointService;
 import cn.fdongl.point.service.UploadFrameService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -75,8 +76,26 @@ public class UploadController extends BaseController {
                 return retMsg.Set(MsgType.ERROR,null,msg);
             }
         }catch(Exception e){
-            return retMsg.Set(MsgType.SUCCESS);
+            return retMsg.Set(MsgType.SUCCESS)  ;
         }
     }
 
+    @ApiOperation(value = "上传教师信息")
+    @RequestMapping(value = "teacherInfo",method = RequestMethod.POST)
+    @ResponseBody
+    public Object uploadTeacherInfo (
+            @RequestParam("file") MultipartFile teacherFile
+    ){
+        System.out.println("上传教师信息");
+        String res = "";
+        if (teacherFile == null || teacherFile.isEmpty()){
+            return retMsg.Set(MsgType.ERROR,null,"文件不能为空");
+        }
+        try{
+            res = uploadFrameService.uploadTeacherInfo(teacherFile);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return retMsg.Set(MsgType.SUCCESS,null,res);
+    }
 }
