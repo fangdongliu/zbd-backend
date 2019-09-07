@@ -34,7 +34,7 @@ public class SysUserMapperTest {
     }
 
     @Test
-    public void testDeleteByIds(){
+    public void testDeleteByIds() {
         SysUser userSearch = new SysUser();
         userSearch.setPage(new Page<SysUser>());
 

@@ -42,7 +42,7 @@
         <result column="modify_user_id" jdbcType="VARCHAR" property="modifyUserId"/>
         <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate"/>
         <result column="status" jdbcType="INTEGER" property="status"/>
-        <collection property="roles" column="id" javaType="list" ofType="String"
+        <collection property="roles" column="id" javaType="list" ofType="string"
                     select="selectRoleCodesByUserName">
         </collection>
     </resultMap>
@@ -292,12 +292,7 @@
         where id in (
         select role_id
         from map_user_role
-        where user_id = (
-        select sys_user.id
-        from sys_user
-        where user_name = #{userName,jdbcType=VARCHAR}
-        limit 1
-        )
+        where user_id = ${0}
         )
     </select>
 

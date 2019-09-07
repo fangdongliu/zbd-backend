@@ -21,4 +21,9 @@ public interface UploadFrameService {
      */
     String uploadClassPoint(MultipartFile classPointFile) throws IOException;
 
+    /**
+     * 上传教师信息
+     * @param teacherFile
+     */
+    String uploadTeacherInfo(MultipartFile teacherFile) throws IOException;
 }

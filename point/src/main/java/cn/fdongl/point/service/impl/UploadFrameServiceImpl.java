@@ -12,11 +12,18 @@ import cn.fdongl.point.util.ExcelUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -152,4 +159,63 @@ public class UploadFrameServiceImpl implements UploadFrameService {
 
     }
 
+    @Override
+    public String uploadTeacherInfo(MultipartFile teacherFile) throws IOException {
+        // 获取Excel的输出流
+        InputStream inputStream = teacherFile.getInputStream();
+        // 获取文件名称
+        String fileName = teacherFile.getOriginalFilename();
+        // init工作簿
+        Workbook workbook = null;
+        // 获取文件后缀
+        String fileType = fileName.substring(fileName.lastIndexOf("."));
+        // 根据不同后缀init不同的类，是xls还是xlsx
+        if (".xls".equals(fileType)) {
+            workbook = new HSSFWorkbook(inputStream);
+        } else if (".xlsx".equals(fileType)) {
+            workbook = new XSSFWorkbook(inputStream);
+        } else {
+            workbook = null;
+            return "请上传正确的表格文件";
+        }
+        // 如果上传为非excel文件，返回
+        if (workbook == null) {
+            return "请上传文件";
+        }
+        // init
+        Sheet sheet = null;
+        Row row = null;
+        Cell cell = null;
+        // 定义读取的容器
+        List list = new ArrayList<>();
+        for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+            sheet = workbook.getSheetAt(i);
+            if (sheet == null) {
+                continue;
+            }
+            for (int j = sheet.getFirstRowNum(); j <= sheet.getLastRowNum(); j++) {
+                row = sheet.getRow(j);
+                if (row == null || row.getFirstCellNum() == j) {
+                    continue;
+                }
+
+                List<Object> li = new ArrayList<>();
+                for (int y = row.getFirstCellNum(); y < row.getLastCellNum(); y++) {
+                    cell = row.getCell(y);
+                    li.add(cell);
+                }
+                list.add(li);
+            }
+        }
+        // 关闭流
+        workbook.close();
+        inputStream.close();
+        for (int i = 0; i < list.size(); i++) {
+            List<Object> lo = (List<Object>) list.get(i);
+            // TODO 随意发挥
+            System.out.println(lo);
+
+        }
+        return "上传成功";
+    }
 }
