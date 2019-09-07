@@ -14,6 +14,9 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,13 +48,13 @@ public class ClassPointServiceImpl implements ClassPointService {
     @Override
     public void savePoint(String classId, MultipartFile file) throws Exception {
         //获取第二个sheet名称
-        HSSFSheet sheet=ExcelUtils.getSheet(file,1);
+        Sheet sheet=ExcelUtils.getSheet(file,1);
         String sheetName=sheet.getSheetName();
         //获取所教学生级数,切割sheet名称
         String stuYear=sheetName.substring(0,3);
 
         //读取评价值不为空的列
-        HSSFRow row = sheet.getRow(0);
+        Row row = sheet.getRow(0);
         Iterator cells = row.cellIterator();
         HSSFCell s=null;
         while(cells.hasNext()){
@@ -71,15 +74,15 @@ public class ClassPointServiceImpl implements ClassPointService {
             Double indexValue=null;//当前指标点的值
 
             for(int i = sheet.getFirstRowNum();i<=sheet.getLastRowNum();i++){
-                HSSFRow s_row = sheet.getRow(i);
-                HSSFCell s_first=s_row.getCell(0);
+                Row s_row = sheet.getRow(i);
+                Cell s_first=s_row.getCell(0);
                 String val= (String) ExcelUtils.getCellValue(s_first);
                 if(!"".equals(val)){
                     String[] vals=val.split(" ");
                     indexName=vals[0];
                     for(int j=i+1;j<=sheet.getLastRowNum();j++){
-                        HSSFRow now=sheet.getRow(j);
-                        HSSFCell nowCell=now.getCell(s_col);
+                        Row now=sheet.getRow(j);
+                        Cell nowCell=now.getCell(s_col);
                         Double f= (Double) ExcelUtils.getCellValue(nowCell);
                         if(f!=null){
                             indexValue=f;
