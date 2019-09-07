@@ -19,6 +19,6 @@
 
 
     <mappers>
-        <mapper resource="cn.fdongl.authority.dao/SysUserMapper.xml"/>
+        <mapper resource="mapper/SysUserMapper.xml"/>
     </mappers>
 </configuration>

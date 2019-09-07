@@ -1,7 +1,7 @@
 package cn.fdongl.point.mapper;
 
+import cn.fdongl.authority.util.IdGen;
 import cn.fdongl.point.entity.MapStudentEvaluation;
-import cn.fdongl.point.util.IdGen;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;

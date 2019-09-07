@@ -1,5 +1,6 @@
 package cn.fdongl.point.service.impl;
 
+import cn.fdongl.authority.util.IdGen;
 import cn.fdongl.point.mapper.MapCourseEvaluationMapper;
 import cn.fdongl.point.mapper.MapStudentEvaluationMapper;
 import cn.fdongl.point.mapper.SysIndexMapper;
@@ -9,7 +10,6 @@ import cn.fdongl.point.service.ClassPointService;
 import cn.fdongl.point.util.AcademicYear;
 import cn.fdongl.point.util.ExcelUtils;
 
-import cn.fdongl.point.util.IdGen;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;

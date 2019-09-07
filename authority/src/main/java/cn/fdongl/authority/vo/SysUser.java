@@ -1,7 +1,7 @@
 package cn.fdongl.authority.vo;
 
+import cn.fdongl.authority.util.Page;
 import lombok.Data;
-import org.springframework.stereotype.Indexed;
 
 import java.util.Date;
 import java.util.List;
@@ -22,11 +22,6 @@ public class SysUser {
      * 用户密码
      */
     private String userPwd;
-
-    /**
-     * 最后一次密码修改时间
-     **/
-    private Date lastPasswordResetDate;
 
     /**
      * 真实姓名
@@ -76,7 +71,7 @@ public class SysUser {
     /**
      * 最后一次修改密码时间
      */
-    private Date lastpasswordresetdate;
+    private Date lastPasswordResetDate;
 
     /**
      * 创建人id
@@ -107,4 +102,9 @@ public class SysUser {
      * 该用户对应的权限
      **/
     private List<String> roles;
+
+    /**
+     * 用户分页
+     **/
+    private Page<SysUser> page;
 }

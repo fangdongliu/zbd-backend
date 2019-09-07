@@ -1,6 +1,6 @@
 package cn.fdongl.point;
 
-import cn.fdongl.authority.tool.AppUserDetailArgumentResolver;
+import cn.fdongl.authority.util.AppUserDetailArgumentResolver;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

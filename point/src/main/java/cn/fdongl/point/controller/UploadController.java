@@ -1,15 +1,13 @@
 package cn.fdongl.point.controller;
 
-import cn.fdongl.authority.tool.BaseController;
-import cn.fdongl.authority.tool.MsgType;
+import cn.fdongl.authority.util.BaseController;
+import cn.fdongl.authority.util.MsgType;
 import cn.fdongl.point.service.ClassPointService;
 import cn.fdongl.point.service.UploadFrameService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Map;
 
 @RequestMapping("/upload")
