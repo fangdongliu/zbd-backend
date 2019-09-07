@@ -4,40 +4,52 @@ import cn.fdongl.authority.mapper.SysUserMapper;
 import cn.fdongl.authority.vo.SysUser;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
+import java.util.List;
+
 @Service
 public class SysUserService {
 
     @Resource
-    private SysUserMapper sysUser1Mapper;
+    private SysUserMapper sysUserMapper;
 
     
     public int deleteByPrimaryKey(String id) {
-        return sysUser1Mapper.deleteByPrimaryKey(id);
+        return sysUserMapper.deleteByPrimaryKey(id);
     }
 
     
     public int insert(SysUser record) {
-        return sysUser1Mapper.insert(record);
+        return sysUserMapper.insert(record);
     }
 
     
     public int insertSelective(SysUser record) {
-        return sysUser1Mapper.insertSelective(record);
+        return sysUserMapper.insertSelective(record);
     }
 
     
     public SysUser selectByPrimaryKey(String id) {
-        return sysUser1Mapper.selectByPrimaryKey(id);
+        return sysUserMapper.selectByPrimaryKey(id);
     }
 
-    
     public int updateByPrimaryKeySelective(SysUser record) {
-        return sysUser1Mapper.updateByPrimaryKeySelective(record);
+        return sysUserMapper.updateByPrimaryKeySelective(record);
     }
 
     
     public int updateByPrimaryKey(SysUser record) {
-        return sysUser1Mapper.updateByPrimaryKey(record);
+        return sysUserMapper.updateByPrimaryKey(record);
     }
 
+    public List<SysUser> selectPageWithCondition(SysUser userSearch) {
+        return sysUserMapper.selectPageWithCondition(userSearch);
+    }
+
+    public int selectNumWithCondition(SysUser userSearch) {
+        return sysUserMapper.selectNumWithCondition(userSearch);
+    }
+
+    public int deleteByIds(List<SysUser> userList){
+        return sysUserMapper.deleteByIds(userList);
+    }
 }

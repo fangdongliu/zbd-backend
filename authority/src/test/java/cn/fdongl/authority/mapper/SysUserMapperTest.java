@@ -1,5 +1,6 @@
 package cn.fdongl.authority.mapper;
 
+import cn.fdongl.authority.util.Page;
 import cn.fdongl.authority.vo.SysUser;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -7,6 +8,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 
 /**
  * @ClassName SysUserMapperTest
@@ -29,5 +31,20 @@ public class SysUserMapperTest {
     public void testFindUserByUserName() throws FileNotFoundException {
         SysUser sysUser = mapper.findUserByUserName("1120161969");
         System.out.println(sysUser);
+    }
+
+    @Test
+    public void testDeleteByIds(){
+        SysUser userSearch = new SysUser();
+        userSearch.setPage(new Page<SysUser>());
+
+        userSearch.getPage().setPageIndex(1);
+        userSearch.getPage().setPageSize(2);
+        userSearch.getPage().setSearchKey("81");
+
+        List<SysUser> resUsers = mapper.selectPageWithCondition(userSearch);
+        int res = mapper.deleteByIds(resUsers);
+
+        System.out.println(res);
     }
 }

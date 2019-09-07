@@ -1,4 +1,4 @@
-package cn.fdongl.authority.tool;
+package cn.fdongl.authority.util;
 
 /**
  * @ClassName BaseController

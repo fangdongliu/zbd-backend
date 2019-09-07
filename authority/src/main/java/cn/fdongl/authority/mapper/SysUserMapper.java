@@ -5,6 +5,8 @@ import cn.fdongl.authority.vo.SysUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @Mapper
 public interface SysUserMapper {
@@ -14,12 +16,34 @@ public interface SysUserMapper {
      */
     SysUser findUserByUserName(String userName);
 
+    /**
+     * @param sysUser 用户名
+     * @return 根据Page分页查询用户List
+     */
+    List<SysUser> selectPageWithCondition(SysUser sysUser);
+
+    /**
+     * @param sysUser 用户名
+     * @return 根据Page分页查询用户数目
+     */
+    int selectNumWithCondition(SysUser sysUser);
+
+    /**
+     * @param userList 用户列表
+     * @return 根据主键批量删除用户
+     */
+    int deleteByIds(List<SysUser> userList);
+
     int deleteByPrimaryKey(String id);
 
     int insert(SysUser record);
 
     int insertSelective(SysUser record);
 
+    /**
+     * @param id 用户id
+     * @return 返回待查询用户(status 不为 -1)
+     **/
     SysUser selectByPrimaryKey(String id);
 
     int updateByPrimaryKeySelective(SysUser record);

@@ -1,17 +1,20 @@
 package cn.fdongl.authority.controller;
 
 import cn.fdongl.authority.service.SysUserService;
-import cn.fdongl.authority.tool.AjaxMessage;
-import cn.fdongl.authority.tool.MsgType;
+import cn.fdongl.authority.util.AjaxMessage;
+import cn.fdongl.authority.util.MsgType;
+import cn.fdongl.authority.util.Page;
 import cn.fdongl.authority.vo.JwtUser;
 import cn.fdongl.authority.vo.SysUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -28,13 +31,13 @@ public class SysUserController {
     private AjaxMessage retMsg = new AjaxMessage();
 
     @Autowired
-    private SysUserService userService;
+    private SysUserService sysUserService;
 
     @ApiOperation(value = "获取用户信息")
     @RequestMapping(value = "getInfo",method = RequestMethod.POST)
     @ResponseBody
     public Object getInfo(@RequestParam(value = "userId") String userId){
-        SysUser theUser = userService.selectByPrimaryKey(userId);
+        SysUser theUser = sysUserService.selectByPrimaryKey(userId);
         if (theUser != null){
             return retMsg.Set(MsgType.SUCCESS,theUser,"获取用户信息成功");
         }else{
@@ -52,14 +55,14 @@ public class SysUserController {
     ){
         Date dateNow = new Date();
 
-        SysUser theUser = userService.selectByPrimaryKey(userId);
+        SysUser theUser = sysUserService.selectByPrimaryKey(userId);
         theUser.setLastPasswordResetDate(dateNow);
         theUser.setModifyDate(dateNow);
         theUser.setModifyUserId(jwtUser.getId());
 
         theUser.setUserPwd(newPassword);
 
-        if(userService.updateByPrimaryKeySelective(theUser) == 1){
+        if(sysUserService.updateByPrimaryKeySelective(theUser) == 1){
             return retMsg.Set(MsgType.SUCCESS, theUser,
                     "更新用户信息成功");
         }else{
@@ -88,11 +91,47 @@ public class SysUserController {
         newUser.setModifyDate(tmpDate);
         newUser.setCreateUserId(userNow.getId());
         newUser.setModifyUserId(userNow.getId());
-        if(userService.insertSelective(newUser) == 1){
-            return retMsg.Set(MsgType.SUCCESS, userService.selectByPrimaryKey(newUser.getId()),
+        if(sysUserService.insertSelective(newUser) == 1){
+            return retMsg.Set(MsgType.SUCCESS, sysUserService.selectByPrimaryKey(newUser.getId()),
                     "新增用户成功");
         }else{
             return retMsg.Set(MsgType.ERROR,null, "新增用户失败");
         }
+    }
+
+    @ApiOperation(value = "获取用户分页")
+    @RequestMapping(value = "getAll", method = RequestMethod.POST)
+    @ResponseBody
+    public Object getAll(
+            @RequestParam("pageIndex") int pageIndex,
+            @RequestParam("pageSize") int pageSize,
+            @RequestParam("searchKey") String searchKey
+    ){
+        SysUser userSearch = new SysUser();
+        userSearch.setPage(new Page<SysUser>());
+
+        userSearch.getPage().setPageIndex(pageIndex);
+        userSearch.getPage().setPageSize(pageSize);
+        userSearch.getPage().setSearchKey(searchKey);
+
+        List<SysUser> userList = sysUserService.selectPageWithCondition(userSearch);
+        int userTotal = sysUserService.selectNumWithCondition(userSearch);
+
+        Page<SysUser> userPage = new Page<>();
+        userPage.setResultList(userList);
+        userPage.setTotal(userTotal);
+
+        return retMsg.Set(MsgType.SUCCESS,userPage,"获取用户分页成功");
+    }
+
+    @ApiOperation(value = "批量删除用户（假删）")
+    @RequestMapping(value = "deleteBatch", method = RequestMethod.POST)
+    @ResponseBody
+    public Object deleteBatch(@RequestBody List<SysUser> userList){
+        System.out.println(userList);
+        if (sysUserService.deleteByIds(userList) == userList.size()){
+            return retMsg.Set(MsgType.SUCCESS,null,"删除用户成功");
+        }
+        return retMsg.Set(MsgType.ERROR,null,"删除用户失败");
     }
 }
