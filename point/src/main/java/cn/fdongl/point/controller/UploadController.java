@@ -3,6 +3,7 @@ package cn.fdongl.point.controller;
 import cn.fdongl.authority.util.BaseController;
 import cn.fdongl.authority.util.MsgType;
 import cn.fdongl.point.service.ClassPointService;
+import cn.fdongl.point.service.CourseUploadService;
 import cn.fdongl.point.service.UploadFrameService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,9 @@ public class UploadController extends BaseController {
     @Autowired
     private ClassPointService classPointService;
     @Autowired
-    private UploadFrameService uploadFrameService ;
+    private UploadFrameService uploadFrameService;
+    @Autowired
+    private CourseUploadService courseUploadService;
 
 
     //老师上传评价表
@@ -98,4 +101,16 @@ public class UploadController extends BaseController {
         }
         return retMsg.Set(MsgType.SUCCESS,null,res);
     }
+
+    @RequestMapping(value = "courseUpload",method = RequestMethod.POST)
+    @ResponseBody
+    public Object uploadCourse(@RequestParam("file") MultipartFile file) {
+        try {
+            courseUploadService.uploadExecuteClass(file);
+        } catch (Exception e) {
+            return retMsg.Set(MsgType.ERROR);
+        }
+        return retMsg.Set(MsgType.SUCCESS);
+    }
+
 }
