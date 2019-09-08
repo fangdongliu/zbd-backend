@@ -105,6 +105,25 @@ public class UploadController extends BaseController {
         return retMsg.Set(MsgType.SUCCESS,null,res);
     }
 
+    @ApiOperation(value = "上传学生选课信息")
+    @RequestMapping(value = "studentCourse",method = RequestMethod.POST)
+    @ResponseBody
+    public Object uploadStudentCourse (
+            @RequestParam("file") MultipartFile studentCourseFile
+    ){
+        System.out.println("上传学生选课信息");
+        String res = "";
+        if (studentCourseFile == null || studentCourseFile.isEmpty()){
+            return retMsg.Set(MsgType.ERROR,null,"文件不能为空");
+        }
+        try{
+            res = uploadFrameService.uploadStudentCourse(studentCourseFile);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return retMsg.Set(MsgType.SUCCESS,null,res);
+    }
+
     @RequestMapping(value = "courseUpload",method = RequestMethod.POST)
     @ResponseBody
     public Object uploadCourse(@RequestParam("file") MultipartFile file) {

@@ -5,7 +5,9 @@ import cn.fdongl.authority.vo.SysUser;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @Mapper
@@ -33,6 +35,16 @@ public interface SysUserMapper {
      * @return 根据主键批量删除用户
      */
     int deleteByIds(List<SysUser> userList);
+
+    /**
+     * 获取所有用户的List
+     *
+     * @author zm
+     * @param []
+     * @return java.util.List<java.lang.String>
+     * @date 2019/9/8 13:48
+     **/
+    List<String> selectAllUser();
 
     int deleteByPrimaryKey(String id);
 

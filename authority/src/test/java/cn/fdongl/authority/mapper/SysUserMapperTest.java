@@ -6,9 +6,12 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ClassName SysUserMapperTest
@@ -49,7 +52,14 @@ public class SysUserMapperTest {
     }
 
     @Test
-    public void pwdTest(){
+    public void testSelectAllUserMap() throws FileNotFoundException {
+        List<String> userList = mapper.selectAllUser();
+        System.out.println(userList);
+    }
 
+    @Test
+    public void pwdTest(){
+        String pwd = new BCryptPasswordEncoder().encode("123456");
+        System.out.println(pwd);
     }
 }
