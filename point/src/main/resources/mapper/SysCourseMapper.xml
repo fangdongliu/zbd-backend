@@ -326,17 +326,12 @@
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
-    <insert id="insertList" parameterType="java.util.List">
-      insert into sys_course (id, course_name,
-        course_number)
-        values
-      <foreach collection="list" item="item" separator=",">
-        (#{id,jdbcType=VARCHAR}, #{courseName,jdbcType=VARCHAR},
-        #{courseNumber,jdbcType=VARCHAR})
-      </foreach>
-    </insert>
+
     <select id="selectIbByNumber" resultType="java.lang.String">
       select course_id from sys_course where course_number=${0}
     </select>
+  <select id="getAllCourseNum" resultType="java.lang.String">
+    select courseNumber from sys_course
+  </select>
 
 </mapper>

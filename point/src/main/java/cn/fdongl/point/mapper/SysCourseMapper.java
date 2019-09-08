@@ -13,8 +13,6 @@ public interface SysCourseMapper {
 
     int insert(SysCourse record);
 
-    int insertList(List<SysCourse> courses);
-
     int insertSelective(SysCourse record);
 
     SysCourse selectByPrimaryKey(String id);
@@ -24,4 +22,6 @@ public interface SysCourseMapper {
     int updateByPrimaryKey(SysCourse record);
 
     String selectIbByNumber(String number);
+
+    List<String> getAllCourseNum();
 }

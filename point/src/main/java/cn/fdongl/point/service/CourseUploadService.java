@@ -7,4 +7,6 @@ import java.io.IOException;
 public interface CourseUploadService {
 
     String uploadExecuteClass(MultipartFile file) throws IOException;
+
+    String uploadTeacherCourse(MultipartFile file) throws IOException;
 }

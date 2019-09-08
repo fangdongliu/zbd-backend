@@ -3,12 +3,8 @@ package cn.fdongl.point.service.impl;
 import cn.fdongl.authority.mapper.SysUserMapper;
 import cn.fdongl.authority.util.IdGen;
 import cn.fdongl.authority.vo.SysUser;
-import cn.fdongl.point.mapper.MapCourseIndexMapper;
-import cn.fdongl.point.mapper.SysCourseMapper;
-import cn.fdongl.point.mapper.SysIndexMapper;
-import cn.fdongl.point.entity.MapCourseIndex;
-import cn.fdongl.point.entity.SysCourse;
-import cn.fdongl.point.entity.SysIndex;
+import cn.fdongl.point.entity.*;
+import cn.fdongl.point.mapper.*;
 import cn.fdongl.point.service.UploadFrameService;
 import cn.fdongl.point.util.ExcelUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -24,15 +20,21 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.testng.annotations.Test;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
+
 
 @Service
 public class UploadFrameServiceImpl implements UploadFrameService {
@@ -45,41 +47,86 @@ public class UploadFrameServiceImpl implements UploadFrameService {
     private MapCourseIndexMapper mapCourseIndexMapper;
     @Autowired
     private SysUserMapper sysUserMapper;
+    @Autowired
+    private SysFileMapper sysFileMapper;
+    @Autowired
+    private MapCultivateFileMapper mapCultivateFileMapper;
+
 
     @Override
-    public void uploadProject(MultipartFile projectFile) throws IOException {
-        int sheetNum= ExcelUtils.getSheetNum(projectFile);
-        List<SysCourse> courses=new ArrayList<>();
-        if(sheetNum!=0){
-            //循环遍历每个表中的sheet，将每个sheet中的课程信息录入
-            for(int i=0;i<sheetNum;i++){
-                Sheet nowSheet=ExcelUtils.getSheet(projectFile,i);
-                int firstCol=ExcelUtils.getSpeCol(nowSheet,"课程代码",1);
-                if(firstCol!=-1){
-                    //在第二行中存在课程代码列
-                    int secondCol=ExcelUtils.getSpeCol(nowSheet,"课程名称",1);
-                    if(secondCol!=-1){
-                        //在第二行中存在课程名称项
-                        for(int j= 2;j<=nowSheet.getLastRowNum();j++){
-                            //从第二行开始遍历表中所有课程
-                            Row row = nowSheet.getRow(j);
-                            Cell courseCodeCell=row.getCell(firstCol);
-                            Cell courseNameCell=row.getCell(secondCol);
-                            SysCourse newCourse=new SysCourse();
-                            newCourse.setCourseNumber((String) ExcelUtils.getCellValue(courseCodeCell));
-                            newCourse.setCourseName((String) ExcelUtils.getCellValue(courseNameCell));
-                            newCourse.setId(IdGen.uuid());
-                            Date now =new Date();
-                            newCourse.setCreateDate(now);
-                            courses.add(newCourse);
-                        }
-                    }
-                }
-            }
+    public String uploadProject(MultipartFile projectFile, HttpServletRequest request) throws IOException {
+        // 获取Excel的输出流
+        InputStream inputStream = projectFile.getInputStream();
+        // 获取文件名称
+        String fileName = projectFile.getOriginalFilename();
+        // init工作簿
+        Workbook workbook = null;
+        // 获取文件后缀
+        String fileType = fileName.substring(fileName.lastIndexOf("."));
+        // 根据不同后缀init不同的类，是xls还是xlsx
+        if (".xls".equals(fileType)) {
+            workbook = new HSSFWorkbook(inputStream);
+        } else if (".xlsx".equals(fileType)) {
+            workbook = new XSSFWorkbook(inputStream);
+        } else {
+            workbook = null;
+            return "请上传正确的表格文件";
+        }
+        // 如果上传为非excel文件，返回
+        if (workbook == null) {
+            return "请上传文件";
         }
 
-        sysCourseMapper.insertList(courses);
+        // 关闭流
+        workbook.close();
+        inputStream.close();
+        String school=fileName.split("学院")[0]+"学院";//获取学院
+        String[] v=fileName.split("-");
+        String[] s=v[2].split("表");
+        String grade=s[1].substring(0,4);
+        List<SysFile> files= sysFileMapper.selectAllFile();
+        MapCultivateFile mapCultivateFile=new MapCultivateFile();
+        mapCultivateFile.setCollege(school);
+        mapCultivateFile.setCultivateName(fileName);
+        mapCultivateFile.setGrade(grade);
+        String fileId=null;
+        String path=null;
+        for(int i=0;i<files.size();i++){
+            SysFile sysFile=files.get(i);
+            if(sysFile.getFileName().equals(fileName)){
+                //还有已上传的文件名存在
+                path=sysFile.getFilePath();
+                fileId=sysFile.getId();
+            }
+        }
+        if(path==null){
+            //建立新的路径
+            SysFile sysFile=new SysFile();
+            String id=IdGen.uuid();
+            path= request.getSession().getServletContext().getRealPath("/")+id;
+            sysFile.setId(id);
+            sysFile.setFileName(fileName);
+            sysFile.setFilePath(path);
+            sysFileMapper.insertSelective(sysFile);
+            fileId=id;
+        }
+        //将文件写到服务器中
+        if(projectFile.getSize() != 0 && !"".equals(projectFile.getName())){
+            FileOutputStream fileOut=new FileOutputStream(path+projectFile.getOriginalFilename());
+            fileOut.write(projectFile.getBytes());
+        }
+        mapCultivateFile.setFileId(fileId);
+        mapCultivateFileMapper.insertSelective(mapCultivateFile);
 
+        return null;
+    }
+
+    @Test
+    public void test(){
+        String val="软件学院2016版培养方案-10-指导性教学计划进程表2016级-20181008";
+        String[] v=val.split("-");
+        String[] s=v[2].split("表");
+        System.out.println(s[1].substring(0,4));
     }
 
     @Override

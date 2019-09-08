@@ -9,6 +9,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -142,6 +143,71 @@ public class ExcelUtils {
         return coLNum;
     }
 
+    /**
+     * 判断指定单元格是不是合并单元格
+     * @param sheet
+     * @param row
+     * @param column
+     * @return
+     */
+    public static boolean isMergedRegion(Sheet sheet,int row ,int column) {
+        int sheetMergeCount = sheet.getNumMergedRegions();
+        for (int i = 0; i < sheetMergeCount; i++) {
+            CellRangeAddress range = sheet.getMergedRegion(i);
+            int firstColumn = range.getFirstColumn();
+            int lastColumn = range.getLastColumn();
+            int firstRow = range.getFirstRow();
+            int lastRow = range.getLastRow();
+            if(row >= firstRow && row <= lastRow){
+                if(column >= firstColumn && column <= lastColumn){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
+
+    /**
+     * 获取合并单元格的值
+     * @param sheet
+     * @param row
+     * @param column
+     * @return
+     */
+    public  static String getMergedRegionValue(Sheet sheet ,int row , int column){
+        int sheetMergeCount = sheet.getNumMergedRegions();
+
+        for(int i = 0 ; i < sheetMergeCount ; i++){
+            CellRangeAddress ca = sheet.getMergedRegion(i);
+            int firstColumn = ca.getFirstColumn();
+            int lastColumn = ca.getLastColumn();
+            int firstRow = ca.getFirstRow();
+            int lastRow = ca.getLastRow();
+
+            if(row >= firstRow && row <= lastRow){
+                if(column >= firstColumn && column <= lastColumn){
+                    Row fRow = sheet.getRow(firstRow);
+                    Cell fCell = fRow.getCell(firstColumn);
+                    return getCellValue1(fCell) ;
+                }
+            }
+        }
+
+        return null ;
+    }
+
+    /**
+     * 获取单元各的值
+     * @param cell
+     * @return
+     */
+    public static String getCellValue1(Cell cell){
+        if(cell == null) return "";
+        return cell.getStringCellValue();
+    }
 
 }
+
+
+

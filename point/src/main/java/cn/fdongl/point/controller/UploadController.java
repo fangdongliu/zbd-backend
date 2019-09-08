@@ -7,9 +7,12 @@ import cn.fdongl.point.service.CourseUploadService;
 import cn.fdongl.point.service.UploadFrameService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Map;
 
 @RequestMapping("/upload")
@@ -56,10 +59,10 @@ public class UploadController extends BaseController {
     //上传培养方案
     @RequestMapping(value = "cultivatePlan",method=RequestMethod.POST)
     @ResponseBody
-    public Object uploadCultivatePlan(@RequestParam("file")MultipartFile file){
+    public Object uploadCultivatePlan(@RequestParam("file")MultipartFile file, HttpServletRequest request){
         try{
             System.out.println("上传培养方案");
-            uploadFrameService.uploadProject(file);
+            uploadFrameService.uploadProject(file,request);
             return retMsg.Set(MsgType.SUCCESS);
         }catch (Exception e){
             return retMsg.Set(MsgType.ERROR);
@@ -112,6 +115,22 @@ public class UploadController extends BaseController {
                 return retMsg.Set(MsgType.ERROR,null,msg);
             }
         } catch (Exception e) {
+            return retMsg.Set(MsgType.ERROR);
+        }
+        return retMsg.Set(MsgType.SUCCESS);
+    }
+
+    @RequestMapping(value = "teacherCourseUpload",method = RequestMethod.POST)
+    @ResponseBody
+    public Object teacherCourseUpload(@RequestParam("file") MultipartFile file){
+        String msg=null;
+        try{
+            msg=courseUploadService.uploadTeacherCourse(file);
+            if(msg!=null){
+                return retMsg.Set(MsgType.ERROR,null,msg);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
             return retMsg.Set(MsgType.ERROR);
         }
         return retMsg.Set(MsgType.SUCCESS);

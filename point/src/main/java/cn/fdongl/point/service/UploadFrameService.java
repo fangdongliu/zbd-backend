@@ -1,7 +1,9 @@
 package cn.fdongl.point.service;
 
+import org.springframework.http.HttpRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
@@ -13,7 +15,7 @@ public interface UploadFrameService {
      * 上传培养方案
      * @param projectFile
      */
-    void uploadProject(MultipartFile projectFile) throws IOException;
+    String uploadProject(MultipartFile projectFile, HttpServletRequest request) throws IOException;
 
     /**
      * 上传课程对应指标点
