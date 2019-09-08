@@ -318,9 +318,6 @@
                 user_name like concat('%', #{page.searchKey,jdbcType=VARCHAR}, '%')
             </if>
         </where>
-        <if test="page != null">
-            limit #{page.pageStart}, #{page.pageSize}
-        </if>
     </select>
 
     <delete id="deleteByIds" parameterType="cn.fdongl.authority.vo.SysUser">
