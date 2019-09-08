@@ -105,8 +105,12 @@ public class UploadController extends BaseController {
     @RequestMapping(value = "courseUpload",method = RequestMethod.POST)
     @ResponseBody
     public Object uploadCourse(@RequestParam("file") MultipartFile file) {
+        String msg=null;
         try {
-            courseUploadService.uploadExecuteClass(file);
+            msg=courseUploadService.uploadExecuteClass(file);
+            if(msg!=null){
+                return retMsg.Set(MsgType.ERROR,null,msg);
+            }
         } catch (Exception e) {
             return retMsg.Set(MsgType.ERROR);
         }
