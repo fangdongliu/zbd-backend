@@ -34,7 +34,7 @@ public class SysUserController {
     private SysUserService sysUserService;
 
     @ApiOperation(value = "获取用户信息")
-    @RequestMapping(value = "getInfo",method = RequestMethod.POST)
+    @RequestMapping(value = "getInfo",method = RequestMethod.POST,produces = "application/json")
     @ResponseBody
     public Object getInfo(@RequestParam(value = "userId") String userId){
         SysUser theUser = sysUserService.selectByPrimaryKey(userId);

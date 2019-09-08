@@ -36,14 +36,14 @@ public class AuthenticationController {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
+    @PostMapping(value = "${jwt.route.authentication.path}")
+    public ResponseEntity<?> createAuthenticationToken(@RequestParam String username,@RequestParam String password) throws AuthenticationException {
 
-        System.out.println("方法：createAuthenticationToken"+authenticationRequest.getUsername()+", "+authenticationRequest.getPassword());
-        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        System.out.println("方法：createAuthenticationToken"+username+", "+password);
+        authenticate(username, password);
 
         // Reload password post-security so we can generate the token
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         final String token = jwtTokenUtil.generateToken(userDetails);
 
         // Return the token

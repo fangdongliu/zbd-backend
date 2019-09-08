@@ -26,6 +26,11 @@ public class SysUser {
     private String userPwd;
 
     /**
+     * 最后一次修改密码时间
+     */
+    private Date lastPasswordResetDate;
+
+    /**
      * 真实姓名
      */
     private String realName;
@@ -71,11 +76,6 @@ public class SysUser {
     private String userTitle;
 
     /**
-     * 最后一次修改密码时间
-     */
-    private Date lastPasswordResetDate;
-
-    /**
      * 创建人id
      */
     private String createUserId;
@@ -113,6 +113,7 @@ public class SysUser {
     public void setUUId(){
         this.id = IdGen.uuid();
     }
+
     public void setSecretePwd(String userPwd){
         this.userPwd = new BCryptPasswordEncoder().encode(userPwd);
     }
