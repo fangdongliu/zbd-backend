@@ -34,8 +34,7 @@ public class SysUserController {
     private SysUserService sysUserService;
 
     @ApiOperation(value = "获取用户信息")
-    @RequestMapping(value = "getInfo",method = RequestMethod.POST,produces = "application/json")
-    @ResponseBody
+    @PostMapping(value = "getInfo")
     public Object getInfo(@RequestParam(value = "userId") String userId){
         SysUser theUser = sysUserService.selectByPrimaryKey(userId);
         if (theUser != null){
@@ -46,8 +45,7 @@ public class SysUserController {
     }
 
     @ApiOperation(value = "更新用户密码")
-    @RequestMapping(value = "updateInfo",method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping(value = "updateInfo")
     public Object updateInfo(
             JwtUser jwtUser,
             @RequestParam("userId") String userId,
@@ -72,8 +70,7 @@ public class SysUserController {
     }
 
     @ApiOperation(value = "管理员添加新用户")
-    @RequestMapping(value = "addNew", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping(value = "addNew")
     public Object addNew(
             JwtUser userNow,
             @RequestParam("userName") String userName,
@@ -105,8 +102,7 @@ public class SysUserController {
     }
 
     @ApiOperation(value = "获取用户分页")
-    @RequestMapping(value = "getAll", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping(value = "getAll")
     public Object getAll(
             @RequestParam("pageIndex") int pageIndex,
             @RequestParam("pageSize") int pageSize,
@@ -130,8 +126,7 @@ public class SysUserController {
     }
 
     @ApiOperation(value = "批量删除用户（假删）")
-    @RequestMapping(value = "deleteBatch", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping(value = "deleteBatch")
     public Object deleteBatch(@RequestBody List<SysUser> userList){
         System.out.println(userList);
         if (sysUserService.deleteByIds(userList) == userList.size()){

@@ -28,7 +28,7 @@ public class UploadController extends BaseController {
 
 
     //老师上传评价表
-    @RequestMapping(value = "/uploadTeacherCom",method = RequestMethod.POST)
+    @PostMapping(value = "/uploadTeacherCom")
     public Object uploadTeacherCom(@RequestParam("classId")String classId,
                                    @RequestParam("file")MultipartFile file){
         try{
@@ -41,7 +41,7 @@ public class UploadController extends BaseController {
 
 
     //学生评教
-    @RequestMapping(value = "studentCom",method = RequestMethod.POST)
+    @PostMapping(value = "studentCom")
     public Object uploadStudentCom(@RequestParam("classId") String classId,
                                    @RequestParam("map") Map<String,Integer> map,
                                    @RequestParam("studentId") String studentId
@@ -57,8 +57,7 @@ public class UploadController extends BaseController {
 
 
     //上传培养方案
-    @RequestMapping(value = "cultivatePlan",method=RequestMethod.POST)
-    @ResponseBody
+    @PostMapping(value = "cultivatePlan")
     public Object uploadCultivatePlan(@RequestParam("file")MultipartFile file, HttpServletRequest request){
         try{
             System.out.println("上传培养方案");
@@ -71,7 +70,7 @@ public class UploadController extends BaseController {
 
 
     //上传培养矩阵
-    @RequestMapping(value = "/cultivateMatrix",method=RequestMethod.POST)
+    @PostMapping(value = "/cultivateMatrix")
     public Object uploadCultivateMatrix(@RequestParam("file") MultipartFile file){
         String msg=null;
         try{
@@ -87,8 +86,7 @@ public class UploadController extends BaseController {
     }
 
     @ApiOperation(value = "上传教师信息")
-    @RequestMapping(value = "teacherInfo",method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping(value = "teacherInfo")
     public Object uploadTeacherInfo (
             @RequestParam("file") MultipartFile teacherFile
     ){
@@ -106,8 +104,7 @@ public class UploadController extends BaseController {
     }
 
     @ApiOperation(value = "上传学生选课信息")
-    @RequestMapping(value = "studentCourse",method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping(value = "studentCourse")
     public Object uploadStudentCourse (
             @RequestParam("file") MultipartFile studentCourseFile
     ){
@@ -124,8 +121,7 @@ public class UploadController extends BaseController {
         return retMsg.Set(MsgType.SUCCESS,null,res);
     }
 
-    @RequestMapping(value = "courseUpload",method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping(value = "courseUpload")
     public Object uploadCourse(@RequestParam("file") MultipartFile file) {
         String msg=null;
         try {
@@ -139,8 +135,7 @@ public class UploadController extends BaseController {
         return retMsg.Set(MsgType.SUCCESS);
     }
 
-    @RequestMapping(value = "teacherCourseUpload",method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping(value = "teacherCourseUpload")
     public Object teacherCourseUpload(@RequestParam("file") MultipartFile file){
         String msg=null;
         try{
