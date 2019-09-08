@@ -60,7 +60,8 @@ public class SysUserController {
         theUser.setModifyDate(dateNow);
         theUser.setModifyUserId(jwtUser.getId());
 
-        theUser.setUserPwd(newPassword);
+        // 修改为设置新的加密密码
+        theUser.setSecretePwd(newPassword);
 
         if(sysUserService.updateByPrimaryKeySelective(theUser) == 1){
             return retMsg.Set(MsgType.SUCCESS, theUser,
@@ -79,14 +80,18 @@ public class SysUserController {
             @RequestParam("userType") String userType,
             @RequestParam("departmentId") String departmentId
     ){
+        // 1.首先判定是不是存在用户名重复
+        if (sysUserService.findUserByUserName(userName)!=null){
+            return retMsg.Set(MsgType.ERROR,null, "用户名重复");
+        }
         Date tmpDate = new Date();
         SysUser newUser = new SysUser();
         newUser.setId(UUID.randomUUID().toString());
         newUser.setUserName(userName);
         newUser.setUserType(userType);
         newUser.setUserDepartment(departmentId);
-        /*设置默认密码为：123456*/
-        newUser.setUserPwd(new BCryptPasswordEncoder().encode("123456"));
+        // 设置默认密码为：123456(加密存储)
+        newUser.setSecretePwd("123456");
         newUser.setCreateDate(tmpDate);
         newUser.setModifyDate(tmpDate);
         newUser.setCreateUserId(userNow.getId());

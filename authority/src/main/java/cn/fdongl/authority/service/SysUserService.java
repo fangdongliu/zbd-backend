@@ -52,4 +52,8 @@ public class SysUserService {
     public int deleteByIds(List<SysUser> userList){
         return sysUserMapper.deleteByIds(userList);
     }
+
+    public SysUser findUserByUserName(String userName){
+        return sysUserMapper.findUserByUserName(userName);
+    }
 }
