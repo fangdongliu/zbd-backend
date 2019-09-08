@@ -16,7 +16,7 @@
     <properties>
         <java.version>1.8</java.version>
     </properties>
-    <packaging>pom</packaging>
+<!--    <packaging>pom</packaging>-->
 
     <dependencies>
         <dependency>
@@ -106,9 +106,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <classifier>exec</classifier>
-                </configuration>
+<!--                <configuration>-->
+<!--                    <classifier>exec</classifier>-->
+<!--                </configuration>-->
             </plugin>
         </plugins>
     </build>

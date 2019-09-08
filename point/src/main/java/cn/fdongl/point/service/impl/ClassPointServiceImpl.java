@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.sql.Array;
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,9 +30,6 @@ import java.util.Map;
 
 @Service
 public class ClassPointServiceImpl implements ClassPointService {
-
-
-
 
     @Autowired
     private MapStudentEvaluationMapper mapStudentEvaluationMapper;
@@ -40,10 +39,6 @@ public class ClassPointServiceImpl implements ClassPointService {
 
     @Autowired
     private MapCourseEvaluationMapper mapCourseEvaluationMapper;
-
-
-
-
 
     @Override
     public void savePoint(String classId, MultipartFile file) throws Exception {
@@ -136,5 +131,21 @@ public class ClassPointServiceImpl implements ClassPointService {
         }
 
         mapStudentEvaluationMapper.insertList(mapStudentEvaluations);
+    }
+
+
+    /**
+     * step1：学生id + course_select_number 确定该学生所选的指定课程，即map_student_evaluation的id
+     * step2：根据学生对于该课程的评价值插入数据库
+     *
+     * @author zm
+     * @param studentId 学生的主键id
+     * @param courseSelectNumber 选课课号 course_select_number
+     * @param evaluationArray 评分数组(下标0-11代表12个指标点)
+     * @return void        
+     * @date 2019/9/8 21:48
+     **/
+    public void studentEvaluateCourse(String studentId, String courseSelectNumber, Array evaluationArray){
+
     }
 }

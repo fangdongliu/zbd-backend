@@ -17,7 +17,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, work_id, index_id, course_select_number, index_number, comment_value, create_user_id, 
+    id, work_id, evaluation_value, course_select_number, index_number, comment_value, create_user_id,
     create_date, modify_user_id, modify_date, `status`
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -34,7 +34,7 @@
   </delete>
   <insert id="insert" parameterType="cn.fdongl.point.entity.MapStudentEvaluation">
     <!--@mbg.generated-->
-    insert into map_student_evaluation (id, work_id, index_id, 
+    insert into map_student_evaluation (id, work_id, evaluation_value,
       course_select_number, index_number, comment_value, 
       create_user_id, create_date, modify_user_id, 
       modify_date, `status`)
@@ -54,7 +54,7 @@
         work_id,
       </if>
       <if test="indexId != null">
-        index_id,
+        evaluation_value,
       </if>
       <if test="courseSelectNumber != null">
         course_select_number,
@@ -125,7 +125,7 @@
         work_id = #{workId,jdbcType=VARCHAR},
       </if>
       <if test="indexId != null">
-        index_id = #{indexId,jdbcType=VARCHAR},
+        evaluation_value = #{indexId,jdbcType=VARCHAR},
       </if>
       <if test="courseSelectNumber != null">
         course_select_number = #{courseSelectNumber,jdbcType=VARCHAR},
@@ -158,7 +158,7 @@
     <!--@mbg.generated-->
     update map_student_evaluation
     set work_id = #{workId,jdbcType=VARCHAR},
-      index_id = #{indexId,jdbcType=VARCHAR},
+      evaluation_value = #{indexId,jdbcType=VARCHAR},
       course_select_number = #{courseSelectNumber,jdbcType=VARCHAR},
       index_number = #{indexNumber,jdbcType=VARCHAR},
       comment_value = #{commentValue,jdbcType=INTEGER},
@@ -170,7 +170,7 @@
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <insert id="insertList">
-    insert into map_student_evaluation (id, work_id, index_id,
+    insert into map_student_evaluation (id, work_id, evaluation_value,
     course_select_number, index_number, comment_value,
     create_user_id, create_date, modify_user_id,
     modify_date, `status`)
