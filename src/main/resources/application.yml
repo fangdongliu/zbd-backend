@@ -15,7 +15,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: root
-
+  main:
+    allow-bean-definition-overriding: true
 mybatis:
   mapper-locations: cn.fdongl.**/*Mapper.xml
   type-aliases-package: cn.fdongl
