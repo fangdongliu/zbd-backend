@@ -4,6 +4,7 @@ import cn.fdongl.authority.mapper.SysUserMapper;
 import cn.fdongl.authority.vo.SysUser;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -11,7 +12,6 @@ public class SysUserService {
 
     @Resource
     private SysUserMapper sysUserMapper;
-
     
     public int deleteByPrimaryKey(String id) {
         return sysUserMapper.deleteByPrimaryKey(id);
@@ -55,5 +55,22 @@ public class SysUserService {
 
     public SysUser findUserByUserName(String userName){
         return sysUserMapper.findUserByUserName(userName);
+    }
+    
+    /**
+     * 获取系统所有用户并存成HashMap
+     *
+     * @author zm
+     * @param         
+     * @return         
+     * @date 2019/9/8 13:34
+     **/
+    public HashMap<String, Integer> getSysUserMap(){
+        HashMap<String, Integer> sysUserMap = new HashMap<>();
+        List<String> allUserList = sysUserMapper.selectAllUser();
+        for (String tmpWorkId : allUserList) {
+            sysUserMap.put(tmpWorkId,1);
+        }
+        return sysUserMap;
     }
 }

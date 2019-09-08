@@ -331,4 +331,11 @@
             #{item.id,jdbcType=VARCHAR}
         </foreach>
     </delete>
+
+    <select id="selectAllUser" resultType="java.lang.String">
+        select work_id
+        from sys_user
+        where status = 0
+    </select>
+
 </mapper>

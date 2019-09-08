@@ -12,6 +12,7 @@
     <artifactId>point-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>point-parent</name>
+    <packaging>pom</packaging>
     <description>指标点计算系统</description>
 
     <properties>

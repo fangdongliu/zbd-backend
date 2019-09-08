@@ -1,5 +1,6 @@
 package cn.fdongl.authority.vo;
 
+import cn.fdongl.authority.util.IdGen;
 import cn.fdongl.authority.util.Page;
 import lombok.Data;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -109,6 +110,9 @@ public class SysUser {
      **/
     private Page<SysUser> page;
 
+    public void setUUId(){
+        this.id = IdGen.uuid();
+    }
     public void setSecretePwd(String userPwd){
         this.userPwd = new BCryptPasswordEncoder().encode(userPwd);
     }
