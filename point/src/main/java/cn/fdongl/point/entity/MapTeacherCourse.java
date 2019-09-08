@@ -1,5 +1,7 @@
 package cn.fdongl.point.entity;
 
+import cn.fdongl.authority.util.Page;
+import cn.fdongl.authority.vo.SysUser;
 import lombok.Data;
 
 import java.util.Date;
@@ -135,4 +137,6 @@ public class MapTeacherCourse {
     * 状态值(-1失效，0默认值)
     */
     private Integer status;
+
+    private Page<MapTeacherCourse> page;
 }

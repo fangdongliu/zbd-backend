@@ -25,6 +25,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,7 +111,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             //建立新的路径
             SysFile sysFile=new SysFile();
             String id=IdGen.uuid();
-            path= request.getSession().getServletContext().getRealPath("/")+id;
+            path= new ApplicationHome(this.getClass()).getSource().getParentFile().getPath()+"\\uploads\\cultivatePlan\\" +id;
             sysFile.setId(id);
             sysFile.setFileName(fileName);
             sysFile.setFilePath(path);
@@ -119,11 +120,12 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         }
         //将文件写到服务器中
         if(projectFile.getSize() != 0 && !"".equals(projectFile.getName())){
-            FileOutputStream fileOut=new FileOutputStream(path+projectFile.getOriginalFilename());
+            FileOutputStream fileOut=new FileOutputStream(path);
             fileOut.write(projectFile.getBytes());
         }
         mapCultivateFile.setFileId(fileId);
         mapCultivateFileMapper.insertSelective(mapCultivateFile);
+        System.out.println(path);
 
         return null;
     }
