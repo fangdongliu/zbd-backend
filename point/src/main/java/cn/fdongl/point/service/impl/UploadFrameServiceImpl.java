@@ -232,7 +232,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             HSSFCell realNameCell = (HSSFCell) lo.get(2);
             HSSFCell departmentCell = (HSSFCell) lo.get(3);
             newTeacher.setUserName(workIdCell.getRichStringCellValue().getString());
-            newTeacher.setUserPwd("123456");
+            newTeacher.setSecretePwd("123456");
             newTeacher.setWorkId(workIdCell.getRichStringCellValue().getString());
             //2行是姓名
             newTeacher.setRealName(realNameCell.getRichStringCellValue().getString());
