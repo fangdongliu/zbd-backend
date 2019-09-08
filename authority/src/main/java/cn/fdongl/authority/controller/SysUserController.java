@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -31,11 +32,12 @@ public class SysUserController {
     private AjaxMessage retMsg = new AjaxMessage();
 
     @Autowired
+    PasswordEncoder passwordEncoder;
+    @Autowired
     private SysUserService sysUserService;
 
     @ApiOperation(value = "获取用户信息")
-    @RequestMapping(value = "getInfo",method = RequestMethod.POST,produces = "application/json")
-    @ResponseBody
+    @PostMapping(value = "getInfo")
     public Object getInfo(@RequestParam(value = "userId") String userId){
         SysUser theUser = sysUserService.selectByPrimaryKey(userId);
         if (theUser != null){
@@ -46,8 +48,7 @@ public class SysUserController {
     }
 
     @ApiOperation(value = "更新用户密码")
-    @RequestMapping(value = "updateInfo",method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping(value = "updateInfo")
     public Object updateInfo(
             JwtUser jwtUser,
             @RequestParam("userId") String userId,
@@ -61,7 +62,7 @@ public class SysUserController {
         theUser.setModifyUserId(jwtUser.getId());
 
         // 修改为设置新的加密密码
-        theUser.setSecretePwd(newPassword);
+        theUser.setSecretePwd(passwordEncoder.encode(newPassword));
 
         if(sysUserService.updateByPrimaryKeySelective(theUser) == 1){
             return retMsg.Set(MsgType.SUCCESS, theUser,
@@ -72,8 +73,7 @@ public class SysUserController {
     }
 
     @ApiOperation(value = "管理员添加新用户")
-    @RequestMapping(value = "addNew", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping(value = "addNew")
     public Object addNew(
             JwtUser userNow,
             @RequestParam("userName") String userName,
@@ -105,8 +105,7 @@ public class SysUserController {
     }
 
     @ApiOperation(value = "获取用户分页")
-    @RequestMapping(value = "getAll", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping(value = "getAll")
     public Object getAll(
             @RequestParam("pageIndex") int pageIndex,
             @RequestParam("pageSize") int pageSize,
@@ -130,8 +129,7 @@ public class SysUserController {
     }
 
     @ApiOperation(value = "批量删除用户（假删）")
-    @RequestMapping(value = "deleteBatch", method = RequestMethod.POST)
-    @ResponseBody
+    @PostMapping(value = "deleteBatch")
     public Object deleteBatch(@RequestBody List<SysUser> userList){
         System.out.println(userList);
         if (sysUserService.deleteByIds(userList) == userList.size()){
