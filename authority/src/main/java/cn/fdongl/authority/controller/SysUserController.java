@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -30,6 +31,8 @@ import java.util.UUID;
 public class SysUserController {
     private AjaxMessage retMsg = new AjaxMessage();
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
     @Autowired
     private SysUserService sysUserService;
 
@@ -59,7 +62,7 @@ public class SysUserController {
         theUser.setModifyUserId(jwtUser.getId());
 
         // 修改为设置新的加密密码
-        theUser.setSecretePwd(newPassword);
+        theUser.setSecretePwd(passwordEncoder.encode(newPassword));
 
         if(sysUserService.updateByPrimaryKeySelective(theUser) == 1){
             return retMsg.Set(MsgType.SUCCESS, theUser,
