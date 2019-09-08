@@ -39,8 +39,7 @@ public class AuthenticationController {
     @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
 
-        System.out.println(authenticationRequest.getUsername());
-        System.out.println(authenticationRequest.getPassword());
+        System.out.println("方法：createAuthenticationToken"+authenticationRequest.getUsername()+", "+authenticationRequest.getPassword());
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
         // Reload password post-security so we can generate the token
@@ -79,6 +78,7 @@ public class AuthenticationController {
         Objects.requireNonNull(password);
 
         try {
+            System.out.println("类：AuthenticationController，方法：authenticate，用户名："+username+"，密码："+password);
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
             throw new AuthenticationException("User is disabled!", e);

@@ -47,4 +47,9 @@ public class SysUserMapperTest {
 
         System.out.println(res);
     }
+
+    @Test
+    public void pwdTest(){
+
+    }
 }

@@ -22,7 +22,7 @@ public class JwtUserDetailServiceImpl implements UserDetailsService {
         if (sysUser == null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
         } else {
-            System.out.println(sysUser);
+            System.out.println("类：JwtUserDetailServiceImpl，方法：loadUserByUsername，查询到的用户："+sysUser);
             return JwtUserFactory.create(sysUser);
         }
     }

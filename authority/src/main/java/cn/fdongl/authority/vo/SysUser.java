@@ -109,7 +109,7 @@ public class SysUser {
      **/
     private Page<SysUser> page;
 
-    public void setUserPwd(String userPwd) {
+    public void setSecretePwd(String userPwd){
         this.userPwd = new BCryptPasswordEncoder().encode(userPwd);
     }
 }
