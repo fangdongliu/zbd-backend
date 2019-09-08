@@ -29,7 +29,7 @@ import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.testng.annotations.Test;
+
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.FileOutputStream;
@@ -61,35 +61,6 @@ public class UploadFrameServiceImpl implements UploadFrameService {
 
 
     @Override
-    public void uploadProject(MultipartFile projectFile) throws IOException {
-        int sheetNum = ExcelUtils.getSheetNum(projectFile);
-        List<SysCourse> courses = new ArrayList<>();
-        if (sheetNum != 0) {
-            //循环遍历每个表中的sheet，将每个sheet中的课程信息录入
-            for (int i = 0; i < sheetNum; i++) {
-                Sheet nowSheet = ExcelUtils.getSheet(projectFile, i);
-                int firstCol = ExcelUtils.getSpeCol(nowSheet, "课程代码", 1);
-                if (firstCol != -1) {
-                    //在第二行中存在课程代码列
-                    int secondCol = ExcelUtils.getSpeCol(nowSheet, "课程名称", 1);
-                    if (secondCol != -1) {
-                        //在第二行中存在课程名称项
-                        for (int j = 2; j <= nowSheet.getLastRowNum(); j++) {
-                            //从第二行开始遍历表中所有课程
-                            Row row = nowSheet.getRow(j);
-                            Cell courseCodeCell = row.getCell(firstCol);
-                            Cell courseNameCell = row.getCell(secondCol);
-                            SysCourse newCourse = new SysCourse();
-                            newCourse.setCourseNumber((String) ExcelUtils.getCellValue(courseCodeCell));
-                            newCourse.setCourseName((String) ExcelUtils.getCellValue(courseNameCell));
-                            newCourse.setId(IdGen.uuid());
-                            Date now = new Date();
-                            newCourse.setCreateDate(now);
-                            courses.add(newCourse);
-                        }
-                    }
-                }
-            }
     public String uploadProject(MultipartFile projectFile, HttpServletRequest request) throws IOException {
         // 获取Excel的输出流
         InputStream inputStream = projectFile.getInputStream();
@@ -157,13 +128,6 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         return null;
     }
 
-    @Test
-    public void test(){
-        String val="软件学院2016版培养方案-10-指导性教学计划进程表2016级-20181008";
-        String[] v=val.split("-");
-        String[] s=v[2].split("表");
-        System.out.println(s[1].substring(0,4));
-    }
 
     @Override
     public String uploadClassPoint(MultipartFile classPointFile) throws IOException {
