@@ -1,8 +1,7 @@
 package cn.fdongl.point.entity;
 
-import lombok.Data;
-
 import java.util.Date;
+import lombok.Data;
 
 @Data
 public class MapStudentEvaluation {
@@ -12,26 +11,19 @@ public class MapStudentEvaluation {
     private String id;
 
     /**
-    * 学生/教师工号
+    * map_student_course表中的主键id
     */
-    private String workId;
+    private String mapStudentCourseId;
 
+    /**
+    * 指标点主键id
+    */
     private String indexId;
 
     /**
-    * 选课课号(学期-课程编号-教师工号-该师该学期第几门课)
+    * 课程指标点评价值(0->4 逐级递增)
     */
-    private String courseSelectNumber;
-
-    /**
-    * 指标要求number
-    */
-    private String indexNumber;
-
-    /**
-    * 课程指标点评价值(0->4)
-    */
-    private Integer commentValue;
+    private Integer evaluationValue;
 
     /**
     * 创建人id

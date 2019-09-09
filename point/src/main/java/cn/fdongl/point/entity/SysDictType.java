@@ -1,37 +1,33 @@
-package cn.fdongl.sys.entity;
+package cn.fdongl.point.entity;
 
-import java.util.Date;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
-public class SysDict {
+public class SysDictType {
     /**
     * 主键id
     */
     private String id;
 
     /**
-    * 字典项名称
+    * 字典类型名
     */
-    private String dictName;
+    private String typeName;
 
     /**
-    * 字典类型 from 字典类型表sys_dict_type
-    */
-    private String typeId;
-
-    /**
-    * 字典项排序值
+    * 字典类型排序值
     */
     private Integer sort;
 
     /**
-    * 父字典项 from 字典表
+    * 父字典类型 from 字典类型表
     */
     private String parentId;
 
     /**
-    * 字典项备注
+    * 字典类型说明
     */
     private String remarks;
 

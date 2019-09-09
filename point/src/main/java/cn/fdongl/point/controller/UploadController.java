@@ -29,10 +29,10 @@ public class UploadController extends BaseController {
 
     //老师上传评价表
     @PostMapping(value = "/uploadTeacherCom")
-    public Object uploadTeacherCom(@RequestParam("classId")String classId,
-                                   @RequestParam("file")MultipartFile file){
-        try{
-            classPointService.savePoint(classId,file);
+    public Object uploadTeacherCom(@RequestParam("classId") String classId,
+                                   @RequestParam("file") MultipartFile file) {
+        try {
+            classPointService.savePoint(classId, file);
             return retMsg.Set(MsgType.SUCCESS);
         } catch (Exception e) {
             return retMsg.Set(MsgType.ERROR);
@@ -40,30 +40,39 @@ public class UploadController extends BaseController {
     }
 
 
-    //学生评教
-    @PostMapping(value = "studentCom")
-    public Object uploadStudentCom(@RequestParam("classId") String classId,
-                                   @RequestParam("map") Map<String,Integer> map,
-                                   @RequestParam("studentId") String studentId
-                                   ){
-        try{
-            classPointService.savePoint(classId,map,studentId);
+    /**
+     * 上传学生评价
+     *
+     * @param courseSelectNumber 选课课号(from map_teacher_course)
+     * @param data map对象，key为指标点ID，value为分数（1-4）
+     * @param studentWorkId 学生工号/学生用户名
+     * @return java.lang.Object
+     * @author zm
+     * @date 2019/9/9 10:36
+     **/
+    @PostMapping(value = "studentEvaluation")
+    public Object uploadStudentCom(
+            @RequestParam("studentWorkId") String studentWorkId,
+            @RequestParam("courseSelectNumber") String courseSelectNumber,
+            @RequestParam("data") Map<String, Integer> data
+    ) {
+        try {
+            classPointService.savePoint(courseSelectNumber, data, studentWorkId);
             return retMsg.Set(MsgType.SUCCESS);
-        }catch(Exception e){
+        } catch (Exception e) {
             return retMsg.Set(MsgType.ERROR);
         }
-
     }
 
 
     //上传培养方案
     @PostMapping(value = "cultivatePlan")
-    public Object uploadCultivatePlan(@RequestParam("file")MultipartFile file, HttpServletRequest request){
-        try{
+    public Object uploadCultivatePlan(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        try {
             System.out.println("上传培养方案");
-            uploadFrameService.uploadProject(file,request);
+            uploadFrameService.uploadProject(file, request);
             return retMsg.Set(MsgType.SUCCESS);
-        }catch (Exception e){
+        } catch (Exception e) {
             return retMsg.Set(MsgType.ERROR);
         }
     }
@@ -71,63 +80,63 @@ public class UploadController extends BaseController {
 
     //上传培养矩阵
     @PostMapping(value = "/cultivateMatrix")
-    public Object uploadCultivateMatrix(@RequestParam("file") MultipartFile file){
-        String msg=null;
-        try{
-            msg=uploadFrameService.uploadClassPoint(file);
-            if(msg==null){
+    public Object uploadCultivateMatrix(@RequestParam("file") MultipartFile file) {
+        String msg = null;
+        try {
+            msg = uploadFrameService.uploadClassPoint(file);
+            if (msg == null) {
                 return retMsg.Set(MsgType.SUCCESS);
-            }else{
-                return retMsg.Set(MsgType.ERROR,null,msg);
+            } else {
+                return retMsg.Set(MsgType.ERROR, null, msg);
             }
-        }catch(Exception e){
-            return retMsg.Set(MsgType.SUCCESS)  ;
+        } catch (Exception e) {
+            return retMsg.Set(MsgType.SUCCESS);
         }
     }
 
     @ApiOperation(value = "上传教师信息")
     @PostMapping(value = "teacherInfo")
-    public Object uploadTeacherInfo (
+    public Object uploadTeacherInfo(
             @RequestParam("file") MultipartFile teacherFile
-    ){
+    ) {
         System.out.println("上传教师信息");
         String res = "";
-        if (teacherFile == null || teacherFile.isEmpty()){
-            return retMsg.Set(MsgType.ERROR,null,"文件不能为空");
+        if (teacherFile == null || teacherFile.isEmpty()) {
+            return retMsg.Set(MsgType.ERROR, null, "文件不能为空");
         }
-        try{
+        try {
             res = uploadFrameService.uploadTeacherInfo(teacherFile);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return retMsg.Set(MsgType.SUCCESS,null,res);
+        return retMsg.Set(MsgType.SUCCESS, null, res);
     }
 
     @ApiOperation(value = "上传学生选课信息")
     @PostMapping(value = "studentCourse")
-    public Object uploadStudentCourse (
+    public Object uploadStudentCourse(
             @RequestParam("file") MultipartFile studentCourseFile
-    ){
+    ) {
         System.out.println("上传学生选课信息");
         String res = "";
-        if (studentCourseFile == null || studentCourseFile.isEmpty()){
-            return retMsg.Set(MsgType.ERROR,null,"文件不能为空");
+        if (studentCourseFile == null || studentCourseFile.isEmpty()) {
+            return retMsg.Set(MsgType.ERROR, null, "文件不能为空");
         }
-        try{
+        try {
             res = uploadFrameService.uploadStudentCourse(studentCourseFile);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return retMsg.Set(MsgType.SUCCESS,null,res);
+        return retMsg.Set(MsgType.SUCCESS, null, res);
     }
 
     @PostMapping(value = "courseUpload")
     public Object uploadCourse(@RequestParam("file") MultipartFile file) {
-        String msg=null;
+        String msg = null;
         try {
-            msg=courseUploadService.uploadExecuteClass(file);
-            if(msg!=null){
-                return retMsg.Set(MsgType.ERROR,null,msg);
+            msg = courseUploadService.uploadExecuteClass(file);
+            if (msg != null) {
+                return retMsg.Set(MsgType.ERROR, null, msg);
             }
         } catch (Exception e) {
             return retMsg.Set(MsgType.ERROR);
@@ -136,12 +145,12 @@ public class UploadController extends BaseController {
     }
 
     @PostMapping(value = "teacherCourseUpload")
-    public Object teacherCourseUpload(@RequestParam("file") MultipartFile file){
-        String msg=null;
-        try{
-            msg=courseUploadService.uploadTeacherCourse(file);
-            if(msg!=null){
-                return retMsg.Set(MsgType.ERROR,null,msg);
+    public Object teacherCourseUpload(@RequestParam("file") MultipartFile file) {
+        String msg = null;
+        try {
+            msg = courseUploadService.uploadTeacherCourse(file);
+            if (msg != null) {
+                return retMsg.Set(MsgType.ERROR, null, msg);
             }
         } catch (IOException e) {
             e.printStackTrace();

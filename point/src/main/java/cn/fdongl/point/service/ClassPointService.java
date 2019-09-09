@@ -18,9 +18,9 @@ public interface ClassPointService {
 
     /**
      * 学生评教
-     * @param course_select_number 选课课号(from map_teacher_course)
+     * @param courseSelectNumber 选课课号(from map_teacher_course)
      * @param data map对象，key为指标点ID，value为分数（1-4）
+     * @param studentWorkId 学生工号/学生用户名
      */
-    void savePoint(String classId, Map<String, Integer> data,String studentId);
-
+    void savePoint(String courseSelectNumber, Map<String, Integer> data,String studentWorkId);
 }
