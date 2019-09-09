@@ -1,6 +1,11 @@
-package cn.fdongl.sys.mapper;
+package cn.fdongl.point.mapper;
 
-import cn.fdongl.sys.entity.SysDict;
+import org.apache.ibatis.annotations.Param;
+
+
+import cn.fdongl.point.entity.SysDict;
+
+import java.util.List;
 
 public interface SysDictMapper {
     int deleteByPrimaryKey(String id);
@@ -14,4 +19,6 @@ public interface SysDictMapper {
     int updateByPrimaryKeySelective(SysDict record);
 
     int updateByPrimaryKey(SysDict record);
+
+    List<String> selectDictNameByTypeId(@Param("typeId")String typeId);
 }

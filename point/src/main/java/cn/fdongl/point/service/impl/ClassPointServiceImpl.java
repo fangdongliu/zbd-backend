@@ -1,8 +1,11 @@
 package cn.fdongl.point.service.impl;
 
 import cn.fdongl.authority.util.IdGen;
+import cn.fdongl.point.entity.MapStudentCourse;
+import cn.fdongl.point.entity.MapTeacherCourse;
 import cn.fdongl.point.entity.*;
 import cn.fdongl.point.mapper.MapCourseEvaluationMapper;
+import cn.fdongl.point.mapper.MapStudentCourseMapper;
 import cn.fdongl.point.mapper.MapStudentEvaluationMapper;
 import cn.fdongl.point.mapper.MapTeacherCourseMapper;
 import cn.fdongl.point.mapper.SysIndexMapper;
@@ -23,10 +26,13 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.sql.Array;
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -34,9 +40,6 @@ import java.util.Map;
 
 @Service
 public class ClassPointServiceImpl implements ClassPointService {
-
-
-
 
     @Autowired
     private MapStudentEvaluationMapper mapStudentEvaluationMapper;
@@ -49,6 +52,8 @@ public class ClassPointServiceImpl implements ClassPointService {
     @Autowired
     private MapTeacherCourseMapper mapTeacherCourseMapper;
 
+    @Autowired
+    private MapStudentCourseMapper mapStudentCourseMapper;
 
     @Override
     public String savePoint(String classId, MultipartFile file) throws Exception {
@@ -199,23 +204,30 @@ public class ClassPointServiceImpl implements ClassPointService {
         return null;
     }
 
-
+    /**
+     * step1：学生work_id + course_select_number 确定该学生所选的指定课程，即map_student_evaluation的id
+     * step2：根据学生对于该课程的评价值插入数据库
+     *
+     * @author zm
+     * @return void
+     * @date 2019/9/8 21:48
+     **/
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public void savePoint(String classId, Map<String, Integer> data,String studentId) {
-        List<MapStudentEvaluation> mapStudentEvaluations=new ArrayList<>();
+    public void savePoint(String courseSelectNumber, Map<String, Integer> data, String studentWorkId){
+        // step1:
+        MapStudentCourse mapStudentCourse = mapStudentCourseMapper.selectByUserWorkIdAndCourseSelectNumber(
+                studentWorkId, courseSelectNumber);
+        // step2:
+        MapStudentEvaluation mapStudentEvaluation = new MapStudentEvaluation();
         for (Map.Entry<String, Integer> entry : data.entrySet()) {
-            MapStudentEvaluation mapStudentEvaluation=new MapStudentEvaluation();
             mapStudentEvaluation.setId(IdGen.uuid());
-            mapStudentEvaluation.setIndexNumber(entry.getKey());
-            mapStudentEvaluation.setCommentValue(entry.getValue());
-            mapStudentEvaluation.setWorkId(studentId);
-            mapStudentEvaluation.setCourseSelectNumber(classId);
-            mapStudentEvaluations.add(mapStudentEvaluation);
-            mapStudentEvaluation.setIndexId(sysIndexMapper.selectByIdAndDate(entry.getKey()).getId());
-            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-        }
+            mapStudentEvaluation.setMapStudentCourseId(mapStudentCourse.getId());
+            mapStudentEvaluation.setIndexId(entry.getKey());
+            mapStudentEvaluation.setEvaluationValue(entry.getValue());
 
-        mapStudentEvaluationMapper.insertList(mapStudentEvaluations);
+            mapStudentEvaluationMapper.insertSelective(mapStudentEvaluation);
+        }
     }
 
     class ExcelContent{

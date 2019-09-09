@@ -1,315 +1,324 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.fdongl.point.mapper.MapStudentCourseMapper">
-  <resultMap id="BaseResultMap" type="cn.fdongl.point.entity.MapStudentCourse">
-    <!--@mbg.generated-->
-    <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="user_work_id" jdbcType="VARCHAR" property="userWorkId" />
-    <result column="total_grade" jdbcType="VARCHAR" property="totalGrade" />
-    <result column="course_name" jdbcType="VARCHAR" property="courseName" />
-    <result column="course_number" jdbcType="VARCHAR" property="courseNumber" />
-    <result column="course_select_number" jdbcType="VARCHAR" property="courseSelectNumber" />
-    <result column="course_semester" jdbcType="VARCHAR" property="courseSemester" />
-    <result column="course_nature" jdbcType="VARCHAR" property="courseNature" />
-    <result column="course_property" jdbcType="VARCHAR" property="courseProperty" />
-    <result column="course_ascription" jdbcType="VARCHAR" property="courseAscription" />
-    <result column="course_kind" jdbcType="VARCHAR" property="courseKind" />
-    <result column="course_hour" jdbcType="INTEGER" property="courseHour" />
-    <result column="course_credit" jdbcType="DOUBLE" property="courseCredit" />
-    <result column="course_department" jdbcType="VARCHAR" property="courseDepartment" />
-    <result column="input_user_name" jdbcType="VARCHAR" property="inputUserName" />
-    <result column="grade_sign" jdbcType="VARCHAR" property="gradeSign" />
-    <result column="exam_nature" jdbcType="VARCHAR" property="examNature" />
-    <result column="supplement_repeat_semester" jdbcType="VARCHAR" property="supplementRepeatSemester" />
-    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
-    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-    <result column="modify_user_id" jdbcType="VARCHAR" property="modifyUserId" />
-    <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate" />
-    <result column="status" jdbcType="INTEGER" property="status" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    <!--@mbg.generated-->
-    id, user_work_id, total_grade, course_name, course_number, course_select_number, 
-    course_semester, course_nature, course_property, course_ascription, course_kind, 
-    course_hour, course_credit, course_department, input_user_name, grade_sign, exam_nature, 
-    supplement_repeat_semester, create_user_id, create_date, modify_user_id, modify_date, 
-    `status`
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    <!--@mbg.generated-->
-    select 
-    <include refid="Base_Column_List" />
-    from map_student_course
-    where id = #{id,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    <!--@mbg.generated-->
-    delete from map_student_course
-    where id = #{id,jdbcType=VARCHAR}
-  </delete>
-  <insert id="insert" parameterType="cn.fdongl.point.entity.MapStudentCourse">
-    <!--@mbg.generated-->
-    insert into map_student_course (id, user_work_id, total_grade, 
-      course_name, course_number, course_select_number, 
-      course_semester, course_nature, course_property, 
-      course_ascription, course_kind, course_hour, 
-      course_credit, course_department, input_user_name, 
-      grade_sign, exam_nature, supplement_repeat_semester, 
-      create_user_id, create_date, modify_user_id, 
-      modify_date, `status`)
-    values (#{id,jdbcType=VARCHAR}, #{userWorkId,jdbcType=VARCHAR}, #{totalGrade,jdbcType=VARCHAR},
-      #{courseName,jdbcType=VARCHAR}, #{courseNumber,jdbcType=VARCHAR}, #{courseSelectNumber,jdbcType=VARCHAR}, 
-      #{courseSemester,jdbcType=VARCHAR}, #{courseNature,jdbcType=VARCHAR}, #{courseProperty,jdbcType=VARCHAR}, 
-      #{courseAscription,jdbcType=VARCHAR}, #{courseKind,jdbcType=VARCHAR}, #{courseHour,jdbcType=INTEGER}, 
-      #{courseCredit,jdbcType=DOUBLE}, #{courseDepartment,jdbcType=VARCHAR}, #{inputUserName,jdbcType=VARCHAR}, 
-      #{gradeSign,jdbcType=VARCHAR}, #{examNature,jdbcType=VARCHAR}, #{supplementRepeatSemester,jdbcType=VARCHAR}, 
-      #{createUserId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=VARCHAR}, 
-      #{modifyDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER})
-  </insert>
-  <insert id="insertSelective" parameterType="cn.fdongl.point.entity.MapStudentCourse">
-    <!--@mbg.generated-->
-    insert into map_student_course
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="userWorkId != null">
-        user_work_id,
-      </if>
-      <if test="totalGrade != null">
-        total_grade,
-      </if>
-      <if test="courseName != null">
-        course_name,
-      </if>
-      <if test="courseNumber != null">
-        course_number,
-      </if>
-      <if test="courseSelectNumber != null">
-        course_select_number,
-      </if>
-      <if test="courseSemester != null">
-        course_semester,
-      </if>
-      <if test="courseNature != null">
-        course_nature,
-      </if>
-      <if test="courseProperty != null">
-        course_property,
-      </if>
-      <if test="courseAscription != null">
-        course_ascription,
-      </if>
-      <if test="courseKind != null">
-        course_kind,
-      </if>
-      <if test="courseHour != null">
-        course_hour,
-      </if>
-      <if test="courseCredit != null">
-        course_credit,
-      </if>
-      <if test="courseDepartment != null">
-        course_department,
-      </if>
-      <if test="inputUserName != null">
-        input_user_name,
-      </if>
-      <if test="gradeSign != null">
-        grade_sign,
-      </if>
-      <if test="examNature != null">
-        exam_nature,
-      </if>
-      <if test="supplementRepeatSemester != null">
-        supplement_repeat_semester,
-      </if>
-      <if test="createUserId != null">
-        create_user_id,
-      </if>
-      <if test="createDate != null">
-        create_date,
-      </if>
-      <if test="modifyUserId != null">
-        modify_user_id,
-      </if>
-      <if test="modifyDate != null">
-        modify_date,
-      </if>
-      <if test="status != null">
-        `status`,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=VARCHAR},
-      </if>
-      <if test="userWorkId != null">
-        #{userWorkId,jdbcType=VARCHAR},
-      </if>
-      <if test="totalGrade != null">
-        #{totalGrade,jdbcType=VARCHAR},
-      </if>
-      <if test="courseName != null">
-        #{courseName,jdbcType=VARCHAR},
-      </if>
-      <if test="courseNumber != null">
-        #{courseNumber,jdbcType=VARCHAR},
-      </if>
-      <if test="courseSelectNumber != null">
-        #{courseSelectNumber,jdbcType=VARCHAR},
-      </if>
-      <if test="courseSemester != null">
-        #{courseSemester,jdbcType=VARCHAR},
-      </if>
-      <if test="courseNature != null">
-        #{courseNature,jdbcType=VARCHAR},
-      </if>
-      <if test="courseProperty != null">
-        #{courseProperty,jdbcType=VARCHAR},
-      </if>
-      <if test="courseAscription != null">
-        #{courseAscription,jdbcType=VARCHAR},
-      </if>
-      <if test="courseKind != null">
-        #{courseKind,jdbcType=VARCHAR},
-      </if>
-      <if test="courseHour != null">
-        #{courseHour,jdbcType=INTEGER},
-      </if>
-      <if test="courseCredit != null">
-        #{courseCredit,jdbcType=DOUBLE},
-      </if>
-      <if test="courseDepartment != null">
-        #{courseDepartment,jdbcType=VARCHAR},
-      </if>
-      <if test="inputUserName != null">
-        #{inputUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="gradeSign != null">
-        #{gradeSign,jdbcType=VARCHAR},
-      </if>
-      <if test="examNature != null">
-        #{examNature,jdbcType=VARCHAR},
-      </if>
-      <if test="supplementRepeatSemester != null">
-        #{supplementRepeatSemester,jdbcType=VARCHAR},
-      </if>
-      <if test="createUserId != null">
-        #{createUserId,jdbcType=VARCHAR},
-      </if>
-      <if test="createDate != null">
-        #{createDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyUserId != null">
-        #{modifyUserId,jdbcType=VARCHAR},
-      </if>
-      <if test="modifyDate != null">
-        #{modifyDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="status != null">
-        #{status,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.fdongl.point.entity.MapStudentCourse">
-    <!--@mbg.generated-->
-    update map_student_course
-    <set>
-      <if test="userWorkId != null">
-        user_work_id = #{userWorkId,jdbcType=VARCHAR},
-      </if>
-      <if test="totalGrade != null">
+    <resultMap id="BaseResultMap" type="cn.fdongl.point.entity.MapStudentCourse">
+        <!--@mbg.generated-->
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="user_work_id" jdbcType="VARCHAR" property="userWorkId"/>
+        <result column="total_grade" jdbcType="VARCHAR" property="totalGrade"/>
+        <result column="course_name" jdbcType="VARCHAR" property="courseName"/>
+        <result column="course_number" jdbcType="VARCHAR" property="courseNumber"/>
+        <result column="course_select_number" jdbcType="VARCHAR" property="courseSelectNumber"/>
+        <result column="course_semester" jdbcType="VARCHAR" property="courseSemester"/>
+        <result column="course_nature" jdbcType="VARCHAR" property="courseNature"/>
+        <result column="course_property" jdbcType="VARCHAR" property="courseProperty"/>
+        <result column="course_ascription" jdbcType="VARCHAR" property="courseAscription"/>
+        <result column="course_kind" jdbcType="VARCHAR" property="courseKind"/>
+        <result column="course_hour" jdbcType="INTEGER" property="courseHour"/>
+        <result column="course_credit" jdbcType="DOUBLE" property="courseCredit"/>
+        <result column="course_department" jdbcType="VARCHAR" property="courseDepartment"/>
+        <result column="input_user_name" jdbcType="VARCHAR" property="inputUserName"/>
+        <result column="grade_sign" jdbcType="VARCHAR" property="gradeSign"/>
+        <result column="exam_nature" jdbcType="VARCHAR" property="examNature"/>
+        <result column="supplement_repeat_semester" jdbcType="VARCHAR" property="supplementRepeatSemester"/>
+        <result column="create_user_id" jdbcType="VARCHAR" property="createUserId"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="modify_user_id" jdbcType="VARCHAR" property="modifyUserId"/>
+        <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, user_work_id, total_grade, course_name, course_number, course_select_number,
+        course_semester, course_nature, course_property, course_ascription, course_kind,
+        course_hour, course_credit, course_department, input_user_name, grade_sign, exam_nature,
+        supplement_repeat_semester, create_user_id, create_date, modify_user_id, modify_date,
+        `status`
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
+        select
+        <include refid="Base_Column_List"/>
+        from map_student_course
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        <!--@mbg.generated-->
+        delete from map_student_course
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="cn.fdongl.point.entity.MapStudentCourse">
+        <!--@mbg.generated-->
+        insert into map_student_course (id, user_work_id, total_grade,
+        course_name, course_number, course_select_number,
+        course_semester, course_nature, course_property,
+        course_ascription, course_kind, course_hour,
+        course_credit, course_department, input_user_name,
+        grade_sign, exam_nature, supplement_repeat_semester,
+        create_user_id, create_date, modify_user_id,
+        modify_date, `status`)
+        values (#{id,jdbcType=VARCHAR}, #{userWorkId,jdbcType=VARCHAR}, #{totalGrade,jdbcType=VARCHAR},
+        #{courseName,jdbcType=VARCHAR}, #{courseNumber,jdbcType=VARCHAR}, #{courseSelectNumber,jdbcType=VARCHAR},
+        #{courseSemester,jdbcType=VARCHAR}, #{courseNature,jdbcType=VARCHAR}, #{courseProperty,jdbcType=VARCHAR},
+        #{courseAscription,jdbcType=VARCHAR}, #{courseKind,jdbcType=VARCHAR}, #{courseHour,jdbcType=INTEGER},
+        #{courseCredit,jdbcType=DOUBLE}, #{courseDepartment,jdbcType=VARCHAR}, #{inputUserName,jdbcType=VARCHAR},
+        #{gradeSign,jdbcType=VARCHAR}, #{examNature,jdbcType=VARCHAR}, #{supplementRepeatSemester,jdbcType=VARCHAR},
+        #{createUserId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=VARCHAR},
+        #{modifyDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" parameterType="cn.fdongl.point.entity.MapStudentCourse">
+        <!--@mbg.generated-->
+        insert into map_student_course
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userWorkId != null">
+                user_work_id,
+            </if>
+            <if test="totalGrade != null">
+                total_grade,
+            </if>
+            <if test="courseName != null">
+                course_name,
+            </if>
+            <if test="courseNumber != null">
+                course_number,
+            </if>
+            <if test="courseSelectNumber != null">
+                course_select_number,
+            </if>
+            <if test="courseSemester != null">
+                course_semester,
+            </if>
+            <if test="courseNature != null">
+                course_nature,
+            </if>
+            <if test="courseProperty != null">
+                course_property,
+            </if>
+            <if test="courseAscription != null">
+                course_ascription,
+            </if>
+            <if test="courseKind != null">
+                course_kind,
+            </if>
+            <if test="courseHour != null">
+                course_hour,
+            </if>
+            <if test="courseCredit != null">
+                course_credit,
+            </if>
+            <if test="courseDepartment != null">
+                course_department,
+            </if>
+            <if test="inputUserName != null">
+                input_user_name,
+            </if>
+            <if test="gradeSign != null">
+                grade_sign,
+            </if>
+            <if test="examNature != null">
+                exam_nature,
+            </if>
+            <if test="supplementRepeatSemester != null">
+                supplement_repeat_semester,
+            </if>
+            <if test="createUserId != null">
+                create_user_id,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="modifyUserId != null">
+                modify_user_id,
+            </if>
+            <if test="modifyDate != null">
+                modify_date,
+            </if>
+            <if test="status != null">
+                `status`,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="userWorkId != null">
+                #{userWorkId,jdbcType=VARCHAR},
+            </if>
+            <if test="totalGrade != null">
+                #{totalGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="courseName != null">
+                #{courseName,jdbcType=VARCHAR},
+            </if>
+            <if test="courseNumber != null">
+                #{courseNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="courseSelectNumber != null">
+                #{courseSelectNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="courseSemester != null">
+                #{courseSemester,jdbcType=VARCHAR},
+            </if>
+            <if test="courseNature != null">
+                #{courseNature,jdbcType=VARCHAR},
+            </if>
+            <if test="courseProperty != null">
+                #{courseProperty,jdbcType=VARCHAR},
+            </if>
+            <if test="courseAscription != null">
+                #{courseAscription,jdbcType=VARCHAR},
+            </if>
+            <if test="courseKind != null">
+                #{courseKind,jdbcType=VARCHAR},
+            </if>
+            <if test="courseHour != null">
+                #{courseHour,jdbcType=INTEGER},
+            </if>
+            <if test="courseCredit != null">
+                #{courseCredit,jdbcType=DOUBLE},
+            </if>
+            <if test="courseDepartment != null">
+                #{courseDepartment,jdbcType=VARCHAR},
+            </if>
+            <if test="inputUserName != null">
+                #{inputUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeSign != null">
+                #{gradeSign,jdbcType=VARCHAR},
+            </if>
+            <if test="examNature != null">
+                #{examNature,jdbcType=VARCHAR},
+            </if>
+            <if test="supplementRepeatSemester != null">
+                #{supplementRepeatSemester,jdbcType=VARCHAR},
+            </if>
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyUserId != null">
+                #{modifyUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="modifyDate != null">
+                #{modifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="cn.fdongl.point.entity.MapStudentCourse">
+        <!--@mbg.generated-->
+        update map_student_course
+        <set>
+            <if test="userWorkId != null">
+                user_work_id = #{userWorkId,jdbcType=VARCHAR},
+            </if>
+            <if test="totalGrade != null">
+                total_grade = #{totalGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="courseName != null">
+                course_name = #{courseName,jdbcType=VARCHAR},
+            </if>
+            <if test="courseNumber != null">
+                course_number = #{courseNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="courseSelectNumber != null">
+                course_select_number = #{courseSelectNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="courseSemester != null">
+                course_semester = #{courseSemester,jdbcType=VARCHAR},
+            </if>
+            <if test="courseNature != null">
+                course_nature = #{courseNature,jdbcType=VARCHAR},
+            </if>
+            <if test="courseProperty != null">
+                course_property = #{courseProperty,jdbcType=VARCHAR},
+            </if>
+            <if test="courseAscription != null">
+                course_ascription = #{courseAscription,jdbcType=VARCHAR},
+            </if>
+            <if test="courseKind != null">
+                course_kind = #{courseKind,jdbcType=VARCHAR},
+            </if>
+            <if test="courseHour != null">
+                course_hour = #{courseHour,jdbcType=INTEGER},
+            </if>
+            <if test="courseCredit != null">
+                course_credit = #{courseCredit,jdbcType=DOUBLE},
+            </if>
+            <if test="courseDepartment != null">
+                course_department = #{courseDepartment,jdbcType=VARCHAR},
+            </if>
+            <if test="inputUserName != null">
+                input_user_name = #{inputUserName,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeSign != null">
+                grade_sign = #{gradeSign,jdbcType=VARCHAR},
+            </if>
+            <if test="examNature != null">
+                exam_nature = #{examNature,jdbcType=VARCHAR},
+            </if>
+            <if test="supplementRepeatSemester != null">
+                supplement_repeat_semester = #{supplementRepeatSemester,jdbcType=VARCHAR},
+            </if>
+            <if test="createUserId != null">
+                create_user_id = #{createUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyUserId != null">
+                modify_user_id = #{modifyUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="modifyDate != null">
+                modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="cn.fdongl.point.entity.MapStudentCourse">
+        <!--@mbg.generated-->
+        update map_student_course
+        set user_work_id = #{userWorkId,jdbcType=VARCHAR},
         total_grade = #{totalGrade,jdbcType=VARCHAR},
-      </if>
-      <if test="courseName != null">
         course_name = #{courseName,jdbcType=VARCHAR},
-      </if>
-      <if test="courseNumber != null">
         course_number = #{courseNumber,jdbcType=VARCHAR},
-      </if>
-      <if test="courseSelectNumber != null">
         course_select_number = #{courseSelectNumber,jdbcType=VARCHAR},
-      </if>
-      <if test="courseSemester != null">
         course_semester = #{courseSemester,jdbcType=VARCHAR},
-      </if>
-      <if test="courseNature != null">
         course_nature = #{courseNature,jdbcType=VARCHAR},
-      </if>
-      <if test="courseProperty != null">
         course_property = #{courseProperty,jdbcType=VARCHAR},
-      </if>
-      <if test="courseAscription != null">
         course_ascription = #{courseAscription,jdbcType=VARCHAR},
-      </if>
-      <if test="courseKind != null">
         course_kind = #{courseKind,jdbcType=VARCHAR},
-      </if>
-      <if test="courseHour != null">
         course_hour = #{courseHour,jdbcType=INTEGER},
-      </if>
-      <if test="courseCredit != null">
         course_credit = #{courseCredit,jdbcType=DOUBLE},
-      </if>
-      <if test="courseDepartment != null">
         course_department = #{courseDepartment,jdbcType=VARCHAR},
-      </if>
-      <if test="inputUserName != null">
         input_user_name = #{inputUserName,jdbcType=VARCHAR},
-      </if>
-      <if test="gradeSign != null">
         grade_sign = #{gradeSign,jdbcType=VARCHAR},
-      </if>
-      <if test="examNature != null">
         exam_nature = #{examNature,jdbcType=VARCHAR},
-      </if>
-      <if test="supplementRepeatSemester != null">
         supplement_repeat_semester = #{supplementRepeatSemester,jdbcType=VARCHAR},
-      </if>
-      <if test="createUserId != null">
         create_user_id = #{createUserId,jdbcType=VARCHAR},
-      </if>
-      <if test="createDate != null">
         create_date = #{createDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyUserId != null">
         modify_user_id = #{modifyUserId,jdbcType=VARCHAR},
-      </if>
-      <if test="modifyDate != null">
         modify_date = #{modifyDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="status != null">
-        `status` = #{status,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="cn.fdongl.point.entity.MapStudentCourse">
-    <!--@mbg.generated-->
-    update map_student_course
-    set user_work_id = #{userWorkId,jdbcType=VARCHAR},
-      total_grade = #{totalGrade,jdbcType=VARCHAR},
-      course_name = #{courseName,jdbcType=VARCHAR},
-      course_number = #{courseNumber,jdbcType=VARCHAR},
-      course_select_number = #{courseSelectNumber,jdbcType=VARCHAR},
-      course_semester = #{courseSemester,jdbcType=VARCHAR},
-      course_nature = #{courseNature,jdbcType=VARCHAR},
-      course_property = #{courseProperty,jdbcType=VARCHAR},
-      course_ascription = #{courseAscription,jdbcType=VARCHAR},
-      course_kind = #{courseKind,jdbcType=VARCHAR},
-      course_hour = #{courseHour,jdbcType=INTEGER},
-      course_credit = #{courseCredit,jdbcType=DOUBLE},
-      course_department = #{courseDepartment,jdbcType=VARCHAR},
-      input_user_name = #{inputUserName,jdbcType=VARCHAR},
-      grade_sign = #{gradeSign,jdbcType=VARCHAR},
-      exam_nature = #{examNature,jdbcType=VARCHAR},
-      supplement_repeat_semester = #{supplementRepeatSemester,jdbcType=VARCHAR},
-      create_user_id = #{createUserId,jdbcType=VARCHAR},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
-      modify_user_id = #{modifyUserId,jdbcType=VARCHAR},
-      modify_date = #{modifyDate,jdbcType=TIMESTAMP},
-      `status` = #{status,jdbcType=INTEGER}
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
+        `status` = #{status,jdbcType=INTEGER}
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--auto generated by MybatisCodeHelper on 2019-09-09-->
+    <select id="selectByUserWorkIdAndCourseSelectNumber" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from map_student_course
+        where user_work_id=#{userWorkId,jdbcType=VARCHAR} and
+        course_select_number=#{courseSelectNumber,jdbcType=VARCHAR}
+    </select>
 </mapper>
