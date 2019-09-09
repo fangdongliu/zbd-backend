@@ -1,8 +1,12 @@
 package cn.fdongl.point.service.impl;
 
+import cn.fdongl.authority.mapper.MapUserRoleMapper;
+import cn.fdongl.authority.mapper.SysRoleMapper;
 import cn.fdongl.authority.mapper.SysUserMapper;
+import cn.fdongl.authority.service.MapUtilService;
 import cn.fdongl.authority.service.SysUserService;
 import cn.fdongl.authority.util.IdGen;
+import cn.fdongl.authority.vo.MapUserRole;
 import cn.fdongl.authority.vo.SysUser;
 import cn.fdongl.point.entity.MapStudentCourse;
 import cn.fdongl.point.mapper.MapCourseIndexMapper;
@@ -59,7 +63,8 @@ public class UploadFrameServiceImpl implements UploadFrameService {
     private SysFileMapper sysFileMapper;
     @Autowired
     private MapCultivateFileMapper mapCultivateFileMapper;
-
+    @Autowired
+    private MapUtilService mapUtilService;
 
     @Override
     public String uploadProject(MultipartFile projectFile, HttpServletRequest request) throws IOException {
@@ -223,8 +228,9 @@ public class UploadFrameServiceImpl implements UploadFrameService {
      * @return java.lang.String        
      * @date 2019/9/9 14:30
      **/
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public String uploadTeacherInfo(MultipartFile teacherFile) throws IOException {
+    public void uploadTeacherInfo(MultipartFile teacherFile) throws IOException {
         // 获取Excel的输出流
         InputStream inputStream = teacherFile.getInputStream();
         // 获取文件名称
@@ -240,7 +246,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             workbook = new XSSFWorkbook(inputStream);
         } else {
             workbook = null;
-            return "请上传正确的表格文件";
+            return;
         }
         // init
         Sheet sheet = null;
@@ -298,9 +304,11 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             newTeacher.setUserDepartment(departmentCell.getRichStringCellValue().getString());
             newTeacher.setUserType("teacher");
 
+            //用户赋角色(teacher)
+            mapUtilService.addNewRoleMap(newTeacher.getId(),"teacher");
+            //插入新的教师
             sysUserMapper.insertSelective(newTeacher);
         }
-        return "上传教师信息成功";
     }
 
     /**
@@ -311,9 +319,9 @@ public class UploadFrameServiceImpl implements UploadFrameService {
      * @author zm
      * @date 2019/9/8 8:56
      **/
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public String uploadStudentCourse(MultipartFile studentCourse) throws IOException {
+    public void uploadStudentCourse(MultipartFile studentCourse) throws IOException {
         // 获取Excel的输出流
         InputStream inputStream = studentCourse.getInputStream();
         // 获取文件名称
@@ -329,7 +337,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             workbook = new XSSFWorkbook(inputStream);
         } else {
             workbook = null;
-            return "请上传正确的表格文件";
+            return ;
         }
         // init
         Sheet sheet = null;
@@ -442,6 +450,9 @@ public class UploadFrameServiceImpl implements UploadFrameService {
                 newStudent.setTrainLevel(trainLevelCell.getRichStringCellValue().getString());
                 newStudent.setClassName(classNameCell.getRichStringCellValue().getString());
 
+                // 用户赋角色(student)
+                mapUtilService.addNewRoleMap(newStudent.getId(),"student");
+                // 插入新的学生
                 sysUserMapper.insertSelective(newStudent);
                 // 记得添加新的map
                 sysUserMap.put(workIdCell.getRichStringCellValue().getString(),1);
@@ -485,6 +496,5 @@ public class UploadFrameServiceImpl implements UploadFrameService {
 
             studentCourseMapper.insertSelective(newStudentCourse);
         }
-        return "上传学生选课信息成功";
     }
 }

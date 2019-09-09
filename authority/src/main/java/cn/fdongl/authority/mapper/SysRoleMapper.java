@@ -16,4 +16,14 @@ public interface SysRoleMapper {
     int updateByPrimaryKeySelective(SysRole record);
 
     int updateByPrimaryKey(SysRole record);
+
+    /**
+     * 根据角色码roleCode获取指定的roleId
+     *
+     * @author zm
+     * @param roleCode
+     * @return java.lang.String
+     * @date 2019/9/9 15:05
+     **/
+    String selectIdByRoleCode(String roleCode);
 }
