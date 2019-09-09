@@ -23,4 +23,5 @@ public interface SysIndexMapper {
 
     SysIndex selectByIdAndDate(String number);
 
+    SysIndex selectByNumAndDate();
 }

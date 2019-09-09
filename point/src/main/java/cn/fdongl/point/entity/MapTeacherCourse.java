@@ -139,4 +139,10 @@ public class MapTeacherCourse {
     private Integer status;
 
     private Page<MapTeacherCourse> page;
+
+    /**
+     * 存放文件的id
+     */
+    private String fileId;
+
 }

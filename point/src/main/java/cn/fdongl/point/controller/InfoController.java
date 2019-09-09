@@ -4,11 +4,11 @@ package cn.fdongl.point.controller;
 import cn.fdongl.authority.util.BaseController;
 import cn.fdongl.authority.util.MsgType;
 import cn.fdongl.authority.util.Page;
-import cn.fdongl.authority.vo.SysUser;
+
 import cn.fdongl.point.entity.MapTeacherCourse;
 import cn.fdongl.point.mapper.MapTeacherCourseMapper;
-import com.fasterxml.jackson.databind.ser.Serializers;
-import io.swagger.annotations.ApiOperation;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

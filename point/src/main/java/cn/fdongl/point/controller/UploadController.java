@@ -31,12 +31,17 @@ public class UploadController extends BaseController {
     @PostMapping(value = "/uploadTeacherCom")
     public Object uploadTeacherCom(@RequestParam("classId")String classId,
                                    @RequestParam("file")MultipartFile file){
+
+        String msg=null;
         try{
-            classPointService.savePoint(classId,file);
-            return retMsg.Set(MsgType.SUCCESS);
+            msg=classPointService.savePoint(classId,file);
+            if(msg!=null){
+                return retMsg.Set(MsgType.ERROR,null,msg);
+            }
         } catch (Exception e) {
             return retMsg.Set(MsgType.ERROR);
         }
+        return retMsg.Set(MsgType.SUCCESS);
     }
 
 
