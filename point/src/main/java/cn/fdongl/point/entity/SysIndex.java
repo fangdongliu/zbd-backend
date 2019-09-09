@@ -1,5 +1,6 @@
 package cn.fdongl.point.entity;
 
+import cn.fdongl.authority.util.IdGen;
 import lombok.Data;
 
 import java.util.Date;
@@ -60,4 +61,8 @@ public class SysIndex {
     * 状态值(-1失效，0默认值)
     */
     private Integer status;
+
+    public SysIndex() {
+        this.id = IdGen.uuid();
+    }
 }

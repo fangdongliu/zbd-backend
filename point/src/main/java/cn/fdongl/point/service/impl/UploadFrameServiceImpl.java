@@ -210,7 +210,10 @@ public class UploadFrameServiceImpl implements UploadFrameService {
                 sysIndexList.add(null);
             }else{
                 SysIndex tmpIndex = new SysIndex();
-
+                String cellValue = (String) ExcelUtils.getJavaValue(threeRowSingleCell);
+                tmpIndex.setIndexNumber(cellValue.substring(0,cellValue.indexOf(" ")));
+                tmpIndex.setIndexNumber(cellValue.substring(cellValue.indexOf(" ")));
+//                tmpIndex.se
             }
         }
     }
