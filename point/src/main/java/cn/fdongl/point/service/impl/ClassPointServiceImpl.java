@@ -156,9 +156,13 @@ public class ClassPointServiceImpl implements ClassPointService {
                     if(n[0]!=null){
                         mapCourseEvaluation.setIndexNumber(n[0]);
                         SysIndex sysIndex=sysIndexMapper.selectByIdAndDate(n[0]);
+                        if(sysIndex==null){
+                            return "存在指标点不存在";
+                        }
                         mapCourseEvaluation.setIndexId(sysIndex.getId());
-                            cell2= (XSSFCell) first.get(s);//目标值
-                            String value=cell2.getRichStringCellValue().getString();
+                            XSSFCell cell3= (XSSFCell) lis.get(s);//目标值
+                            //String value=cell3.getRichStringCellValue().getString();
+                        Double value=cell3.getNumericCellValue();
                             if(value==null){
                                 //目标表值为空
                                 return  grade+"级评价表中"+n[0]+"的目标值为空";
@@ -169,16 +173,16 @@ public class ClassPointServiceImpl implements ClassPointService {
                             while(j<l.size()){
                                 //从下面的行中找评价值
                                 List<Object> list2= (List<Object>) l.get(j);
-
-                                    XSSFCell cell1=(XSSFCell) list2.get(v);
-                                    String com=cell1.getRichStringCellValue().getString();
-                                    if(com!=null){
-                                        Double commentValue=Double.valueOf(com);
-                                        mapCourseEvaluation.setEvaluationValue(commentValue);
-                                        flag=true;
-                                        break;
-                                    }
-
+                                XSSFCell cell1=(XSSFCell) list2.get(v);
+                                Object g=ExcelUtils.getCellValue1(cell1);
+                                String y= (String) g;
+                                if(y!=""&&y!=null){
+                                    Double com=Double.valueOf(y);
+                                    mapCourseEvaluation.setEvaluationValue(com);
+                                    flag=true;
+                                    break;
+                                }
+                                j++;
                             }
                             if(flag){
                                 return grade+"级评价表中"+n[0]+"的评价值为空";
