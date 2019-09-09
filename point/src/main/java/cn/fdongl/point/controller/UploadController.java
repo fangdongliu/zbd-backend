@@ -123,7 +123,7 @@ public class UploadController extends BaseController {
     public Object uploadStudentCourse(
             @RequestParam("file") MultipartFile studentCourseFile
     ) {
-        System.out.println("上传学生选课信息");
+        System.out.println("上传学生选课信息-开始");
         String res = "";
         if (studentCourseFile == null || studentCourseFile.isEmpty()) {
             return retMsg.Set(MsgType.ERROR, null, "文件不能为空");
@@ -133,6 +133,7 @@ public class UploadController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("上传学生选课信息-完成");
         return retMsg.Set(MsgType.SUCCESS, null, res);
     }
 

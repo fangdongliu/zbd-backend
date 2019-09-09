@@ -215,6 +215,14 @@ public class UploadFrameServiceImpl implements UploadFrameService {
 
     }
 
+    /**
+     * 上传教师信息
+     *
+     * @author zm
+     * @param teacherFile
+     * @return java.lang.String        
+     * @date 2019/9/9 14:30
+     **/
     @Override
     public String uploadTeacherInfo(MultipartFile teacherFile) throws IOException {
         // 获取Excel的输出流
@@ -263,27 +271,31 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         // 关闭流
         workbook.close();
         inputStream.close();
-
+        //取出所有的系统用户形成HashMap
+        HashMap<String, Integer> sysUserMap = sysUserService.getSysUserMap();
         //新建待插入的用户
         SysUser newTeacher = new SysUser();
-
         // 前两行是表头
         for (int i = 2; i < list.size(); i++) {
             //lo 是一行
             List<Object> lo = (List<Object>) list.get(i);
-            newTeacher.setId(IdGen.uuid());
             //0行是工号
             HSSFCell workIdCell = (HSSFCell) lo.get(0);
+            //已经有该教师-skip
+            if (sysUserMap.get(workIdCell.getRichStringCellValue().getString()) != null){
+                continue;
+            }
+            newTeacher.setId(IdGen.uuid());
+            //2行是姓名
             HSSFCell realNameCell = (HSSFCell) lo.get(2);
+            //3行是学院信息
             HSSFCell departmentCell = (HSSFCell) lo.get(3);
+
             newTeacher.setUserName(workIdCell.getRichStringCellValue().getString());
             newTeacher.setSecretePwd("123456");
             newTeacher.setWorkId(workIdCell.getRichStringCellValue().getString());
-            //2行是姓名
             newTeacher.setRealName(realNameCell.getRichStringCellValue().getString());
-            //3行是学院信息
             newTeacher.setUserDepartment(departmentCell.getRichStringCellValue().getString());
-            //4行是教师身份
             newTeacher.setUserType("teacher");
 
             sysUserMapper.insertSelective(newTeacher);
@@ -412,7 +424,6 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             workIdCell = (HSSFCell) lo.get(0);
 
             // 之前没有该学生，需要新增
-
             if (sysUserMap.get(workIdCell.getRichStringCellValue().getString()) == null) {
                 realNameCell = (HSSFCell) lo.get(1);
                 educationSystemCell = (HSSFCell) lo.get(2);

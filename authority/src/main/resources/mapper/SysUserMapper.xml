@@ -42,9 +42,9 @@
         <result column="modify_user_id" jdbcType="VARCHAR" property="modifyUserId"/>
         <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate"/>
         <result column="status" jdbcType="INTEGER" property="status"/>
-        <collection property="roles" column="id" javaType="list" ofType="string"
-                    select="selectRoleCodesByUserName">
-        </collection>
+        <association property="roles" column="id" javaType="list"
+                    select="selectRoleCodesByUserId">
+        </association>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -286,13 +286,13 @@
         user_name = #{userName,jdbcType=VARCHAR}
     </select>
 
-    <select id="selectRoleCodesByUserName" resultType="java.lang.String">
+    <select id="selectRoleCodesByUserId" parameterType="java.lang.String" resultType="java.lang.String">
         select role_code
         from sys_role
         where id in (
-        select role_id
-        from map_user_role
-        where user_id = ${0}
+            select role_id
+            from map_user_role
+            where user_id = #{first}
         )
     </select>
 
