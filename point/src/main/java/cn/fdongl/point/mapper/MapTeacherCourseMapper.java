@@ -22,4 +22,7 @@ public interface MapTeacherCourseMapper {
     List<MapTeacherCourse>  getMapTeacherCourseByPage(MapTeacherCourse  map);
 
     int getTotal(MapTeacherCourse mapTeacherCourse);
+    List<MapTeacherCourse>  getOldMapTeacherCourseByPage(MapTeacherCourse  map);
+
+    int getOldTotal(MapTeacherCourse mapTeacherCourse);
 }

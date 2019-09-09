@@ -22,6 +22,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.system.ApplicationHome;
@@ -92,7 +93,7 @@ public class ClassPointServiceImpl implements ClassPointService {
                 continue;
             }
             String sheetName=sheet.getSheetName();
-            int f=sheetName.indexOf("评价值");
+            int f=sheetName.indexOf("评价");
             String grade=null;
             if(f==-1){
                 //说明该sheet不是评价表
@@ -106,7 +107,7 @@ public class ClassPointServiceImpl implements ClassPointService {
             List<Object> lo=new ArrayList<>();
             for (int j =0; j < sheet.getLastRowNum(); j++) {
                 row = sheet.getRow(j);
-                if (row == null || row.getFirstCellNum() == j) {
+                if (row == null) {
                     continue;
                 }
                 List<Object> li = new ArrayList<>();
@@ -124,27 +125,30 @@ public class ClassPointServiceImpl implements ClassPointService {
 
         for(int i=0;i<list.size();i++){
             //遍历每张sheet表
-            ExcelContent excelContent=new ExcelContent();
+            ExcelContent excelContent=list.get(i);
             String grade=excelContent.getSchoolYear();//获取该张sheet表针对的级数
             List lo=excelContent.getLi();
             List<Object> first= (List<Object>) lo.get(0);
             int s=0;
             int v=0;
             for(int j=0;j<first.size();j++){
-                HSSFCell cell1 = (HSSFCell) first.get(j);
-                String val = cell1.getRichStringCellValue().getString();
-                if("达成目标值".equals(val)){
-                    s=j;
+                if(first.get(j)!=null){
+                    XSSFCell cell1 = (XSSFCell) first.get(j);
+                    String val = cell1.getRichStringCellValue().getString();
+                    if("达成目标值".equals(val)){
+                        s=j;
+                    }
+                    if("评价值".equals(val)){
+                        v=j;
+                    }
                 }
-                if("评价值".equals(val)){
-                    v=j;
-                }
+
             }
             List<Object> l=excelContent.getLi();
             for(int j=1;j<l.size();j++){
                 //遍历每一行
                 List<Object> lis= (List<Object>) l.get(j);
-                HSSFCell cell2 = (HSSFCell) first.get(0);
+                XSSFCell cell2 = (XSSFCell) lis.get(0);
                 String name = cell2.getRichStringCellValue().getString();
                 if(name!=null){
                     MapCourseEvaluation mapCourseEvaluation=new MapCourseEvaluation();
@@ -153,30 +157,35 @@ public class ClassPointServiceImpl implements ClassPointService {
                         mapCourseEvaluation.setIndexNumber(n[0]);
                         SysIndex sysIndex=sysIndexMapper.selectByIdAndDate(n[0]);
                         mapCourseEvaluation.setIndexId(sysIndex.getId());
-                        cell2= (HSSFCell) first.get(s);//目标值
-                        String value=cell2.getRichStringCellValue().getString();
-                        if(value==null){
-                            //目标表值为空
-                            return  grade+"级评价表中"+n[0]+"的目标值为空";
-                        }
-                        //目标表值不为空
-                        mapCourseEvaluation.setIndexId(sysIndex.getId());
-                        boolean flag=false;
-                        while(j<l.size()){
-                            //从下面的行中找评价值
-                            List<Object> list2= (List<Object>) l.get(j);
-                            HSSFCell cell1=(HSSFCell) list2.get(v);
-                            String com=cell1.getRichStringCellValue().getString();
-                            if(com!=null){
-                                Double commentValue=Double.valueOf(com);
-                                mapCourseEvaluation.setEvaluationValue(commentValue);
-                                flag=true;
-                                break;
+                            cell2= (XSSFCell) first.get(s);//目标值
+                            String value=cell2.getRichStringCellValue().getString();
+                            if(value==null){
+                                //目标表值为空
+                                return  grade+"级评价表中"+n[0]+"的目标值为空";
                             }
-                        }
-                        if(flag){
-                            return grade+"级评价表中"+n[0]+"的评价值为空";
-                        }
+                            //目标表值不为空
+                            mapCourseEvaluation.setIndexId(sysIndex.getId());
+                            boolean flag=false;
+                            while(j<l.size()){
+                                //从下面的行中找评价值
+                                List<Object> list2= (List<Object>) l.get(j);
+
+                                    XSSFCell cell1=(XSSFCell) list2.get(v);
+                                    String com=cell1.getRichStringCellValue().getString();
+                                    if(com!=null){
+                                        Double commentValue=Double.valueOf(com);
+                                        mapCourseEvaluation.setEvaluationValue(commentValue);
+                                        flag=true;
+                                        break;
+                                    }
+
+                            }
+                            if(flag){
+                                return grade+"级评价表中"+n[0]+"的评价值为空";
+                            }
+
+
+
                     }
                     mapCourseEvaluation.setStudentGrade(excelContent.getSchoolYear());//设置学生年级
                     mapCourseEvaluation.setId(IdGen.uuid());
@@ -200,6 +209,7 @@ public class ClassPointServiceImpl implements ClassPointService {
         }
         MapTeacherCourse mapTeacherCourse=mapTeacherCourseMapper.selectByPrimaryKey(classId);
         mapTeacherCourse.setFileId(id);
+        mapTeacherCourse.setStatus(4);
         mapTeacherCourseMapper.updateByPrimaryKeySelective(mapTeacherCourse);
         return null;
     }
