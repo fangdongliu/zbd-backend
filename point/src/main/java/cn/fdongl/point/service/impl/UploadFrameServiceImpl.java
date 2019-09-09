@@ -43,7 +43,6 @@ import java.io.InputStream;
 import java.util.*;
 
 
-
 @Service
 public class UploadFrameServiceImpl implements UploadFrameService {
 
@@ -93,39 +92,39 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         // 关闭流
         workbook.close();
         inputStream.close();
-        String school=fileName.split("学院")[0]+"学院";//获取学院
-        String[] v=fileName.split("-");
-        String[] s=v[2].split("表");
-        String grade=s[1].substring(0,4);
-        List<SysFile> files= sysFileMapper.selectAllFile();
-        MapCultivateFile mapCultivateFile=new MapCultivateFile();
+        String school = fileName.split("学院")[0] + "学院";//获取学院
+        String[] v = fileName.split("-");
+        String[] s = v[2].split("表");
+        String grade = s[1].substring(0, 4);
+        List<SysFile> files = sysFileMapper.selectAllFile();
+        MapCultivateFile mapCultivateFile = new MapCultivateFile();
         mapCultivateFile.setCollege(school);
         mapCultivateFile.setCultivateName(fileName);
         mapCultivateFile.setGrade(grade);
-        String fileId=null;
-        String path=null;
-        for(int i=0;i<files.size();i++){
-            SysFile sysFile=files.get(i);
-            if(sysFile.getFileName().equals(fileName)){
+        String fileId = null;
+        String path = null;
+        for (int i = 0; i < files.size(); i++) {
+            SysFile sysFile = files.get(i);
+            if (sysFile.getFileName().equals(fileName)) {
                 //还有已上传的文件名存在
-                path=sysFile.getFilePath();
-                fileId=sysFile.getId();
+                path = sysFile.getFilePath();
+                fileId = sysFile.getId();
             }
         }
-        if(path==null){
+        if (path == null) {
             //建立新的路径
-            SysFile sysFile=new SysFile();
-            String id=IdGen.uuid();
-            path= new ApplicationHome(this.getClass()).getSource().getParentFile().getPath()+"\\uploads\\cultivatePlan\\" +id;
+            SysFile sysFile = new SysFile();
+            String id = IdGen.uuid();
+            path = new ApplicationHome(this.getClass()).getSource().getParentFile().getPath() + "\\uploads\\cultivatePlan\\" + id;
             sysFile.setId(id);
             sysFile.setFileName(fileName);
             sysFile.setFilePath(path);
             sysFileMapper.insertSelective(sysFile);
-            fileId=id;
+            fileId = id;
         }
         //将文件写到服务器中
-        if(projectFile.getSize() != 0 && !"".equals(projectFile.getName())){
-            FileOutputStream fileOut=new FileOutputStream(path);
+        if (projectFile.getSize() != 0 && !"".equals(projectFile.getName())) {
+            FileOutputStream fileOut = new FileOutputStream(path);
             fileOut.write(projectFile.getBytes());
         }
         mapCultivateFile.setFileId(fileId);
@@ -136,96 +135,95 @@ public class UploadFrameServiceImpl implements UploadFrameService {
     }
 
 
+    /**
+     * 处理上传培养矩阵
+     *
+     * @param cultivateMatrix 所上传的培养矩阵
+     * @return void
+     * @author zm
+     * @date 2019/9/9 19:50
+     **/
     @Override
-    public String uploadClassPoint(MultipartFile classPointFile) throws IOException {
-        List<SysIndex> indexList = new ArrayList<>();
-        Sheet nowSheet = ExcelUtils.getSheet(classPointFile, 0);
-        Row row = nowSheet.getRow(3);
-        Iterator cells = row.cellIterator();
-        List<Double> flagValues = new ArrayList<>();
-        String msg = null;//返回的结果信息
-        //创建指标点
-        while (cells.hasNext()) {
-            Cell cell = (Cell) cells.next();
-            String val = cell.getStringCellValue();
-            if (val != null) {
-                int colNum = cell.getColumnIndex();
-                String[] vals = val.split(" ");
-                SysIndex sysIndex = new SysIndex();
-                sysIndex.setIndexTitle(vals[0]);
-                sysIndex.setId(IdGen.uuid());
-                sysIndex.setIndexContent(vals[1]);
-                indexList.set(colNum, sysIndex);
-                flagValues.set(colNum, new Double(0));
+    public void uploadCultivateMatrix(MultipartFile cultivateMatrix) throws IOException {
+        // 获取Excel的输出流
+        InputStream inputStream = cultivateMatrix.getInputStream();
+        // 获取文件名称
+        String fileName = cultivateMatrix.getOriginalFilename();
+        // init工作簿
+        Workbook workbook = null;
+        // 获取文件后缀
+        String fileType = fileName.substring(fileName.lastIndexOf("."));
+        // 根据不同后缀init不同的类，是xls还是xlsx
+        if (".xls".equals(fileType)) {
+            workbook = new HSSFWorkbook(inputStream);
+        } else if (".xlsx".equals(fileType)) {
+            workbook = new XSSFWorkbook(inputStream);
+        } else {
+            workbook = null;
+            return;
+        }
+        // init
+        Sheet sheet = null;
+        Row row = null;
+        Cell cell = null;
+        // 定义读取的容器 行集合
+        List list = new ArrayList<>();
+        // 循环 sheet 这里仅仅处理第三个sheet
+        int sheetNum = workbook.getNumberOfSheets();
+        // 设置 sheet 为第三个sheet
+        sheet = workbook.getSheetAt(sheetNum -1);
+        // 循环 sheet
+        for (int j = sheet.getFirstRowNum(); j <= sheet.getLastRowNum(); j++) {
+            row = sheet.getRow(j);
+            if (row == null || row.getFirstCellNum() == j) {
+                continue;
+            }
+            List<Object> li = new ArrayList<>();
+            for (int y = row.getFirstCellNum(); y < row.getLastCellNum(); y++) {
+                cell = row.getCell(y);
+                li.add(cell);
+            }
+            list.add(li);
+        }
+        // 关闭流
+        workbook.close();
+        inputStream.close();
+
+        // 0行 0行的列1是 矩阵名称
+        List<Object> zeroLo = (List<Object>) list.get(0);
+        // 获取矩阵名称 e.g. 北京理工软件工程专业毕业要求指标点职称课程关联矩阵
+        String matrixName = ExcelUtils.getMergedRegionValue(sheet, 0 ,0 );
+        // 1行 指标点大类
+        List<Object> oneLo = (List<Object>) list.get(1);
+        // 2行 指标点大类的说明
+        List<Object> twoLo = (List<Object>) list.get(2);
+        // 3行 指标点小类
+        List<Object> threeLo = (List<Object>) list.get(3);
+        XSSFCell threeRowSingleCell;
+        // 新建indexList用来存储所有的指标点小项(下标对应的是excel的列，后续课程匹配指标点时候用到)
+        List<SysIndex> sysIndexList = new ArrayList<>();
+        // 遍历3行(第四行)
+        for (int i = 0; i < threeLo.size(); i++) {
+            threeRowSingleCell = (XSSFCell) threeLo.get(i);
+            // 为空则插入空的 SysIndex 不为空则插入有内容的SysIndex
+            if(ExcelUtils.getJavaValue(threeRowSingleCell) == null){
+                sysIndexList.add(null);
+            }else{
+                SysIndex tmpIndex = new SysIndex();
+                String cellValue = (String) ExcelUtils.getJavaValue(threeRowSingleCell);
+                tmpIndex.setIndexNumber(cellValue.substring(0,cellValue.indexOf(" ")));
+                tmpIndex.setIndexNumber(cellValue.substring(cellValue.indexOf(" ")));
+//                tmpIndex.se
             }
         }
-
-        sysIndexMapper.insertList(indexList);
-
-        List<MapCourseIndex> mapCourseIndices = new ArrayList<>();
-
-
-        //课程和指标点对应
-        for (int i = 4; i <= nowSheet.getLastRowNum(); i++) {
-            Row r = nowSheet.getRow(i);//获取行元素
-            Iterator cs = row.cellIterator();
-            //遍历每一行的值
-            int j = 0;
-            String courseId = null;
-            while (cs.hasNext()) {
-                HSSFCell cell = (HSSFCell) cs.next();
-                if (j == 0) {
-                    //第一个元素表示课程代号
-                    String courseNum = (String) ExcelUtils.getCellValue(cell);
-                    if (courseNum == null) {
-                        //课程代码为空
-                        break;
-                    } else {
-                        courseId = sysCourseMapper.selectIbByNumber(courseNum);
-                    }
-                } else {
-                    //后面的元素为指标值
-                    Double indexValue = (Double) ExcelUtils.getCellValue(cell);
-                    if (indexValue != null) {
-                        //说明该指标值存在
-                        int col = cell.getColumnIndex();//获取列号;
-                        SysIndex sysIndex = indexList.get(col);//获取该列的指标值
-                        MapCourseIndex mapCourseIndex = new MapCourseIndex();
-                        mapCourseIndex.setId(IdGen.uuid());
-                        mapCourseIndex.setIndexId(sysIndex.getId());
-                        mapCourseIndex.setProportionValue(indexValue);
-                        mapCourseIndex.setCourseId(courseId);
-
-                        Double val = flagValues.get(col);
-                        val += indexValue;
-                        flagValues.set(col, val);
-                        mapCourseIndices.add(mapCourseIndex);
-                    }
-
-                }
-            }
-
-        }
-
-        mapCourseIndexMapper.insertList(mapCourseIndices);
-        for (int i = 0; i < mapCourseIndices.size(); i++) {
-            if (mapCourseIndices.get(i) != null) {
-                Double d = flagValues.get(i);
-                if (d - 1 > 0.00001) {
-                    msg = "某指标点和的值不为1";
-                }
-            }
-        }
-        return msg;
-
     }
 
     /**
      * 上传教师信息
      *
-     * @author zm
      * @param teacherFile
-     * @return java.lang.String        
+     * @return java.lang.String
+     * @author zm
      * @date 2019/9/9 14:30
      **/
     @Transactional(rollbackFor = Exception.class)
@@ -288,7 +286,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             //0行是工号
             HSSFCell workIdCell = (HSSFCell) lo.get(0);
             //已经有该教师-skip
-            if (sysUserMap.get(workIdCell.getRichStringCellValue().getString()) != null){
+            if (sysUserMap.get(workIdCell.getRichStringCellValue().getString()) != null) {
                 continue;
             }
             newTeacher.setId(IdGen.uuid());
@@ -305,7 +303,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             newTeacher.setUserType("teacher");
 
             //用户赋角色(teacher)
-            mapUtilService.addNewRoleMap(newTeacher.getId(),"teacher");
+            mapUtilService.addNewRoleMap(newTeacher.getId(), "teacher");
             //插入新的教师
             sysUserMapper.insertSelective(newTeacher);
         }
@@ -337,7 +335,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             workbook = new XSSFWorkbook(inputStream);
         } else {
             workbook = null;
-            return ;
+            return;
         }
         // init
         Sheet sheet = null;
@@ -417,7 +415,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         HSSFCell examNatureCell = null;
         // 20列是补重学期
         HSSFCell supplementRepeatCell = null;
-        // 21列是选课课号
+        // 24列是选课课号
         HSSFCell courseSelectNumber = null;
 
         // 取出所有的用户形成HashMap
@@ -451,15 +449,15 @@ public class UploadFrameServiceImpl implements UploadFrameService {
                 newStudent.setClassName(classNameCell.getRichStringCellValue().getString());
 
                 // 用户赋角色(student)
-                mapUtilService.addNewRoleMap(newStudent.getId(),"student");
+                mapUtilService.addNewRoleMap(newStudent.getId(), "student");
                 // 插入新的学生
                 sysUserMapper.insertSelective(newStudent);
                 // 记得添加新的map
-                sysUserMap.put(workIdCell.getRichStringCellValue().getString(),1);
+                sysUserMap.put(workIdCell.getRichStringCellValue().getString(), 1);
             }
 
             courseSemesterCell = (HSSFCell) lo.get(3);
-            courseSelectNumber = (HSSFCell) lo.get(21);
+            courseSelectNumber = (HSSFCell) lo.get(24);
             courseNumberCell = (HSSFCell) lo.get(7);
             courseNameCell = (HSSFCell) lo.get(8);
             totalGradeCell = (HSSFCell) lo.get(9);

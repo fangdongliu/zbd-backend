@@ -141,4 +141,21 @@ public class SysUserController {
         }
         return retMsg.Set(MsgType.ERROR,null,"删除用户失败");
     }
+
+    /**
+     * 根据用户类型获取用户的所有学期List
+     *
+     * @author zm
+     * @param userId
+     * @param userType
+     * @return java.lang.Object        
+     * @date 2019/9/9 18:50
+     **/
+    @PostMapping(value = "getSemester")
+    public Object getUserSemesters(
+            @RequestParam("userId") String  userId,
+            @RequestParam("userType") String userType
+    ){
+        return retMsg.Set(MsgType.SUCCESS);
+    }
 }
