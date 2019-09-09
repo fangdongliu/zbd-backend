@@ -35,13 +35,7 @@ public class SysInfoServiceImpl implements SysInfoService {
      **/
     @Override
     public List<String> getDepartment() {
-      /*  String departmentTypeId = sysDictTypeMapper.selectIdByTypeName("学院机构");
-        List<String> departmentNameList = sysDictMapper
-                new ArrayList<>();
-        for (String tmpDepartmentId : departmentIdList) {
-            departmentNameList.add(sysDictMapper.selectByPrimaryKey(tmpDepartmentId).getDictName());
-        }
-        return departmentNameList;*/
-      return null;
+        String departmentTypeId = sysDictTypeMapper.selectIdByTypeName("学院机构");
+        return sysDictMapper.selectDictNameByTypeId(departmentTypeId);
     }
 }

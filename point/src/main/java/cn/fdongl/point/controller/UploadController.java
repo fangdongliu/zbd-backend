@@ -106,16 +106,17 @@ public class UploadController extends BaseController {
             @RequestParam("file") MultipartFile teacherFile
     ) {
         System.out.println("上传教师信息");
-        String res = "";
         if (teacherFile == null || teacherFile.isEmpty()) {
             return retMsg.Set(MsgType.ERROR, null, "文件不能为空");
         }
         try {
-            res = uploadFrameService.uploadTeacherInfo(teacherFile);
+            uploadFrameService.uploadTeacherInfo(teacherFile);
         } catch (Exception e) {
             e.printStackTrace();
+            return retMsg.Set(MsgType.SUCCESS, null, "上传教师信息失败");
         }
-        return retMsg.Set(MsgType.SUCCESS, null, res);
+        System.out.println("上传教师信息成功");
+        return retMsg.Set(MsgType.SUCCESS, null, "上传教师信息成功");
     }
 
     @ApiOperation(value = "上传学生选课信息")
@@ -123,17 +124,17 @@ public class UploadController extends BaseController {
     public Object uploadStudentCourse(
             @RequestParam("file") MultipartFile studentCourseFile
     ) {
-        System.out.println("上传学生选课信息");
-        String res = "";
         if (studentCourseFile == null || studentCourseFile.isEmpty()) {
             return retMsg.Set(MsgType.ERROR, null, "文件不能为空");
         }
         try {
-            res = uploadFrameService.uploadStudentCourse(studentCourseFile);
+            uploadFrameService.uploadStudentCourse(studentCourseFile);
         } catch (Exception e) {
             e.printStackTrace();
+            return retMsg.Set(MsgType.SUCCESS, null, "上传学生选课信息失败");
         }
-        return retMsg.Set(MsgType.SUCCESS, null, res);
+        System.out.println("上传学生选课信息成功");
+        return retMsg.Set(MsgType.SUCCESS, null, "上传学生选课信息成功");
     }
 
     @PostMapping(value = "courseUpload")

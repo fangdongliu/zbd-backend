@@ -1,8 +1,12 @@
 package cn.fdongl.point.service.impl;
 
+import cn.fdongl.authority.mapper.MapUserRoleMapper;
+import cn.fdongl.authority.mapper.SysRoleMapper;
 import cn.fdongl.authority.mapper.SysUserMapper;
+import cn.fdongl.authority.service.MapUtilService;
 import cn.fdongl.authority.service.SysUserService;
 import cn.fdongl.authority.util.IdGen;
+import cn.fdongl.authority.vo.MapUserRole;
 import cn.fdongl.authority.vo.SysUser;
 import cn.fdongl.point.entity.MapStudentCourse;
 import cn.fdongl.point.mapper.MapCourseIndexMapper;
@@ -59,7 +63,8 @@ public class UploadFrameServiceImpl implements UploadFrameService {
     private SysFileMapper sysFileMapper;
     @Autowired
     private MapCultivateFileMapper mapCultivateFileMapper;
-
+    @Autowired
+    private MapUtilService mapUtilService;
 
     @Override
     public String uploadProject(MultipartFile projectFile, HttpServletRequest request) throws IOException {
@@ -215,8 +220,17 @@ public class UploadFrameServiceImpl implements UploadFrameService {
 
     }
 
+    /**
+     * 上传教师信息
+     *
+     * @author zm
+     * @param teacherFile
+     * @return java.lang.String        
+     * @date 2019/9/9 14:30
+     **/
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public String uploadTeacherInfo(MultipartFile teacherFile) throws IOException {
+    public void uploadTeacherInfo(MultipartFile teacherFile) throws IOException {
         // 获取Excel的输出流
         InputStream inputStream = teacherFile.getInputStream();
         // 获取文件名称
@@ -232,7 +246,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             workbook = new XSSFWorkbook(inputStream);
         } else {
             workbook = null;
-            return "请上传正确的表格文件";
+            return;
         }
         // init
         Sheet sheet = null;
@@ -263,32 +277,38 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         // 关闭流
         workbook.close();
         inputStream.close();
-
+        //取出所有的系统用户形成HashMap
+        HashMap<String, Integer> sysUserMap = sysUserService.getSysUserMap();
         //新建待插入的用户
         SysUser newTeacher = new SysUser();
-
         // 前两行是表头
         for (int i = 2; i < list.size(); i++) {
             //lo 是一行
             List<Object> lo = (List<Object>) list.get(i);
-            newTeacher.setId(IdGen.uuid());
             //0行是工号
             HSSFCell workIdCell = (HSSFCell) lo.get(0);
+            //已经有该教师-skip
+            if (sysUserMap.get(workIdCell.getRichStringCellValue().getString()) != null){
+                continue;
+            }
+            newTeacher.setId(IdGen.uuid());
+            //2行是姓名
             HSSFCell realNameCell = (HSSFCell) lo.get(2);
+            //3行是学院信息
             HSSFCell departmentCell = (HSSFCell) lo.get(3);
+
             newTeacher.setUserName(workIdCell.getRichStringCellValue().getString());
             newTeacher.setSecretePwd("123456");
             newTeacher.setWorkId(workIdCell.getRichStringCellValue().getString());
-            //2行是姓名
             newTeacher.setRealName(realNameCell.getRichStringCellValue().getString());
-            //3行是学院信息
             newTeacher.setUserDepartment(departmentCell.getRichStringCellValue().getString());
-            //4行是教师身份
             newTeacher.setUserType("teacher");
 
+            //用户赋角色(teacher)
+            mapUtilService.addNewRoleMap(newTeacher.getId(),"teacher");
+            //插入新的教师
             sysUserMapper.insertSelective(newTeacher);
         }
-        return "上传教师信息成功";
     }
 
     /**
@@ -299,9 +319,9 @@ public class UploadFrameServiceImpl implements UploadFrameService {
      * @author zm
      * @date 2019/9/8 8:56
      **/
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public String uploadStudentCourse(MultipartFile studentCourse) throws IOException {
+    public void uploadStudentCourse(MultipartFile studentCourse) throws IOException {
         // 获取Excel的输出流
         InputStream inputStream = studentCourse.getInputStream();
         // 获取文件名称
@@ -317,7 +337,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             workbook = new XSSFWorkbook(inputStream);
         } else {
             workbook = null;
-            return "请上传正确的表格文件";
+            return ;
         }
         // init
         Sheet sheet = null;
@@ -412,7 +432,6 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             workIdCell = (HSSFCell) lo.get(0);
 
             // 之前没有该学生，需要新增
-
             if (sysUserMap.get(workIdCell.getRichStringCellValue().getString()) == null) {
                 realNameCell = (HSSFCell) lo.get(1);
                 educationSystemCell = (HSSFCell) lo.get(2);
@@ -431,6 +450,9 @@ public class UploadFrameServiceImpl implements UploadFrameService {
                 newStudent.setTrainLevel(trainLevelCell.getRichStringCellValue().getString());
                 newStudent.setClassName(classNameCell.getRichStringCellValue().getString());
 
+                // 用户赋角色(student)
+                mapUtilService.addNewRoleMap(newStudent.getId(),"student");
+                // 插入新的学生
                 sysUserMapper.insertSelective(newStudent);
                 // 记得添加新的map
                 sysUserMap.put(workIdCell.getRichStringCellValue().getString(),1);
@@ -474,6 +496,5 @@ public class UploadFrameServiceImpl implements UploadFrameService {
 
             studentCourseMapper.insertSelective(newStudentCourse);
         }
-        return "上传学生选课信息成功";
     }
 }

@@ -115,6 +115,6 @@ public class SysUser {
     }
 
     public void setSecretePwd(String userPwd){
-        this.userPwd = userPwd;
+        this.userPwd = new BCryptPasswordEncoder().encode(userPwd);
     }
 }

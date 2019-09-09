@@ -134,4 +134,10 @@
         `status` = #{status,jdbcType=INTEGER}
         where id = #{id,jdbcType=VARCHAR}
     </update>
+
+    <select id="selectIdByRoleCode" resultType="java.lang.String">
+        select id
+        from index_point.sys_role
+        where role_code = #{roleCode,jdbcType=VARCHAR}
+    </select>
 </mapper>

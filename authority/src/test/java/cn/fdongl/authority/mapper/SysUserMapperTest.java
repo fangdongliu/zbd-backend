@@ -58,7 +58,7 @@ public class SysUserMapperTest {
     }
 
     @Test
-    public void pwdTest(){
+    public void pwdTest() {
         String pwd = new BCryptPasswordEncoder().encode("123456");
         System.out.println(pwd);
     }

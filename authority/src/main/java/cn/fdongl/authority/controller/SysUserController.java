@@ -47,20 +47,24 @@ public class SysUserController {
         }
     }
 
-    @ApiOperation(value = "更新用户密码")
+    @ApiOperation(value = "更新用户信息")
     @PostMapping(value = "updateInfo")
     public Object updateInfo(
             JwtUser jwtUser,
             @RequestParam("userId") String userId,
-            @RequestParam("newPassword") String newPassword
+            @RequestParam("newPassword") String newPassword,
+            @RequestParam(value = "newRealName",required = false) String newRealName
     ){
         Date dateNow = new Date();
 
         SysUser theUser = sysUserService.selectByPrimaryKey(userId);
+
         theUser.setLastPasswordResetDate(dateNow);
         theUser.setModifyDate(dateNow);
         theUser.setModifyUserId(jwtUser.getId());
-
+        if (newRealName != null){
+            theUser.setRealName(newRealName);
+        }
         // 修改为设置新的加密密码
         theUser.setSecretePwd(passwordEncoder.encode(newPassword));
 

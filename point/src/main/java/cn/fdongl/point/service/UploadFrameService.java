@@ -27,11 +27,11 @@ public interface UploadFrameService {
      * 上传教师信息
      * @param teacherFile
      */
-    String uploadTeacherInfo(MultipartFile teacherFile) throws IOException;
+    void uploadTeacherInfo(MultipartFile teacherFile) throws IOException;
 
     /**
      * 上传学生选课信息
      * @param studentCourse
      */
-    String uploadStudentCourse(MultipartFile studentCourse) throws IOException;
+    void uploadStudentCourse(MultipartFile studentCourse) throws IOException;
 }
