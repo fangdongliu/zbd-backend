@@ -14,7 +14,7 @@ public interface ClassPointService {
      * @param file 上传的excel文件
      */
 
-    void savePoint(String classId, MultipartFile file) throws  Exception;
+    String savePoint(String classId, MultipartFile file) throws  Exception;
 
     /**
      * 学生评教

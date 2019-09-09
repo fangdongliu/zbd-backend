@@ -1,6 +1,7 @@
 package cn.fdongl.point.service.impl;
 
 import cn.fdongl.authority.util.IdGen;
+import cn.fdongl.point.entity.MapTeacherCourse;
 import cn.fdongl.point.mapper.MapCourseEvaluationMapper;
 import cn.fdongl.point.mapper.MapStudentEvaluationMapper;
 import cn.fdongl.point.mapper.SysIndexMapper;
@@ -14,13 +15,17 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.sql.Array;
 import java.sql.Struct;
 import java.util.ArrayList;
@@ -40,78 +45,84 @@ public class ClassPointServiceImpl implements ClassPointService {
     @Autowired
     private MapCourseEvaluationMapper mapCourseEvaluationMapper;
 
+
     @Override
-    public void savePoint(String classId, MultipartFile file) throws Exception {
-        //获取第二个sheet名称
-        Sheet sheet=ExcelUtils.getSheet(file,1);
-        String sheetName=sheet.getSheetName();
-        //获取所教学生级数,切割sheet名称
-        String stuYear=sheetName.substring(0,3);
+    public String savePoint(String classId, MultipartFile file) throws Exception {
 
-        //读取评价值不为空的列
-        Row row = sheet.getRow(0);
-        Iterator cells = row.cellIterator();
-        HSSFCell s=null;
-        while(cells.hasNext()){
-            HSSFCell cell = (HSSFCell) cells.next();
-            String val=cell.getStringCellValue();
-            if("评价值".equals(val)){
-                s=cell;
-                break;
-            }
+        // 获取Excel的输出流
+        InputStream inputStream = file.getInputStream();
+        // 获取文件名称
+        String fileName = file.getOriginalFilename();
+        // init工作簿
+        Workbook workbook = null;
+        // 获取文件后缀
+        String fileType = fileName.substring(fileName.lastIndexOf("."));
+        // 根据不同后缀init不同的类，是xls还是xlsx
+        if (".xls".equals(fileType)) {
+            workbook = new HSSFWorkbook(inputStream);
+        } else if (".xlsx".equals(fileType)) {
+            workbook = new XSSFWorkbook(inputStream);
+        } else {
+            workbook = null;
+            return "请上传正确的表格文件";
+        }
+        // 如果上传为非excel文件，返回
+        if (workbook == null) {
+            return "请上传文件";
         }
 
-        if(s!=null){
-            int s_col=s.getColumnIndex();//评价值所在列的列号
-            List<MapCourseEvaluation> courseIndices=new ArrayList<>();
-            int count=0;
-            String indexName=null;//当前指标点的名称
-            Double indexValue=null;//当前指标点的值
+        // init
+        Sheet sheet = null;
+        Row row = null;
+        Cell cell = null;
+        List list = new ArrayList<>();
 
-            for(int i = sheet.getFirstRowNum();i<=sheet.getLastRowNum();i++){
-                Row s_row = sheet.getRow(i);
-                Cell s_first=s_row.getCell(0);
-                String val= (String) ExcelUtils.getCellValue(s_first);
-                if(!"".equals(val)){
-                    String[] vals=val.split(" ");
-                    indexName=vals[0];
-                    for(int j=i+1;j<=sheet.getLastRowNum();j++){
-                        Row now=sheet.getRow(j);
-                        Cell nowCell=now.getCell(s_col);
-                        Double f= (Double) ExcelUtils.getCellValue(nowCell);
-                        if(f!=null){
-                            indexValue=f;
-                            //将对应的值填写到类再添加到数据库中
-                            MapCourseEvaluation newCourseIndex=new MapCourseEvaluation();
-                            newCourseIndex.setCourseId(classId);
-                            newCourseIndex.setSchoolYear(AcademicYear.getStartYear());
-                            newCourseIndex.setEvaluationValue(indexValue);
-                            newCourseIndex.setId(IdGen.uuid());
-                            newCourseIndex.setIndexNumber(val);
-                            newCourseIndex.setStudentGrade(stuYear);
-                            courseIndices.add(newCourseIndex);
-                            i=j;
-                            break;
-                        }else{
-                            String firstRowValue= (String) ExcelUtils.getCellValue(now.getCell(0));//当前行的评价值名称
-                            if(firstRowValue!=null){
-                                System.out.println(indexName+"项的值不能为空");
-                                i=j;
-                                break;
-                            }
-                        }
-                    }
+        for (int t = 0; t < workbook.getNumberOfSheets(); t++) {
+            sheet = workbook.getSheetAt(t);
+            if (sheet == null) {
+                continue;
+            }
+            for (int j =0; j < sheet.getLastRowNum(); j++) {
+                row = sheet.getRow(j);
+                if (row == null || row.getFirstCellNum() == j) {
+                    continue;
                 }
+                List<Object> li = new ArrayList<>();
+                for (int y = row.getFirstCellNum(); y < row.getLastCellNum(); y++) {
+                    cell = row.getCell(y);
+                    li.add(cell);
+                }
+                list.add(li);
             }
-            for(int i=0;i<courseIndices.size();i++){
-                String number=courseIndices.get(i).getIndexNumber();
-                MapCourseEvaluation mapCourseIndex=courseIndices.get(i);
-                String indexId=sysIndexMapper.selectByIdAndDate(number).getId();
-                mapCourseIndex.setIndexId(indexId);
+
+        }
+        workbook.close();
+        inputStream.close();
+
+        List<Object> f= (List<Object>) list.get(0);
+        int s=0;
+        int v=0;
+        for(int j=0;j<f.size();j++){
+            String val= (String) f.get(j);
+            if("达成目标值".equals(val)){
+                s=j;
             }
-            mapCourseEvaluationMapper.insertList(courseIndices);
+            if("评价值".equals(val)){
+                v=j;
+            }
+        }
+        for(int j=0;j<list.size();j++){
+            List<Object> lo= (List<Object>) list.get(j);
+            String name= (String) lo.get(j);
+            if(name!=null){
+                MapTeacherCourse mapTeacherCourse=new MapTeacherCourse();
+                String[] n=name.split(" ");
+                mapTeacherCourse.setCourseName(n[0]);
+
+            }
         }
 
+        return null;
     }
 
 
@@ -142,7 +153,7 @@ public class ClassPointServiceImpl implements ClassPointService {
      * @param studentId 学生的主键id
      * @param courseSelectNumber 选课课号 course_select_number
      * @param evaluationArray 评分数组(下标0-11代表12个指标点)
-     * @return void        
+     * @return void
      * @date 2019/9/8 21:48
      **/
     public void studentEvaluateCourse(String studentId, String courseSelectNumber, Array evaluationArray){
