@@ -18,10 +18,10 @@ public interface UploadFrameService {
     String uploadProject(MultipartFile projectFile, HttpServletRequest request) throws IOException;
 
     /**
-     * 上传课程对应指标点
-     * @param classPointFile
+     * 上传课程培养标准实现矩阵
+     * @param cultivateMatrix
      */
-    String uploadClassPoint(MultipartFile classPointFile) throws IOException;
+    void uploadCultivateMatrix(MultipartFile cultivateMatrix) throws IOException;
 
     /**
      * 上传教师信息

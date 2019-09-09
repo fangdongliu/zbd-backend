@@ -84,20 +84,25 @@ public class UploadController extends BaseController {
     }
 
 
-    //上传培养矩阵
+    /**
+     * 上传培养矩阵
+     *
+     * @author zm
+     * @param file e.g. 软件学院2016版培养方案-3-培养标准实现矩阵2016级
+     * @return java.lang.Object
+     * @date 2019/9/9 19:41
+     **/
     @PostMapping(value = "/cultivateMatrix")
     public Object uploadCultivateMatrix(@RequestParam("file") MultipartFile file) {
-        String msg = null;
         try {
-            msg = uploadFrameService.uploadClassPoint(file);
-            if (msg == null) {
-                return retMsg.Set(MsgType.SUCCESS);
-            } else {
-                return retMsg.Set(MsgType.ERROR, null, msg);
-            }
+            System.out.println("开始上传培养矩阵");
+            uploadFrameService.uploadCultivateMatrix(file);
         } catch (Exception e) {
+            e.printStackTrace();
             return retMsg.Set(MsgType.SUCCESS);
         }
+        System.out.println("传培养矩阵上传完毕");
+        return retMsg.Set(MsgType.SUCCESS);
     }
 
     @ApiOperation(value = "上传教师信息")
