@@ -57,6 +57,7 @@ public class InfoController extends BaseController {
         teacherCoursePage.setResultList(mapTeacherCourses);
         teacherCoursePage.setTotal(total);
 
+
         return retMsg.Set(MsgType.SUCCESS,teacherCoursePage,"获取教师课程分页成功");
     }
 

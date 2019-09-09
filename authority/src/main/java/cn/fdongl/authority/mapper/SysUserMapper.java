@@ -40,7 +40,7 @@ public interface SysUserMapper {
      * 获取所有用户的List
      *
      * @author zm
-     * @param []
+     * @param
      * @return java.util.List<java.lang.String>
      * @date 2019/9/8 13:48
      **/

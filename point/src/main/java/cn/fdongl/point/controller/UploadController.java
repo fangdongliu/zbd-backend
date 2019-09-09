@@ -38,14 +38,11 @@ public class UploadController extends BaseController {
             if(msg!=null){
                 return retMsg.Set(MsgType.ERROR,null,msg);
             }
-    public Object uploadTeacherCom(@RequestParam("classId") String classId,
-                                   @RequestParam("file") MultipartFile file) {
-        try {
-            classPointService.savePoint(classId, file);
-            return retMsg.Set(MsgType.SUCCESS);
+
         } catch (Exception e) {
             return retMsg.Set(MsgType.ERROR);
         }
+        return retMsg.Set(MsgType.SUCCESS);
     }
 
 
