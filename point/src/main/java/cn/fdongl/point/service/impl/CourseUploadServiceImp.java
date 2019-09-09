@@ -247,7 +247,7 @@ public class CourseUploadServiceImp implements CourseUploadService {
                         String schoolYear=val.substring(1,12);
                         String s=val.substring(14);
                         String[] ls=s.split("-");//第一个是课号，第二个是老师工号
-                        mapTeacherCourse.setCourseId(ls[0]);
+                        mapTeacherCourse.setCourseNumber(ls[0]);
                         mapTeacherCourse.setCourseSemester(schoolYear);
                         mapTeacherCourse.setTeacherWorkId(ls[1]);
                         break;
@@ -325,6 +325,7 @@ public class CourseUploadServiceImp implements CourseUploadService {
                     }
                 }
             }
+            mapTeacherCourse.setStatus(3);
             mapTeacherCourseMapper.insertSelective(mapTeacherCourse);
         }
 

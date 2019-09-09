@@ -61,6 +61,37 @@ public class InfoController extends BaseController {
         return retMsg.Set(MsgType.SUCCESS,teacherCoursePage,"获取教师课程分页成功");
     }
 
+    /**
+     * 获取教师往期评价
+     * @param pageIndex
+     * @param pageSize
+     * @return
+     */
+    @PostMapping(value = "oldTeacherEvaluation")
+    public Object getAllOld(
+            @RequestParam("pageIndex") int pageIndex,
+            @RequestParam("pageSize") int pageSize
+    ){
+        MapTeacherCourse mapTeacherCourse=new MapTeacherCourse();
+        mapTeacherCourse.setPage(new Page<MapTeacherCourse>());
+
+        mapTeacherCourse.getPage().setPageIndex(pageIndex);
+        mapTeacherCourse.getPage().setPageSize(pageSize);
+
+        List<MapTeacherCourse> mapTeacherCourses=mapTeacherCourseMapper.getOldMapTeacherCourseByPage(mapTeacherCourse);
+
+        int total=mapTeacherCourseMapper.getOldTotal(mapTeacherCourse);
+
+
+        Page<MapTeacherCourse> teacherCoursePage = new Page<>();
+        teacherCoursePage.setResultList(mapTeacherCourses);
+        teacherCoursePage.setTotal(total);
+
+
+        return retMsg.Set(MsgType.SUCCESS,teacherCoursePage,"获取教师课程分页成功");
+
+    }
+
 
     /**
      * 获取所有学院的列表
