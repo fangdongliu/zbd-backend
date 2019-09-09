@@ -111,11 +111,6 @@ public class CourseUploadServiceImp implements CourseUploadService {
         workbook.close();
         inputStream.close();
         List<SysCourse> courses = new ArrayList<>();
-        List<String> courseNumList=sysCourseMapper.getAllCourseNum();
-        Map<String,Integer> courseNumMap=new HashMap<>();
-        for(int i=0;i<courseNumList.size();i++){
-            courseNumMap.put(courseNumList.get(i),1);
-        }
 
         for (int i = 0; i < list.size(); i++) {
             ExcelContent excelContent= (ExcelContent) list.get(i);
@@ -173,12 +168,16 @@ public class CourseUploadServiceImp implements CourseUploadService {
                 }
             }
             sysCourse.setCourseSemester(excelContent.getSchoolYear());
-            Integer flag=courseNumMap.get(sysCourse.getCourseNumber());
-            if(flag==null){
-                sysCourseMapper.insertSelective(sysCourse);
+            courses.add(sysCourse);
+            if(courses.size()>400){
+                sysCourseMapper.insertBatch(courses);
+                courses.clear();
             }
-        }
 
+        }
+        if(courses.size()>0){
+            sysCourseMapper.insertBatch(courses);
+        }
         return null;
 
     }

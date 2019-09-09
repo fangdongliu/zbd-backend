@@ -13,6 +13,8 @@ public interface SysCourseMapper {
 
     int insert(SysCourse record);
 
+    int insertBatch(List<SysCourse>list);
+
     int insertSelective(SysCourse record);
 
     SysCourse selectByPrimaryKey(String id);

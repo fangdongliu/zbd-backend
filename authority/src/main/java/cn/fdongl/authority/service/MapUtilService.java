@@ -3,8 +3,12 @@ package cn.fdongl.authority.service;
 import cn.fdongl.authority.mapper.MapUserRoleMapper;
 import cn.fdongl.authority.mapper.SysRoleMapper;
 import cn.fdongl.authority.vo.MapUserRole;
+import cn.fdongl.authority.vo.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ClassName MapUtilService
@@ -37,5 +41,17 @@ public class MapUtilService {
         mapUserRole.setUserId(userId);
         mapUserRole.setRoleId(roleId);
         mapUserRoleMapper.insertSelective(mapUserRole);
+    }
+    public void addNewRoleMapBatch(List<SysUser> userId, String roleCode){
+        String roleId = sysRoleMapper.selectIdByRoleCode(roleCode);
+        List<MapUserRole>mapUserRoles = new ArrayList<>();
+        for (SysUser sysUser : userId) {
+            MapUserRole m = new MapUserRole();
+            m.setUUId();
+            m.setUserId(sysUser.getId());
+            m.setRoleId(roleId);
+            mapUserRoles.add(m);
+        }
+        mapUserRoleMapper.insertBatch(mapUserRoles);
     }
 }

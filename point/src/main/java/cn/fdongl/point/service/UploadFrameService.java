@@ -1,10 +1,12 @@
 package cn.fdongl.point.service;
 
+import cn.fdongl.point.entity.MapStudentCourse;
 import org.springframework.http.HttpRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 上传学院纲要
@@ -28,6 +30,8 @@ public interface UploadFrameService {
      * @param teacherFile
      */
     void uploadTeacherInfo(MultipartFile teacherFile) throws IOException;
+
+
 
     /**
      * 上传学生选课信息
