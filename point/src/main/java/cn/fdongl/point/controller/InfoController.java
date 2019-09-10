@@ -6,11 +6,14 @@ import cn.fdongl.authority.util.MsgType;
 import cn.fdongl.authority.util.Page;
 
 import cn.fdongl.authority.util.SearchResult;
+import cn.fdongl.authority.vo.JwtUser;
 import cn.fdongl.point.entity.MapTeacherCourse;
 import cn.fdongl.point.entity.SysCourse;
+import cn.fdongl.point.entity.SysFile;
 import cn.fdongl.point.mapper.MapTeacherCourseMapper;
 
 
+import cn.fdongl.point.mapper.SysFileMapper;
 import cn.fdongl.point.service.SysInfoService;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +33,8 @@ public class InfoController extends BaseController {
 
     @Autowired
     private SysInfoService sysInfoService;
+    @Autowired
+    private SysFileMapper sysFileMapper;
 
     /**
      * 获取教师评价
@@ -43,11 +48,13 @@ public class InfoController extends BaseController {
     @PostMapping(value = "teacherEvaluation")
     public Object getAll(
             @RequestParam("pageIndex") int pageIndex,
-            @RequestParam("pageSize") int pageSize
+            @RequestParam("pageSize") int pageSize,
+            JwtUser user
     ) {
         MapTeacherCourse mapTeacherCourse = new MapTeacherCourse();
         mapTeacherCourse.setPage(new Page<MapTeacherCourse>());
 
+        mapTeacherCourse.setTeacherWorkId(user.getUsername());
         mapTeacherCourse.getPage().setPageIndex(pageIndex);
         mapTeacherCourse.getPage().setPageSize(pageSize);
 
@@ -74,11 +81,13 @@ public class InfoController extends BaseController {
     @PostMapping(value = "oldTeacherEvaluation")
     public Object getAllOld(
             @RequestParam("pageIndex") int pageIndex,
-            @RequestParam("pageSize") int pageSize
+            @RequestParam("pageSize") int pageSize,
+            JwtUser user
     ) {
         MapTeacherCourse mapTeacherCourse = new MapTeacherCourse();
         mapTeacherCourse.setPage(new Page<MapTeacherCourse>());
 
+        mapTeacherCourse.setTeacherWorkId(user.getUsername());
         mapTeacherCourse.getPage().setPageIndex(pageIndex);
         mapTeacherCourse.getPage().setPageSize(pageSize);
 
@@ -93,6 +102,34 @@ public class InfoController extends BaseController {
 
 
         return retMsg.Set(MsgType.SUCCESS, teacherCoursePage, "获取教师课程分页成功");
+
+    }
+
+    /**
+     * 获取用户所有的文件下载
+     */
+    @PostMapping(value = "getAllUserTables")
+    public Object getAllUserTable(@RequestParam("pageIndex") int pageIndex,
+                                @RequestParam("pageSize") int pageSize,
+                                @RequestParam("keyWord") String keyWord,
+                                JwtUser user){
+        SysFile sysFile=new SysFile();
+        sysFile.setPage(new Page<SysFile>());
+        sysFile.setCreateUserId(user.getId());
+        sysFile.getPage().setPageIndex(pageIndex);
+        sysFile.getPage().setPageSize(pageSize);
+        sysFile.setFileName(keyWord);
+
+        List<SysFile> sysFiles=sysFileMapper.getSysFileByPage(sysFile);
+        int total=sysFileMapper.getTotal(sysFile);
+
+        Page<SysFile> filePage = new Page<>();
+        filePage.setResultList(sysFiles);
+        filePage.setTotal(total);
+
+
+        return retMsg.Set(MsgType.SUCCESS, filePage, "获取教师课程分页成功");
+
 
     }
 
@@ -191,4 +228,6 @@ public class InfoController extends BaseController {
         }
         return retMsg.Set(MsgType.SUCCESS, null, "获取学期成功");
     }
+
+
 }

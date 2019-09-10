@@ -1,5 +1,6 @@
 package cn.fdongl.point.entity;
 
+import cn.fdongl.authority.util.Page;
 import lombok.Data;
 
 import java.util.Date;
@@ -45,4 +46,6 @@ public class SysFile {
     * 状态值(-1失效，0默认值)
     */
     private Integer status;
+
+    private transient Page<SysFile> page;
 }
