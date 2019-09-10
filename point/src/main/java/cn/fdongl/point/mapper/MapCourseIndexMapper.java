@@ -11,8 +11,6 @@ public interface MapCourseIndexMapper {
 
     int insert(MapCourseIndex record);
 
-    int insertList(List<MapCourseIndex> list);
-
     int insertSelective(MapCourseIndex record);
 
     MapCourseIndex selectByPrimaryKey(String id);

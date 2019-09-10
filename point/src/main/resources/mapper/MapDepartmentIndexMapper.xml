@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.fdongl.point.mapper.MapCourseIndexMapper">
-  <resultMap id="BaseResultMap" type="cn.fdongl.point.entity.MapCourseIndex">
+<mapper namespace="cn.fdongl.point.mapper.MapDepartmentIndexMapper">
+  <resultMap id="BaseResultMap" type="cn.fdongl.point.entity.MapDepartmentIndex">
     <!--@mbg.generated-->
     <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="course_number" jdbcType="VARCHAR" property="courseNumber" />
     <result column="index_id" jdbcType="VARCHAR" property="indexId" />
-    <result column="index_number" jdbcType="VARCHAR" property="indexNumber" />
-    <result column="proportion_value" jdbcType="DOUBLE" property="proportionValue" />
-    <result column="school_grade" jdbcType="VARCHAR" property="schoolGrade" />
-    <result column="statistic_year" jdbcType="VARCHAR" property="statisticYear" />
+    <result column="student_grade" jdbcType="VARCHAR" property="studentGrade" />
+    <result column="department_name" jdbcType="VARCHAR" property="departmentName" />
+    <result column="majority_name" jdbcType="VARCHAR" property="majorityName" />
+    <result column="period" jdbcType="INTEGER" property="period" />
     <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="modify_user_id" jdbcType="VARCHAR" property="modifyUserId" />
@@ -18,58 +17,53 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, course_number, index_id, index_number, proportion_value, school_grade, statistic_year,
-    create_user_id, create_date, modify_user_id, modify_date, `status`
+    id, index_id, student_grade, department_name, majority_name, period, create_user_id, 
+    create_date, modify_user_id, modify_date, `status`
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     <!--@mbg.generated-->
     select 
     <include refid="Base_Column_List" />
-    from map_course_index
+    from map_department_index
     where id = #{id,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     <!--@mbg.generated-->
-    delete from map_course_index
+    delete from map_department_index
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="cn.fdongl.point.entity.MapCourseIndex">
+  <insert id="insert" parameterType="cn.fdongl.point.entity.MapDepartmentIndex">
     <!--@mbg.generated-->
-    insert into map_course_index (id, course_number, index_id,
-      index_number, proportion_value, school_grade, 
-      statistic_year, create_user_id, create_date, 
-      modify_user_id, modify_date, `status`
-      )
-    values (#{id,jdbcType=VARCHAR}, #{courseId,jdbcType=VARCHAR}, #{indexId,jdbcType=VARCHAR}, 
-      #{indexNumber,jdbcType=VARCHAR}, #{proportionValue,jdbcType=DOUBLE}, #{schoolGrade,jdbcType=VARCHAR}, 
-      #{statisticYear,jdbcType=VARCHAR}, #{createUserId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
-      #{modifyUserId,jdbcType=VARCHAR}, #{modifyDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}
-      )
+    insert into map_department_index (id, index_id, student_grade, 
+      department_name, majority_name, period, 
+      create_user_id, create_date, modify_user_id, 
+      modify_date, `status`)
+    values (#{id,jdbcType=VARCHAR}, #{indexId,jdbcType=VARCHAR}, #{studentGrade,jdbcType=VARCHAR}, 
+      #{departmentName,jdbcType=VARCHAR}, #{majorityName,jdbcType=VARCHAR}, #{period,jdbcType=INTEGER}, 
+      #{createUserId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=VARCHAR}, 
+      #{modifyDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="cn.fdongl.point.entity.MapCourseIndex">
+  <insert id="insertSelective" parameterType="cn.fdongl.point.entity.MapDepartmentIndex">
     <!--@mbg.generated-->
-    insert into map_course_index
+    insert into map_department_index
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
-      <if test="courseNumber != null">
-        course_number,
-      </if>
       <if test="indexId != null">
         index_id,
       </if>
-      <if test="indexNumber != null">
-        index_number,
+      <if test="studentGrade != null">
+        student_grade,
       </if>
-      <if test="proportionValue != null">
-        proportion_value,
+      <if test="departmentName != null">
+        department_name,
       </if>
-      <if test="schoolGrade != null">
-        school_grade,
+      <if test="majorityName != null">
+        majority_name,
       </if>
-      <if test="statisticYear != null">
-        statistic_year,
+      <if test="period != null">
+        period,
       </if>
       <if test="createUserId != null">
         create_user_id,
@@ -91,23 +85,20 @@
       <if test="id != null">
         #{id,jdbcType=VARCHAR},
       </if>
-      <if test="courseNumber != null">
-        #{courseNumber,jdbcType=VARCHAR},
-      </if>
       <if test="indexId != null">
         #{indexId,jdbcType=VARCHAR},
       </if>
-      <if test="indexNumber != null">
-        #{indexNumber,jdbcType=VARCHAR},
+      <if test="studentGrade != null">
+        #{studentGrade,jdbcType=VARCHAR},
       </if>
-      <if test="proportionValue != null">
-        #{proportionValue,jdbcType=DOUBLE},
+      <if test="departmentName != null">
+        #{departmentName,jdbcType=VARCHAR},
       </if>
-      <if test="schoolGrade != null">
-        #{schoolGrade,jdbcType=VARCHAR},
+      <if test="majorityName != null">
+        #{majorityName,jdbcType=VARCHAR},
       </if>
-      <if test="statisticYear != null">
-        #{statisticYear,jdbcType=VARCHAR},
+      <if test="period != null">
+        #{period,jdbcType=INTEGER},
       </if>
       <if test="createUserId != null">
         #{createUserId,jdbcType=VARCHAR},
@@ -126,27 +117,24 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.fdongl.point.entity.MapCourseIndex">
+  <update id="updateByPrimaryKeySelective" parameterType="cn.fdongl.point.entity.MapDepartmentIndex">
     <!--@mbg.generated-->
-    update map_course_index
+    update map_department_index
     <set>
-      <if test="courseNumber != null">
-        course_number = #{courseNumber,jdbcType=VARCHAR},
-      </if>
       <if test="indexId != null">
         index_id = #{indexId,jdbcType=VARCHAR},
       </if>
-      <if test="indexNumber != null">
-        index_number = #{indexNumber,jdbcType=VARCHAR},
+      <if test="studentGrade != null">
+        student_grade = #{studentGrade,jdbcType=VARCHAR},
       </if>
-      <if test="proportionValue != null">
-        proportion_value = #{proportionValue,jdbcType=DOUBLE},
+      <if test="departmentName != null">
+        department_name = #{departmentName,jdbcType=VARCHAR},
       </if>
-      <if test="schoolGrade != null">
-        school_grade = #{schoolGrade,jdbcType=VARCHAR},
+      <if test="majorityName != null">
+        majority_name = #{majorityName,jdbcType=VARCHAR},
       </if>
-      <if test="statisticYear != null">
-        statistic_year = #{statisticYear,jdbcType=VARCHAR},
+      <if test="period != null">
+        period = #{period,jdbcType=INTEGER},
       </if>
       <if test="createUserId != null">
         create_user_id = #{createUserId,jdbcType=VARCHAR},
@@ -166,15 +154,14 @@
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="cn.fdongl.point.entity.MapCourseIndex">
+  <update id="updateByPrimaryKey" parameterType="cn.fdongl.point.entity.MapDepartmentIndex">
     <!--@mbg.generated-->
-    update map_course_index
-    set course_number = #{courseNumber,jdbcType=VARCHAR},
-      index_id = #{indexId,jdbcType=VARCHAR},
-      index_number = #{indexNumber,jdbcType=VARCHAR},
-      proportion_value = #{proportionValue,jdbcType=DOUBLE},
-      school_grade = #{schoolGrade,jdbcType=VARCHAR},
-      statistic_year = #{statisticYear,jdbcType=VARCHAR},
+    update map_department_index
+    set index_id = #{indexId,jdbcType=VARCHAR},
+      student_grade = #{studentGrade,jdbcType=VARCHAR},
+      department_name = #{departmentName,jdbcType=VARCHAR},
+      majority_name = #{majorityName,jdbcType=VARCHAR},
+      period = #{period,jdbcType=INTEGER},
       create_user_id = #{createUserId,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       modify_user_id = #{modifyUserId,jdbcType=VARCHAR},

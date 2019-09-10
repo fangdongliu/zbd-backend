@@ -1,5 +1,6 @@
 package cn.fdongl.point.entity;
 
+import cn.fdongl.authority.util.IdGen;
 import lombok.Data;
 
 import java.util.Date;
@@ -12,9 +13,9 @@ public class MapCourseIndex {
     private String id;
 
     /**
-     * 课程id
+     * 课程编号
      */
-    private String courseId;
+    private String courseNumber;
 
     /**
      * 指标要求id
@@ -65,4 +66,12 @@ public class MapCourseIndex {
      * 状态值(-1失效，0默认值代表是导入时的初始设置值，1标识是某课程的计算结果值)
      */
     private Integer status;
+
+    public MapCourseIndex() {
+        this.id = IdGen.uuid();
+    }
+
+    public void setUUId(){
+        this.id = IdGen.uuid();
+    }
 }

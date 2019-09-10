@@ -19,14 +19,12 @@ import cn.fdongl.point.entity.SysIndex;
 import cn.fdongl.point.entity.*;
 import cn.fdongl.point.mapper.*;
 import cn.fdongl.point.service.UploadFrameService;
+import cn.fdongl.point.util.DateUtils;
 import cn.fdongl.point.util.ExcelUtils;
 import cn.fdongl.point.util.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +63,12 @@ public class UploadFrameServiceImpl implements UploadFrameService {
     private MapCultivateFileMapper mapCultivateFileMapper;
     @Autowired
     private MapUtilService mapUtilService;
+    @Autowired
+    private MapDepartmentIndexMapper mapDepartmentIndexMapper;
+    @Autowired
+    private SysDictMapper sysDictMapper;
+    @Autowired
+    private SysDictTypeMapper sysDictTypeMapper;
 
     @Override
     public String uploadProject(MultipartFile projectFile, HttpServletRequest request) throws IOException {
@@ -144,16 +148,13 @@ public class UploadFrameServiceImpl implements UploadFrameService {
      * @author zm
      * @date 2019/9/9 19:50
      **/
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void uploadCultivateMatrix(MultipartFile cultivateMatrix) throws IOException {
         // 获取Excel的输出流
         InputStream inputStream = cultivateMatrix.getInputStream();
         // 获取文件名称
         String fileName = cultivateMatrix.getOriginalFilename();
-        // 截取 学院 + 专业 + 年级
-        String department = StringUtils.getDepartment(fileName);
-        String majority = StringUtils.getMajority(fileName);
-        String grade = StringUtils.getGrade(fileName);
         // init工作簿
         Workbook workbook = null;
         // 获取文件后缀
@@ -176,7 +177,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         // 循环 sheet 这里仅仅处理第三个sheet
         int sheetNum = workbook.getNumberOfSheets();
         // 设置 sheet 为第三个sheet
-        sheet = workbook.getSheetAt(sheetNum -1);
+        sheet = workbook.getSheetAt(sheetNum - 1);
         // 循环 sheet
         for (int j = sheet.getFirstRowNum(); j <= sheet.getLastRowNum(); j++) {
             row = sheet.getRow(j);
@@ -193,34 +194,97 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         // 关闭流
         workbook.close();
         inputStream.close();
-
         // 0行 0行的列1是 矩阵名称
         List<Object> zeroLo = (List<Object>) list.get(0);
         // 获取矩阵名称 e.g. 北京理工软件工程专业毕业要求指标点职称课程关联矩阵
-        String matrixName = ExcelUtils.getMergedRegionValue(sheet, 0 ,0 );
-        // 1行 指标点大类
-        List<Object> oneLo = (List<Object>) list.get(1);
-        // 2行 指标点大类的说明
-        List<Object> twoLo = (List<Object>) list.get(2);
-        // 3行 指标点小类
-        List<Object> threeLo = (List<Object>) list.get(3);
+        String matrixTitle = ExcelUtils.getMergedRegionValue(sheet, 0, 0);
+        // 根据矩阵 title 获取专业名称
+        String majority = StringUtils.getMajority(matrixTitle);
+        // 截取 学院 + 专业 + 年级
+        String department = StringUtils.getDepartment(fileName);
+        String grade = StringUtils.getGrade(fileName);
+        // 获取当前是第几期
+        String dictTypeId = sysDictTypeMapper.selectIdByTypeName("培养矩阵期数");
+        sysDictMapper.selectByPrimaryKey(dictTypeId);
+        // 0行 指标点大类(因为第0行是合并的单元格，所以原第1行世纪是第0行，下同)
+        List<Object> oneLo = (List<Object>) list.get(0);
+        // 1行 指标点大类的说明
+        List<Object> twoLo = (List<Object>) list.get(1);
+        // 2行 指标点小类
+        List<Object> threeLo = (List<Object>) list.get(2);
         XSSFCell threeRowSingleCell;
+
         // 新建indexList用来存储所有的指标点小项(下标对应的是excel的列，后续课程匹配指标点时候用到)
         List<SysIndex> sysIndexList = new ArrayList<>();
+        // 新建关联用于插入
+        MapDepartmentIndex mapDepartmentIndex = new MapDepartmentIndex();
+        mapDepartmentIndex.setDepartmentName(department);
+        mapDepartmentIndex.setMajorityName(majority);
+        mapDepartmentIndex.setStudentGrade(grade);
+        mapDepartmentIndex.setPeriod(sysDictMapper.selectRecentSort());
+        mapDepartmentIndex.setCreateDate(DateUtils.getNowDate());
+        mapDepartmentIndex.setModifyDate(DateUtils.getNowDate());
         // 遍历3行(第四行)
         for (int i = 0; i < threeLo.size(); i++) {
             threeRowSingleCell = (XSSFCell) threeLo.get(i);
-            // 为空则插入空的 SysIndex 不为空则插入有内容的SysIndex
-            if(ExcelUtils.getJavaValue(threeRowSingleCell) == null){
+            String cellValue = (String) ExcelUtils.getJavaValue(threeRowSingleCell);
+            //结尾标志
+            if ("所有支撑的指标点".equals(cellValue)) {
+                break;
+            }
+            // 为空则在 sysIndexList 中插入null 不为空则插入有内容的 SysIndex
+            if (cellValue == null || "".equals(cellValue)) {
                 sysIndexList.add(null);
-            }else{
+            } else {
+                // 新建 SysIndex 用于插入
                 SysIndex tmpIndex = new SysIndex();
-                String cellValue = (String) ExcelUtils.getJavaValue(threeRowSingleCell);
-                tmpIndex.setIndexNumber(cellValue.substring(0,cellValue.indexOf(" ")));
-                tmpIndex.setIndexNumber(cellValue.substring(cellValue.indexOf(" ")));
-//                tmpIndex.se
+                tmpIndex.setCreateDate(DateUtils.getNowDate());
+                tmpIndex.setModifyDate(DateUtils.getNowDate());
+                // 指标点小项的编号
+                tmpIndex.setIndexNumber(cellValue.substring(0, cellValue.indexOf(" ")));
+                // 指标点小项的说明
+                tmpIndex.setIndexContent(cellValue.substring(cellValue.indexOf(" ")));
+                // 加入指标点小项的list中
+                sysIndexList.add(tmpIndex);
+                // 插入指标点小项目
+                sysIndexMapper.insertSelective(tmpIndex);
+                // 插入关联
+                mapDepartmentIndex.setUUId();
+                mapDepartmentIndex.setIndexId(tmpIndex.getId());
+                mapDepartmentIndexMapper.insertSelective(mapDepartmentIndex);
             }
         }
+
+        // 从第3行开始就是课程行
+        for (int i = 3; i < list.size() - 2; i++) {
+            List<Object> tmpLo = (List<Object>) list.get(i);
+            // 0 列是课程编号
+            String courseNumber = (String) ExcelUtils.getJavaValue((XSSFCell) tmpLo.get(0));
+            // 1 列是课程名称
+            String courseName = (String) ExcelUtils.getJavaValue((XSSFCell) tmpLo.get(1));
+            // 根据是第几列来从sysIndexList取出对应的指标点小项目 id 和 number
+            for (int j = 2; j < tmpLo.size() - 1; j++) {
+                String singleColumnValue = (String) ExcelUtils.getJavaValue((XSSFCell) tmpLo.get(j));
+                if (singleColumnValue == null || "".equals(singleColumnValue)) {
+                    continue;
+                }
+                // 新建课程-指标点关联项用于插入
+                MapCourseIndex mapCourseIndex = new MapCourseIndex();
+                // 设置课程编号
+                mapCourseIndex.setCourseNumber(courseNumber);
+                mapCourseIndex.setSchoolGrade(grade);
+                mapCourseIndex.setCreateDate(DateUtils.getNowDate());
+                mapCourseIndex.setModifyDate(DateUtils.getNowDate());
+                mapCourseIndex.setIndexNumber(sysIndexList.get(j).getIndexNumber());
+                mapCourseIndex.setIndexId(sysIndexList.get(j).getId());
+                mapCourseIndex.setProportionValue(Double.valueOf(singleColumnValue));
+                mapCourseIndexMapper.insertSelective(mapCourseIndex);
+            }
+            System.out.println("第" + i + "行完成");
+        }
+        // 课程行后两行是统计行(第一列是空，暂不处理)
+        // 更新字典项中的period信息
+        sysDictMapper.periodAddOne();
     }
 
     /**

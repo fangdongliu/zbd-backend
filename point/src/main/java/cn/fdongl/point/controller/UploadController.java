@@ -92,7 +92,7 @@ public class UploadController extends BaseController {
      * @return java.lang.Object
      * @date 2019/9/9 19:41
      **/
-    @PostMapping(value = "/cultivateMatrix")
+    @PostMapping(value = "cultivateMatrix")
     public Object uploadCultivateMatrix(@RequestParam("file") MultipartFile file) {
         try {
             System.out.println("开始上传培养矩阵");
