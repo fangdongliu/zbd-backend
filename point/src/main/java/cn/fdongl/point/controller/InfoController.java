@@ -146,7 +146,7 @@ public class InfoController extends BaseController {
     }
 
     /**
-     * 获取学生某学期所有的课程分页 for test
+     * 获取学生某学期所有的课程分页
      *
      * @author zm
      * @param studentWorkId 学生工号
@@ -154,7 +154,7 @@ public class InfoController extends BaseController {
      * @return java.lang.Object        
      * @date 2019/9/10 15:45
      **/
-    @PostMapping(value = "getCoursePage")
+    @PostMapping(value = "coursePage")
     public Object getCoursePage(
             @RequestParam("studentWorkId") String studentWorkId,
             @RequestParam("courseSemester") String courseSemester,

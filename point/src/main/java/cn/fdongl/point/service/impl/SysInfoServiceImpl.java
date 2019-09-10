@@ -86,13 +86,20 @@ public class SysInfoServiceImpl implements SysInfoService {
         List<SearchResult> searchResultList =
                 mapStudentCourseMapper.selectCourseNameAndCourseSelectNumberPageByUserWorkIdAndCourseSemester(
                         studentWorkId, courseSemester, (pageIndex - 1) * pageSize, pageSize);
-        int searchResultTotal =
-                mapStudentCourseMapper.selectSearchResultNumByUserWorkIdAndCourseSemester(
+        System.out.println("输出课程名称和选课课号");
+        System.out.println(searchResultList);
+
+        int searchResultTotal = mapStudentCourseMapper.selectSearchResultNumByUserWorkIdAndCourseSemester(
                         studentWorkId, courseSemester);
-        Page<SearchResult> resultPage = new Page<>();
+
+        System.out.println("该学期该课程所有数目");
+        System.out.println(searchResultTotal);
+
+        Page<SearchResult> resultPage = new Page<SearchResult>();
         resultPage.setResultList(searchResultList);
         resultPage.setTotal(searchResultTotal);
 
+        System.out.println(resultPage);
         return resultPage;
     }
 }

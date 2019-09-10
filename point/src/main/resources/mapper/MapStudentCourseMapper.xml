@@ -366,15 +366,16 @@
         limit #{pageStart},#{pageSize}
     </select>
 
-    <select id="selectCourseNameAndCourseSelectNumberPageByUserWorkIdAndCourseSemester" resultType="SearchResult">
-        select course_name, course_select_number
+    <select id="selectCourseNameAndCourseSelectNumberPageByUserWorkIdAndCourseSemester" resultType="cn.fdongl.authority.util.SearchResult">
+        select course_name as str1, course_select_number as str2
         from map_student_course
         where user_work_id=#{userWorkId,jdbcType=VARCHAR}
         and course_semester=#{courseSemester,jdbcType=VARCHAR}
         limit #{pageStart},#{pageSize}
     </select>
+
     <select id="selectSearchResultNumByUserWorkIdAndCourseSemester" resultType="int">
-        select count (*)
+        select count(*)
         from map_student_course
         where user_work_id=#{userWorkId,jdbcType=VARCHAR}
         and course_semester=#{courseSemester,jdbcType=VARCHAR}
