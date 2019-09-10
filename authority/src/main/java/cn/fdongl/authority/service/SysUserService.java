@@ -2,6 +2,7 @@ package cn.fdongl.authority.service;
 
 import cn.fdongl.authority.mapper.SysUserMapper;
 import cn.fdongl.authority.vo.SysUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -12,7 +13,7 @@ public class SysUserService {
 
     @Resource
     private SysUserMapper sysUserMapper;
-    
+
     public int deleteByPrimaryKey(String id) {
         return sysUserMapper.deleteByPrimaryKey(id);
     }

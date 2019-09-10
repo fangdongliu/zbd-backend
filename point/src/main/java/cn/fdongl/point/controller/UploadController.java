@@ -99,13 +99,20 @@ public class UploadController extends BaseController {
             uploadFrameService.uploadCultivateMatrix(file);
         } catch (Exception e) {
             e.printStackTrace();
-            return retMsg.Set(MsgType.SUCCESS);
+            return retMsg.Set(MsgType.ERROR);
         }
         System.out.println("传培养矩阵上传完毕");
         return retMsg.Set(MsgType.SUCCESS);
     }
 
-    @ApiOperation(value = "上传教师信息")
+    /**
+     * 上传教师信息
+     *
+     * @author zm
+     * @param teacherFile
+     * @return java.lang.Object
+     * @date 2019/9/10 14:52
+     **/
     @PostMapping(value = "teacherInfo")
     public Object uploadTeacherInfo(
             @RequestParam("file") MultipartFile teacherFile
@@ -124,7 +131,14 @@ public class UploadController extends BaseController {
         return retMsg.Set(MsgType.SUCCESS, null, "上传教师信息成功");
     }
 
-    @ApiOperation(value = "上传学生选课信息")
+    /**
+     * 上传学生选课信息
+     *
+     * @author zm
+     * @param studentCourseFile
+     * @return java.lang.Object
+     * @date 2019/9/10 14:52
+     **/
     @PostMapping(value = "studentCourse")
     public Object uploadStudentCourse(
             @RequestParam("file") MultipartFile studentCourseFile
@@ -170,5 +184,4 @@ public class UploadController extends BaseController {
         }
         return retMsg.Set(MsgType.SUCCESS);
     }
-
 }

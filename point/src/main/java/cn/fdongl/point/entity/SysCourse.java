@@ -1,5 +1,6 @@
 package cn.fdongl.point.entity;
 
+import cn.fdongl.authority.util.Page;
 import lombok.Data;
 
 import java.util.Date;
@@ -125,4 +126,9 @@ public class SysCourse {
     * 状态值(-1失效，0默认值)
     */
     private Integer status;
+
+    /**
+     * 课程分页
+     */
+    private transient Page<SysCourse> page;
 }
