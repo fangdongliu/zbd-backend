@@ -2,6 +2,7 @@ package cn.fdongl.point.util;
 
 
 import net.sf.json.JSONArray;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -216,7 +217,7 @@ public class ExcelUtils {
      * 根据Cell获取对应的String类型值
      *
      * @author zm
-     * @param [cell]
+     * @param
      * @return java.lang.Object
      * @date 2019/9/9 21:17
      **/
@@ -293,6 +294,22 @@ public class ExcelUtils {
             }
         }
         return doubleStr;
+    }
+
+    //获取文件输出流
+    public static InputStream getResourcesFileInputStream(String fileName){
+        return Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
+    }
+
+    public static String inputStreamToString(InputStream in) throws IOException {
+        ByteArrayOutputStream baos= new ByteArrayOutputStream();
+        int len=0;
+        byte[] b=new byte[1024];
+        while((len=in.read(b,0,b.length))!=-1){
+            baos.write(b,0,len);
+        }
+        byte[] buffer=baos.toByteArray();
+        return Base64.encodeBase64String(buffer);
     }
 }
 

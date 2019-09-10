@@ -5,14 +5,17 @@ import cn.fdongl.point.entity.MapTeacherCourse;
 import cn.fdongl.point.entity.SysFile;
 import cn.fdongl.point.mapper.MapTeacherCourseMapper;
 import cn.fdongl.point.mapper.SysFileMapper;
+import cn.fdongl.point.util.ExcelUtils;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
 
 @RestController
 @RequestMapping("/download")
@@ -27,8 +30,8 @@ public class DownloadController extends BaseController {
      * @param id
      * @return
      */
-    @PostMapping(value = "oldTeacherEvaluation")
-    public Object oldTeacherEvaluation(@RequestParam("id") String id,
+    @GetMapping(value = "downOldTeacherEvaluation")
+    public String oldTeacherEvaluation(@RequestParam("id") String id,
                                        HttpServletResponse response) {
         MapTeacherCourse mapTeacherCourse = mapTeacherCourseMapper.selectByPrimaryKey(id);
         String fileId = mapTeacherCourse.getFileId();
@@ -40,38 +43,40 @@ public class DownloadController extends BaseController {
         if (fileName != null) {
             File file1 = new File(filePath, fileName);
             if (file1.exists()) {
-                response.setContentType("application/force-download");// 设置强制下载不打开
-                response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);// 设置文件名
-                byte[] buffer = new byte[1024];
-                FileInputStream fis = null;
-                BufferedInputStream bis = null;
+                response.setContentType("application/vnd.ms-excel;charset=UTF-8");
+                response.setCharacterEncoding("UTF-8");
+                // response.setContentType("application/force-download");
                 try {
+                    response.setHeader("Content-Disposition", "attachment;fileName=" +   URLEncoder.encode(fileName,"UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                byte[] buffer = new byte[1024];
+                FileInputStream fis = null; //文件输入流
+                BufferedInputStream bis = null;
+
+                OutputStream os = null; //输出流
+                try {
+                    os = response.getOutputStream();
                     fis = new FileInputStream(file1);
                     bis = new BufferedInputStream(fis);
-                    OutputStream os = response.getOutputStream();
                     int i = bis.read(buffer);
-                    while (i != -1) {
-                        os.write(buffer, 0, i);
+                    while(i != -1){
+                        os.write(buffer);
                         i = bis.read(buffer);
                     }
-                    System.out.println("success");
-                } catch (Exception e) {
 
-                } finally {
-                    if (bis != null) {
-                        try {
-                            bis.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    if (fis != null) {
-                        try {
-                            fis.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                System.out.println("----------file download---" + fileName);
+                try {
+                    bis.close();
+                    fis.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
                 }
             }
         }

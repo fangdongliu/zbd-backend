@@ -4,11 +4,7 @@ import cn.fdongl.authority.util.IdGen;
 import cn.fdongl.point.entity.MapStudentCourse;
 import cn.fdongl.point.entity.MapTeacherCourse;
 import cn.fdongl.point.entity.*;
-import cn.fdongl.point.mapper.MapCourseEvaluationMapper;
-import cn.fdongl.point.mapper.MapStudentCourseMapper;
-import cn.fdongl.point.mapper.MapStudentEvaluationMapper;
-import cn.fdongl.point.mapper.MapTeacherCourseMapper;
-import cn.fdongl.point.mapper.SysIndexMapper;
+import cn.fdongl.point.mapper.*;
 import cn.fdongl.point.service.ClassPointService;
 import cn.fdongl.point.util.AcademicYear;
 import cn.fdongl.point.util.ExcelUtils;
@@ -28,8 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.sql.Array;
@@ -55,6 +53,9 @@ public class ClassPointServiceImpl implements ClassPointService {
 
     @Autowired
     private MapStudentCourseMapper mapStudentCourseMapper;
+
+    @Autowired
+    private SysFileMapper sysFileMapper;
 
     @Override
     public String savePoint(String classId, MultipartFile file) throws Exception {
@@ -174,8 +175,8 @@ public class ClassPointServiceImpl implements ClassPointService {
                                 //从下面的行中找评价值
                                 List<Object> list2= (List<Object>) l.get(j);
                                 XSSFCell cell1=(XSSFCell) list2.get(v);
-                                Object g=ExcelUtils.getCellValue1(cell1);
-                                String y= (String) g;
+
+                                String y= (String) ExcelUtils.getJavaValue(cell1);
                                 if(y!=""&&y!=null){
                                     Double com=Double.valueOf(y);
                                     mapCourseEvaluation.setEvaluationValue(com);
@@ -184,7 +185,7 @@ public class ClassPointServiceImpl implements ClassPointService {
                                 }
                                 j++;
                             }
-                            if(flag){
+                            if(!flag){
                                 return grade+"级评价表中"+n[0]+"的评价值为空";
                             }
 
@@ -200,21 +201,40 @@ public class ClassPointServiceImpl implements ClassPointService {
             }
         }
 
+
         //将文件保存到服务器
-        SysFile newFile=new SysFile();
-        String id=IdGen.uuid();
-        String path= new ApplicationHome(this.getClass()).getSource().getParentFile().getPath()+id;
-        newFile.setFilePath(path);
-        newFile.setFileName(file.getName());
-        newFile.setId(id);
-        if(file.getSize() != 0 && !"".equals(file.getName())){
-            FileOutputStream fileOut=new FileOutputStream(path);
-            fileOut.write(file.getBytes());
-        }
         MapTeacherCourse mapTeacherCourse=mapTeacherCourseMapper.selectByPrimaryKey(classId);
-        mapTeacherCourse.setFileId(id);
-        mapTeacherCourse.setStatus(4);
-        mapTeacherCourseMapper.updateByPrimaryKeySelective(mapTeacherCourse);
+        SysFile sysFile=null;
+        String path=  ClassUtils.getDefaultClassLoader().getResource("").getPath()+"/teacherEvaluation";
+        String filePath=null;
+        if(mapTeacherCourse.getFileId()!=null&& !mapTeacherCourse.getFileId().equals("")){
+            //说明是修改文件
+            sysFile=sysFileMapper.selectByPrimaryKey(mapTeacherCourse.getFileId());
+            sysFile.setFileName(fileName);
+            filePath=path+"/"+sysFile.getId();
+            sysFile.setFilePath(filePath);
+            sysFileMapper.updateByPrimaryKeySelective(sysFile);
+
+        }else{
+            //说明是新上传文件
+            sysFile=new SysFile();
+            String id=IdGen.uuid();
+            sysFile.setId(id);
+            filePath=path+"/"+sysFile.getId();
+            sysFile.setFilePath(filePath);
+            sysFile.setFileName(fileName);
+            mapTeacherCourse.setFileId(id);
+            mapTeacherCourse.setStatus(4);
+            mapTeacherCourseMapper.updateByPrimaryKeySelective(mapTeacherCourse);
+            sysFileMapper.insertSelective(sysFile);
+        }
+
+        File dest = new File(filePath+"/"+fileName);
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdirs();// 新建文件夹
+        }
+        file.transferTo(dest);// 文件写入
+
         return null;
     }
 
