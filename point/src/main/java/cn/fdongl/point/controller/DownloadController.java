@@ -27,34 +27,15 @@ public class DownloadController extends BaseController {
     @Autowired
     private SysFileMapper sysFileMapper;
 
-    @GetMapping(value = "{id}",produces = MediaType.ALL_VALUE)
-    public void download(@PathVariable("id") String id,HttpServletResponse response){
-        response.setContentType("application/msexcel");
-        response.setHeader("Content-Disposition", "attachment;fileName=" + "file.xlsx");
-        File f = new File("C:\\Users\\LiuFangdong\\Documents\\Tencent Files\\894856599\\FileRecv\\test.xlsx");
-        try {
-            InputStream in = new FileInputStream(f);
-            ServletOutputStream out = response.getOutputStream();
-            final byte[] b = new byte[8192];
-            for (int r; (r = in.read(b)) != -1;) {
-                out.write(b, 0, r);
-            }
-            in.close();
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * 下载往期教师评价表
      * @param id
      * @return
      */
-    @GetMapping(value = "downOldTeacherEvaluation")
-    public String oldTeacherEvaluation(@RequestParam("id") String id,
-                                       HttpServletResponse response) {
+    @GetMapping(value = "downOldTeacherEvaluation",produces = MediaType.ALL_VALUE)
+    public void oldTeacherEvaluation(@RequestParam("id") String id,
+                                       HttpServletResponse response) throws UnsupportedEncodingException {
         MapTeacherCourse mapTeacherCourse = mapTeacherCourseMapper.selectByPrimaryKey(id);
         String fileId = mapTeacherCourse.getFileId();
         SysFile file = sysFileMapper.selectByPrimaryKey(fileId);
@@ -65,44 +46,57 @@ public class DownloadController extends BaseController {
         if (fileName != null) {
             File file1 = new File(filePath, fileName);
             if (file1.exists()) {
-                response.setContentType("application/vnd.ms-excel;charset=UTF-8");
-                response.setCharacterEncoding("UTF-8");
-                // response.setContentType("application/force-download");
+                response.setContentType("application/msexcel");
+                response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(fileName,"UTF-8"));
                 try {
-                    response.setHeader("Content-Disposition", "attachment;fileName=" +   URLEncoder.encode(fileName,"UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                byte[] buffer = new byte[1024];
-                FileInputStream fis = null; //文件输入流
-                BufferedInputStream bis = null;
-
-                OutputStream os = null; //输出流
-                try {
-                    os = response.getOutputStream();
-                    fis = new FileInputStream(file1);
-                    bis = new BufferedInputStream(fis);
-                    int i = bis.read(buffer);
-                    while(i != -1){
-                        os.write(buffer);
-                        i = bis.read(buffer);
+                    InputStream in = new FileInputStream(file1);
+                    ServletOutputStream out = response.getOutputStream();
+                    final byte[] b = new byte[8192];
+                    for (int r; (r = in.read(b)) != -1;) {
+                        out.write(b, 0, r);
                     }
-
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                System.out.println("----------file download---" + fileName);
-                try {
-                    bis.close();
-                    fis.close();
+                    in.close();
+                    out.flush();
+                    out.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
         }
-        return null;
     }
+
+    /**
+     * 下载与该用户所有有关的表
+     */
+    @GetMapping(value = "downloadUserTable",produces = MediaType.ALL_VALUE)
+    public void userTable(@RequestParam("id") String id,
+                                     HttpServletResponse response) throws UnsupportedEncodingException {
+        SysFile file = sysFileMapper.selectByPrimaryKey(id);
+
+        String fileName = file.getFileName();
+        String filePath = file.getFilePath();
+        //下载文件
+        if (fileName != null) {
+            File file1 = new File(filePath, fileName);
+            if (file1.exists()) {
+                response.setContentType("application/msexcel");
+                response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(fileName,"UTF-8"));
+                try {
+                    InputStream in = new FileInputStream(file1);
+                    ServletOutputStream out = response.getOutputStream();
+                    final byte[] b = new byte[8192];
+                    for (int r; (r = in.read(b)) != -1;) {
+                        out.write(b, 0, r);
+                    }
+                    in.close();
+                    out.flush();
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 
 }

@@ -2,6 +2,7 @@ package cn.fdongl.point.controller;
 
 import cn.fdongl.authority.util.BaseController;
 import cn.fdongl.authority.util.MsgType;
+import cn.fdongl.authority.vo.JwtUser;
 import cn.fdongl.point.service.ClassPointService;
 import cn.fdongl.point.service.CourseUploadService;
 import cn.fdongl.point.service.UploadFrameService;
@@ -30,11 +31,12 @@ public class UploadController extends BaseController {
     //老师上传评价表
     @PostMapping(value = "/uploadTeacherCom")
     public Object uploadTeacherCom(@RequestParam("classId")String classId,
-                                   @RequestParam("file")MultipartFile file){
+                                   @RequestParam("file")MultipartFile file,
+                                   JwtUser user){
 
         String msg=null;
         try{
-            msg=classPointService.savePoint(classId,file);
+            msg=classPointService.savePoint(classId,file,user);
             if(msg!=null){
                 return retMsg.Set(MsgType.ERROR,null,msg);
             }
@@ -73,10 +75,10 @@ public class UploadController extends BaseController {
 
     //上传培养方案
     @PostMapping(value = "cultivatePlan")
-    public Object uploadCultivatePlan(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+    public Object uploadCultivatePlan(@RequestParam("file") MultipartFile file, HttpServletRequest request,JwtUser user) {
         try {
             System.out.println("上传培养方案");
-            uploadFrameService.uploadProject(file, request);
+            uploadFrameService.uploadProject(file, request,user);
             return retMsg.Set(MsgType.SUCCESS);
         } catch (Exception e) {
             return retMsg.Set(MsgType.ERROR);
@@ -93,10 +95,10 @@ public class UploadController extends BaseController {
      * @date 2019/9/9 19:41
      **/
     @PostMapping(value = "cultivateMatrix")
-    public Object uploadCultivateMatrix(@RequestParam("file") MultipartFile file) {
+    public Object uploadCultivateMatrix(@RequestParam("file") MultipartFile file,JwtUser user) {
         try {
             System.out.println("开始上传培养矩阵");
-            uploadFrameService.uploadCultivateMatrix(file);
+            uploadFrameService.uploadCultivateMatrix(file,user);
         } catch (Exception e) {
             e.printStackTrace();
             return retMsg.Set(MsgType.ERROR);
@@ -115,14 +117,15 @@ public class UploadController extends BaseController {
      **/
     @PostMapping(value = "teacherInfo")
     public Object uploadTeacherInfo(
-            @RequestParam("file") MultipartFile teacherFile
+            @RequestParam("file") MultipartFile teacherFile,
+            JwtUser user
     ) {
         System.out.println("上传教师信息");
         if (teacherFile == null || teacherFile.isEmpty()) {
             return retMsg.Set(MsgType.ERROR, null, "文件不能为空");
         }
         try {
-            uploadFrameService.uploadTeacherInfo(teacherFile);
+            uploadFrameService.uploadTeacherInfo(teacherFile,user);
         } catch (Exception e) {
             e.printStackTrace();
             return retMsg.Set(MsgType.SUCCESS, null, "上传教师信息失败");
@@ -141,13 +144,14 @@ public class UploadController extends BaseController {
      **/
     @PostMapping(value = "studentCourse")
     public Object uploadStudentCourse(
-            @RequestParam("file") MultipartFile studentCourseFile
+            @RequestParam("file") MultipartFile studentCourseFile,
+            JwtUser user
     ) {
         if (studentCourseFile == null || studentCourseFile.isEmpty()) {
             return retMsg.Set(MsgType.ERROR, null, "文件不能为空");
         }
         try {
-            uploadFrameService.uploadStudentCourse(studentCourseFile);
+            uploadFrameService.uploadStudentCourse(studentCourseFile,user);
         } catch (Exception e) {
             e.printStackTrace();
             return retMsg.Set(MsgType.SUCCESS, null, "上传学生选课信息失败");
@@ -157,10 +161,10 @@ public class UploadController extends BaseController {
     }
 
     @PostMapping(value = "courseUpload")
-    public Object uploadCourse(@RequestParam("file") MultipartFile file) {
+    public Object uploadCourse(@RequestParam("file") MultipartFile file,JwtUser user) {
         String msg = null;
         try {
-            msg = courseUploadService.uploadExecuteClass(file);
+            msg = courseUploadService.uploadExecuteClass(file,user);
             if (msg != null) {
                 return retMsg.Set(MsgType.ERROR, null, msg);
             }
@@ -171,10 +175,10 @@ public class UploadController extends BaseController {
     }
 
     @PostMapping(value = "teacherCourseUpload")
-    public Object teacherCourseUpload(@RequestParam("file") MultipartFile file) {
+    public Object teacherCourseUpload(@RequestParam("file") MultipartFile file,JwtUser user) {
         String msg = null;
         try {
-            msg = courseUploadService.uploadTeacherCourse(file);
+            msg = courseUploadService.uploadTeacherCourse(file,user);
             if (msg != null) {
                 return retMsg.Set(MsgType.ERROR, null, msg);
             }

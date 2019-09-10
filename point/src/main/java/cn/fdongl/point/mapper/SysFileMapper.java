@@ -20,4 +20,8 @@ public interface SysFileMapper {
     int updateByPrimaryKey(SysFile record);
 
     List<SysFile> selectAllFile();
+
+    List<SysFile> getSysFileByPage(SysFile file);
+
+    int getTotal(SysFile file);
 }

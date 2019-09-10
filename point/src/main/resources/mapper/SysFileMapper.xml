@@ -137,4 +137,24 @@
   <select id="selectAllFile" resultMap="BaseResultMap">
     select * from sys_file
   </select>
+  <select id="getSysFileByPage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from index_point.sys_file
+    where create_user_id=#{createUserId,jdbcType=VARCHAR}
+    <if test="fileName != null">
+      and file_name like concat('%',#{fileName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="page != null">
+      limit #{page.pageStart}, #{page.pageSize}
+    </if>
+  </select>
+  <select id="getTotal"  resultType="int">
+    select count(*)
+    from index_point.sys_file  where create_user_id=#{createUserId,jdbcType=VARCHAR}
+    <if test="fileName != null">
+      and file_name like concat('%',#{fileName,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
+
 </mapper>

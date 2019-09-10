@@ -6,6 +6,7 @@ import cn.fdongl.authority.mapper.SysUserMapper;
 import cn.fdongl.authority.service.MapUtilService;
 import cn.fdongl.authority.service.SysUserService;
 import cn.fdongl.authority.util.IdGen;
+import cn.fdongl.authority.vo.JwtUser;
 import cn.fdongl.authority.vo.MapUserRole;
 import cn.fdongl.authority.vo.SysUser;
 import cn.fdongl.point.entity.MapStudentCourse;
@@ -33,10 +34,12 @@ import org.springframework.http.HttpRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,7 +78,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
     PasswordEncoder passwordEncoder;
 
     @Override
-    public String uploadProject(MultipartFile projectFile, HttpServletRequest request) throws IOException {
+    public String uploadProject(MultipartFile projectFile, HttpServletRequest request, JwtUser user) throws IOException {
         // 获取Excel的输出流
         InputStream inputStream = projectFile.getInputStream();
         // 获取文件名称
@@ -140,6 +143,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         mapCultivateFileMapper.insertSelective(mapCultivateFile);
         System.out.println(path);
 
+
         return null;
     }
 
@@ -154,7 +158,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
      **/
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void uploadCultivateMatrix(MultipartFile cultivateMatrix) throws IOException {
+    public void uploadCultivateMatrix(MultipartFile cultivateMatrix,JwtUser user) throws IOException {
         // 获取Excel的输出流
         InputStream inputStream = cultivateMatrix.getInputStream();
         // 获取文件名称
@@ -289,6 +293,21 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         // 课程行后两行是统计行(第一列是空，暂不处理)
         // 更新字典项中的period信息
         sysDictMapper.periodAddOne();
+        //将上传文件保存到服务器
+        SysFile sysFile=new SysFile();
+        String path=  ClassUtils.getDefaultClassLoader().getResource("").getPath()+"/cultivateMatrix";
+        sysFile.setId(IdGen.uuid());
+        sysFile.setFileName(cultivateMatrix.getOriginalFilename());
+        sysFile.setStatus(2);
+        sysFile.setFilePath(path);
+        sysFile.setCreateUserId(user.getId());
+        sysFileMapper.insertSelective(sysFile);
+        File dest = new File(sysFile.getFilePath()+"/"+fileName);
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdirs();// 新建文件夹
+        }
+
+        cultivateMatrix.transferTo(dest);// 文件写入
     }
 
     /**
@@ -301,7 +320,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
      **/
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void uploadTeacherInfo(MultipartFile teacherFile) throws IOException {
+    public void uploadTeacherInfo(MultipartFile teacherFile,JwtUser user) throws IOException {
         // 获取Excel的输出流
         InputStream inputStream = teacherFile.getInputStream();
         // 获取文件名称
@@ -395,6 +414,24 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             sysUserMapper.insertBatch(users);
 //            users.clear();
         }
+
+        //将文件写入服务器
+        SysFile sysFile=new SysFile();
+        String path=  ClassUtils.getDefaultClassLoader().getResource("").getPath()+"/teacherInfo";
+        sysFile.setId(IdGen.uuid());
+        sysFile.setFileName(teacherFile.getOriginalFilename());
+        sysFile.setStatus(3);
+        sysFile.setFilePath(path);
+        sysFile.setCreateUserId(user.getId());
+        sysFileMapper.insertSelective(sysFile);
+        File dest = new File(sysFile.getFilePath()+"/"+fileName);
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdirs();// 新建文件夹
+        }
+
+        teacherFile.transferTo(dest);// 文件写入
+
+
     }
 
     /**
@@ -407,7 +444,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
      **/
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void uploadStudentCourse(MultipartFile studentCourse) throws IOException {
+    public void uploadStudentCourse(MultipartFile studentCourse,JwtUser user) throws IOException {
         // 获取Excel的输出流
         InputStream inputStream = studentCourse.getInputStream();
         // 获取文件名称
@@ -606,5 +643,19 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         if(mapStudentCourseList.size()>0){
             studentCourseMapper.insertBatch(mapStudentCourseList);
         }
+
+        SysFile sysFile=new SysFile();
+        String path=  ClassUtils.getDefaultClassLoader().getResource("").getPath()+"/studentInfo";
+        sysFile.setId(IdGen.uuid());
+        sysFile.setFileName(studentCourse.getOriginalFilename());
+        sysFile.setStatus(6);
+        sysFile.setFilePath(path);
+        sysFile.setCreateUserId(user.getId());
+        sysFileMapper.insertSelective(sysFile);
+        File dest = new File(sysFile.getFilePath()+"/"+fileName);
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdirs();// 新建文件夹
+        }
+        studentCourse.transferTo(dest);// 文件写入
     }
 }
