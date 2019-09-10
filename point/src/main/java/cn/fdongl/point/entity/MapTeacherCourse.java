@@ -4,6 +4,7 @@ import cn.fdongl.authority.util.Page;
 import cn.fdongl.authority.vo.SysUser;
 import lombok.Data;
 
+import java.beans.Transient;
 import java.util.Date;
 
 @Data
@@ -138,7 +139,8 @@ public class MapTeacherCourse {
     */
     private Integer status;
 
-    private Page<MapTeacherCourse> page;
+
+    private transient Page<MapTeacherCourse> page;
 
     /**
      * 存放文件的id
