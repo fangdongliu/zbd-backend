@@ -7,6 +7,7 @@ import cn.fdongl.point.entity.*;
 import cn.fdongl.point.mapper.*;
 import cn.fdongl.point.service.ClassPointService;
 import cn.fdongl.point.util.AcademicYear;
+import cn.fdongl.point.util.DateUtils;
 import cn.fdongl.point.util.ExcelUtils;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -239,28 +240,30 @@ public class ClassPointServiceImpl implements ClassPointService {
     }
 
     /**
-     * step1：学生work_id + course_select_number 确定该学生所选的指定课程，即map_student_evaluation的id
-     * step2：根据学生对于该课程的评价值插入数据库
+     * 学生上传新的课程评价
      *
-     * @author zm
+     * @param studentWorkId         学生工号
+     * @param courseSelectNumber    选课课号
+     * @param studentEvaluationList 评价list -> 用于批量插入
+     *                              courseSelectNumber：选课课号
+     *                              indexId：指标点id
+     *                              evaluationValue：评价值(0-4)
      * @return void
-     * @date 2019/9/8 21:48
+     * @author zm
+     * @date 2019/9/10 20:49
      **/
-    @Transactional(rollbackFor = Exception.class)
     @Override
-    public void savePoint(String courseSelectNumber, Map<String, Integer> data, String studentWorkId){
-        // step1:
-        MapStudentCourse mapStudentCourse = mapStudentCourseMapper.selectByUserWorkIdAndCourseSelectNumber(
-                studentWorkId, courseSelectNumber);
-        // step2:
-        MapStudentEvaluation mapStudentEvaluation = new MapStudentEvaluation();
-        for (Map.Entry<String, Integer> entry : data.entrySet()) {
-            mapStudentEvaluation.setId(IdGen.uuid());
-            mapStudentEvaluation.setMapStudentCourseId(mapStudentCourse.getId());
-            mapStudentEvaluation.setIndexId(entry.getKey());
-            mapStudentEvaluation.setEvaluationValue(entry.getValue());
-
-            mapStudentEvaluationMapper.insertSelective(mapStudentEvaluation);
+    public void savePoint(String studentWorkId, String courseSelectNumber, List<MapStudentEvaluation> studentEvaluationList) {
+        for (MapStudentEvaluation studentEvaluation :
+                studentEvaluationList) {
+            studentEvaluation.setUUId();
+            studentEvaluation.setStudentWorkId(studentWorkId);
+            studentEvaluation.setCourseSelectNumber(courseSelectNumber);
+            studentEvaluation.setCreateUserId(studentWorkId);
+            studentEvaluation.setModifyUserId(studentWorkId);
+            studentEvaluation.setCreateDate(DateUtils.getNowDate());
+            studentEvaluation.setModifyDate(DateUtils.getNowDate());
+            mapStudentEvaluationMapper.insertSelective(studentEvaluation);
         }
     }
 

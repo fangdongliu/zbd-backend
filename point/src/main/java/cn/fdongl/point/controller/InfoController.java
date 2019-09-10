@@ -6,6 +6,7 @@ import cn.fdongl.authority.util.MsgType;
 import cn.fdongl.authority.util.Page;
 
 import cn.fdongl.authority.util.SearchResult;
+import cn.fdongl.point.entity.MapStudentEvaluation;
 import cn.fdongl.point.entity.MapTeacherCourse;
 import cn.fdongl.point.entity.SysCourse;
 import cn.fdongl.point.mapper.MapTeacherCourseMapper;
@@ -24,13 +25,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/getInfo")
 public class InfoController extends BaseController {
-
     @Autowired
     private MapTeacherCourseMapper mapTeacherCourseMapper;
-
     @Autowired
     private SysInfoService sysInfoService;
-
     /**
      * 获取教师评价
      *
@@ -148,10 +146,10 @@ public class InfoController extends BaseController {
     /**
      * 获取学生某学期所有的课程分页
      *
-     * @author zm
-     * @param studentWorkId 学生工号
+     * @param studentWorkId  学生工号
      * @param courseSemester 课程学期
-     * @return java.lang.Object        
+     * @return java.lang.Object
+     * @author zm
      * @date 2019/9/10 15:45
      **/
     @PostMapping(value = "coursePage")
@@ -163,32 +161,31 @@ public class InfoController extends BaseController {
         Page<SearchResult> coursePage = new Page<>();
         try {
             coursePage = sysInfoService.getStudentCoursePage(
-                    studentWorkId,courseSemester,pageIndex, pageSize);
+                    studentWorkId, courseSemester, pageIndex, pageSize);
         } catch (Exception e) {
             return retMsg.Set(MsgType.ERROR, "获取学生课程失败失败");
         }
         return retMsg.Set(MsgType.SUCCESS, coursePage, "获取学生课程成功");
     }
 
-    /**a
-     * 获取用户的某课程的指标点评价 for finish
+    /**
+     * 获取学生的某课程的指标点评价
      *
-     * @param userWorkId
-     * @param courseSelectNumber
+     * @param studentWorkId
      * @return 未评价返回{flag:false}
      * @author zm
      * @date 2019/9/10 15:38
      **/
-    @PostMapping(value = "getCourseIndexEvaluation")
+   /* @PostMapping(value = "courseIndexEvaluation")
     public Object getCourseIndexEvaluation(
-            @RequestParam("userWorkId") String userWorkId,
-            @RequestParam("userType") String userType,
-            @RequestParam("courseSelectNumber") String courseSelectNumber) {
+            @RequestParam("studentWorkId") String studentWorkId,
+            @RequestParam("evaluationValue") List<MapStudentEvaluation> evaluationValue) {
         try {
 
         } catch (Exception e) {
-            return retMsg.Set(MsgType.ERROR, null, "获取学期失败");
+            e.printStackTrace();
+            return retMsg.Set(MsgType.ERROR, null, "获取用户指标点评价失败");
         }
-        return retMsg.Set(MsgType.SUCCESS, null, "获取学期成功");
-    }
+        return retMsg.Set(MsgType.SUCCESS, null, "获取用户指标点评价成功");
+    }*/
 }
