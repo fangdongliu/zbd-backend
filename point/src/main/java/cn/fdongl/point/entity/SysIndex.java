@@ -65,4 +65,8 @@ public class SysIndex {
     public SysIndex() {
         this.id = IdGen.uuid();
     }
+
+    public void setUUId(){
+        this.id = IdGen.uuid();
+    }
 }

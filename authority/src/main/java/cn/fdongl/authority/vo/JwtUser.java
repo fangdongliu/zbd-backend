@@ -20,14 +20,14 @@ public class JwtUser implements UserDetails {
     private String userDepartment;
     private String className;
     private String startYear;
-    private int educationSystem;
+    private Integer educationSystem;
     private String trainLevel;
     private String userTitle;
     private String createUserId;
     private Date createDate;
     private String modifyUserId;
     private Date modifyDate;
-    private int status;
+    private Integer status;
 
     private final Collection<? extends GrantedAuthority> authorities;
 

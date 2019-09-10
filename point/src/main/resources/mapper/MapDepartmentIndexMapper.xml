@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.fdongl.authority.mapper.MapUserRoleMapper">
-  <resultMap id="BaseResultMap" type="cn.fdongl.authority.vo.MapUserRole">
+<mapper namespace="cn.fdongl.point.mapper.MapDepartmentIndexMapper">
+  <resultMap id="BaseResultMap" type="cn.fdongl.point.entity.MapDepartmentIndex">
     <!--@mbg.generated-->
     <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="user_id" jdbcType="VARCHAR" property="userId" />
-    <result column="role_id" jdbcType="VARCHAR" property="roleId" />
+    <result column="index_id" jdbcType="VARCHAR" property="indexId" />
+    <result column="student_grade" jdbcType="VARCHAR" property="studentGrade" />
+    <result column="department_name" jdbcType="VARCHAR" property="departmentName" />
+    <result column="majority_name" jdbcType="VARCHAR" property="majorityName" />
+    <result column="period" jdbcType="INTEGER" property="period" />
     <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="modify_user_id" jdbcType="VARCHAR" property="modifyUserId" />
@@ -14,53 +17,53 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, user_id, role_id, create_user_id, create_date, modify_user_id, modify_date, `status`
+    id, index_id, student_grade, department_name, majority_name, period, create_user_id, 
+    create_date, modify_user_id, modify_date, `status`
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     <!--@mbg.generated-->
     select 
     <include refid="Base_Column_List" />
-    from map_user_role
+    from map_department_index
     where id = #{id,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     <!--@mbg.generated-->
-    delete from map_user_role
+    delete from map_department_index
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="cn.fdongl.authority.vo.MapUserRole">
+  <insert id="insert" parameterType="cn.fdongl.point.entity.MapDepartmentIndex">
     <!--@mbg.generated-->
-    insert into map_user_role (id, user_id, role_id, 
+    insert into map_department_index (id, index_id, student_grade, 
+      department_name, majority_name, period, 
       create_user_id, create_date, modify_user_id, 
       modify_date, `status`)
-    values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{roleId,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=VARCHAR}, #{indexId,jdbcType=VARCHAR}, #{studentGrade,jdbcType=VARCHAR}, 
+      #{departmentName,jdbcType=VARCHAR}, #{majorityName,jdbcType=VARCHAR}, #{period,jdbcType=INTEGER}, 
       #{createUserId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=VARCHAR}, 
       #{modifyDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER})
   </insert>
-  <insert id="insertBatch" parameterType="cn.fdongl.authority.vo.MapUserRole">
+  <insert id="insertSelective" parameterType="cn.fdongl.point.entity.MapDepartmentIndex">
     <!--@mbg.generated-->
-    replace into map_user_role (id, user_id, role_id,
-    create_user_id, create_date, modify_user_id,
-    modify_date, `status`)
-    values
-    <foreach collection="list" item="item" separator=",">
-      (#{item.id,jdbcType=VARCHAR}, #{item.userId,jdbcType=VARCHAR}, #{item.roleId,jdbcType=VARCHAR},
-      #{item.createUserId,jdbcType=VARCHAR}, #{item.createDate,jdbcType=TIMESTAMP}, #{item.modifyUserId,jdbcType=VARCHAR},
-      #{item.modifyDate,jdbcType=TIMESTAMP}, #{item.status,jdbcType=INTEGER})
-    </foreach>
-  </insert>
-  <insert id="insertSelective" parameterType="cn.fdongl.authority.vo.MapUserRole">
-    <!--@mbg.generated-->
-    insert into map_user_role
+    insert into map_department_index
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
-      <if test="userId != null">
-        user_id,
+      <if test="indexId != null">
+        index_id,
       </if>
-      <if test="roleId != null">
-        role_id,
+      <if test="studentGrade != null">
+        student_grade,
+      </if>
+      <if test="departmentName != null">
+        department_name,
+      </if>
+      <if test="majorityName != null">
+        majority_name,
+      </if>
+      <if test="period != null">
+        period,
       </if>
       <if test="createUserId != null">
         create_user_id,
@@ -82,11 +85,20 @@
       <if test="id != null">
         #{id,jdbcType=VARCHAR},
       </if>
-      <if test="userId != null">
-        #{userId,jdbcType=VARCHAR},
+      <if test="indexId != null">
+        #{indexId,jdbcType=VARCHAR},
       </if>
-      <if test="roleId != null">
-        #{roleId,jdbcType=VARCHAR},
+      <if test="studentGrade != null">
+        #{studentGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentName != null">
+        #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="majorityName != null">
+        #{majorityName,jdbcType=VARCHAR},
+      </if>
+      <if test="period != null">
+        #{period,jdbcType=INTEGER},
       </if>
       <if test="createUserId != null">
         #{createUserId,jdbcType=VARCHAR},
@@ -105,15 +117,24 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.fdongl.authority.vo.MapUserRole">
+  <update id="updateByPrimaryKeySelective" parameterType="cn.fdongl.point.entity.MapDepartmentIndex">
     <!--@mbg.generated-->
-    update map_user_role
+    update map_department_index
     <set>
-      <if test="userId != null">
-        user_id = #{userId,jdbcType=VARCHAR},
+      <if test="indexId != null">
+        index_id = #{indexId,jdbcType=VARCHAR},
       </if>
-      <if test="roleId != null">
-        role_id = #{roleId,jdbcType=VARCHAR},
+      <if test="studentGrade != null">
+        student_grade = #{studentGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentName != null">
+        department_name = #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="majorityName != null">
+        majority_name = #{majorityName,jdbcType=VARCHAR},
+      </if>
+      <if test="period != null">
+        period = #{period,jdbcType=INTEGER},
       </if>
       <if test="createUserId != null">
         create_user_id = #{createUserId,jdbcType=VARCHAR},
@@ -133,11 +154,14 @@
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="cn.fdongl.authority.vo.MapUserRole">
+  <update id="updateByPrimaryKey" parameterType="cn.fdongl.point.entity.MapDepartmentIndex">
     <!--@mbg.generated-->
-    update map_user_role
-    set user_id = #{userId,jdbcType=VARCHAR},
-      role_id = #{roleId,jdbcType=VARCHAR},
+    update map_department_index
+    set index_id = #{indexId,jdbcType=VARCHAR},
+      student_grade = #{studentGrade,jdbcType=VARCHAR},
+      department_name = #{departmentName,jdbcType=VARCHAR},
+      majority_name = #{majorityName,jdbcType=VARCHAR},
+      period = #{period,jdbcType=INTEGER},
       create_user_id = #{createUserId,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       modify_user_id = #{modifyUserId,jdbcType=VARCHAR},

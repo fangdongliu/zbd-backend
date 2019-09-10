@@ -1,11 +1,6 @@
 package cn.fdongl.point.mapper;
 
-import org.apache.ibatis.annotations.Param;
-
-
-import cn.fdongl.point.entity.SysDict;
-
-import java.util.List;
+import cn.fdongl.point.entity.SysDict;import org.apache.ibatis.annotations.Param;import java.util.List;
 
 public interface SysDictMapper {
     int deleteByPrimaryKey(String id);
@@ -20,5 +15,23 @@ public interface SysDictMapper {
 
     int updateByPrimaryKey(SysDict record);
 
-    List<String> selectDictNameByTypeId(@Param("typeId")String typeId);
+    List<String> selectDictNameByTypeId(@Param("typeId") String typeId);
+
+    /**
+     * 获取最近的培养矩阵的期数
+     *
+     * @author zm
+     * @return int
+     * @date 2019/9/10 9:39
+     **/
+    int selectRecentSort();
+
+    /**
+     * 字典表中的 period 期数 + 1
+     *
+     * @author zm
+     * @return void        
+     * @date 2019/9/10 14:00
+     **/
+    int periodAddOne();
 }

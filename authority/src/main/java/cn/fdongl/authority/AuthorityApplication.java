@@ -22,7 +22,7 @@ import java.util.List;
 public class AuthorityApplication implements WebMvcConfigurer {
 
     public static void main(String[] args) {
-        SpringApplication.run(AuthorityApplication.class, args);
+        SpringApplication.run(AuthorityApplication.class,args);
     }
 
     @Override

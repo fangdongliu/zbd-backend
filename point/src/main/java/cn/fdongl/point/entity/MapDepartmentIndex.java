@@ -1,34 +1,41 @@
 package cn.fdongl.point.entity;
 
 import java.util.Date;
+
+import cn.fdongl.authority.util.IdGen;
 import lombok.Data;
 
 @Data
-public class SysDictType {
+public class MapDepartmentIndex {
     /**
      * 主键id
      */
     private String id;
 
     /**
-     * 字典类型名
+     * 指标点主键id(from sys_index)
      */
-    private String typeName;
+    private String indexId;
 
     /**
-     * 字典类型排序值
+     * 学生级数
      */
-    private Integer sort;
+    private String studentGrade;
 
     /**
-     * 父字典类型 from 字典类型表
+     * 学院(机构)名称
      */
-    private String parentId;
+    private String departmentName;
 
     /**
-     * 字典类型说明
+     * 专业名称
      */
-    private String remarks;
+    private String majorityName;
+
+    /**
+     * 期数
+     */
+    private Integer period;
 
     /**
      * 创建人id
@@ -54,4 +61,12 @@ public class SysDictType {
      * 状态值(-1失效，0默认值)
      */
     private Integer status;
+
+    public MapDepartmentIndex() {
+        this.id = IdGen.uuid();
+    }
+
+    public void setUUId(){
+        this.id = IdGen.uuid();
+    }
 }

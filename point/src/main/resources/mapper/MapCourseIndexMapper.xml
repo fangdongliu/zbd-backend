@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="cn.fdongl.point.entity.MapCourseIndex">
     <!--@mbg.generated-->
     <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="course_id" jdbcType="VARCHAR" property="courseId" />
+    <result column="course_number" jdbcType="VARCHAR" property="courseNumber" />
     <result column="index_id" jdbcType="VARCHAR" property="indexId" />
     <result column="index_number" jdbcType="VARCHAR" property="indexNumber" />
     <result column="proportion_value" jdbcType="DOUBLE" property="proportionValue" />
@@ -18,7 +18,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, course_id, index_id, index_number, proportion_value, school_grade, statistic_year, 
+    id, course_number, index_id, index_number, proportion_value, school_grade, statistic_year,
     create_user_id, create_date, modify_user_id, modify_date, `status`
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -35,7 +35,7 @@
   </delete>
   <insert id="insert" parameterType="cn.fdongl.point.entity.MapCourseIndex">
     <!--@mbg.generated-->
-    insert into map_course_index (id, course_id, index_id, 
+    insert into map_course_index (id, course_number, index_id,
       index_number, proportion_value, school_grade, 
       statistic_year, create_user_id, create_date, 
       modify_user_id, modify_date, `status`
@@ -53,8 +53,8 @@
       <if test="id != null">
         id,
       </if>
-      <if test="courseId != null">
-        course_id,
+      <if test="courseNumber != null">
+        course_number,
       </if>
       <if test="indexId != null">
         index_id,
@@ -91,8 +91,8 @@
       <if test="id != null">
         #{id,jdbcType=VARCHAR},
       </if>
-      <if test="courseId != null">
-        #{courseId,jdbcType=VARCHAR},
+      <if test="courseNumber != null">
+        #{courseNumber,jdbcType=VARCHAR},
       </if>
       <if test="indexId != null">
         #{indexId,jdbcType=VARCHAR},
@@ -130,8 +130,8 @@
     <!--@mbg.generated-->
     update map_course_index
     <set>
-      <if test="courseId != null">
-        course_id = #{courseId,jdbcType=VARCHAR},
+      <if test="courseNumber != null">
+        course_number = #{courseNumber,jdbcType=VARCHAR},
       </if>
       <if test="indexId != null">
         index_id = #{indexId,jdbcType=VARCHAR},
@@ -169,7 +169,7 @@
   <update id="updateByPrimaryKey" parameterType="cn.fdongl.point.entity.MapCourseIndex">
     <!--@mbg.generated-->
     update map_course_index
-    set course_id = #{courseId,jdbcType=VARCHAR},
+    set course_number = #{courseNumber,jdbcType=VARCHAR},
       index_id = #{indexId,jdbcType=VARCHAR},
       index_number = #{indexNumber,jdbcType=VARCHAR},
       proportion_value = #{proportionValue,jdbcType=DOUBLE},
@@ -182,21 +182,4 @@
       `status` = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
-
-  <insert id="insertList" parameterType="java.util.List">
-    insert into map_course_index (id, course_id, index_id,
-    proportion_value, statistic_year, create_user_id,
-    create_date, modify_user_id, modify_date,
-    `status`)
-    values
-    <foreach collection="list" item="item" separator=",">
-      (#{id,jdbcType=VARCHAR}, #{courseId,jdbcType=VARCHAR}, #{indexId,jdbcType=VARCHAR},
-      #{proportionValue,jdbcType=DOUBLE}, #{statisticYear,jdbcType=VARCHAR}, #{createUserId,jdbcType=VARCHAR},
-      #{createDate,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=VARCHAR}, #{modifyDate,jdbcType=TIMESTAMP},
-      #{status,jdbcType=INTEGER})
-    </foreach>
-
-  </insert>
-
-
 </mapper>

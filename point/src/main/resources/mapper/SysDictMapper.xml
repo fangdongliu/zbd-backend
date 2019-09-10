@@ -176,4 +176,20 @@
         from sys_dict
         where type_id=#{typeId,jdbcType=VARCHAR}
     </select>
+
+    <select id="selectRecentSort" resultType="int">
+        select sort
+        from index_point.sys_dict
+        where sort =(
+        select max(sort) from index_point.sys_dict)
+    </select>
+
+    <select id="periodAddOne" resultType="int">
+        update index_point.sys_dict
+        set index_point.sys_dict.sort = index_point.sys_dict.sort + 1
+        where index_point.sys_dict.type_id = (
+        select id
+        from index_point.sys_dict_type
+        where type_name = '培养矩阵期数')
+    </select>
 </mapper>

@@ -69,9 +69,33 @@
       #{createDate,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=VARCHAR}, #{modifyDate,jdbcType=TIMESTAMP}, 
       #{status,jdbcType=INTEGER})
   </insert>
+  <insert id="insertBatch" parameterType="cn.fdongl.point.entity.SysCourse">
+    <!--@mbg.generated-->
+    replace into sys_course (id, course_name, course_credit,
+    course_number, course_semester, course_department,
+    course_route, course_character, course_type,
+    course_kind, course_attribution, assess_method,
+    type_Identification, module_Identification,
+    is_substitute, total_len, semester_len,
+    experiment_len, remarks, create_user_id,
+    create_date, modify_user_id, modify_date,
+    `status`)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.id,jdbcType=VARCHAR}, #{item.courseName,jdbcType=VARCHAR}, #{item.courseCredit,jdbcType=DOUBLE},
+      #{item.courseNumber,jdbcType=VARCHAR}, #{item.courseSemester,jdbcType=VARCHAR}, #{item.courseDepartment,jdbcType=VARCHAR},
+      #{item.courseRoute,jdbcType=VARCHAR}, #{item.courseCharacter,jdbcType=VARCHAR}, #{item.courseType,jdbcType=VARCHAR},
+      #{item.courseKind,jdbcType=VARCHAR}, #{item.courseAttribution,jdbcType=VARCHAR}, #{item.assessMethod,jdbcType=VARCHAR},
+      #{item.typeIdentification,jdbcType=VARCHAR}, #{item.moduleIdentification,jdbcType=VARCHAR},
+      #{item.isSubstitute,jdbcType=INTEGER}, #{item.totalLen,jdbcType=INTEGER}, #{item.semesterLen,jdbcType=INTEGER},
+      #{item.experimentLen,jdbcType=INTEGER}, #{item.remarks,jdbcType=VARCHAR}, #{item.createUserId,jdbcType=VARCHAR},
+      #{item.createDate,jdbcType=TIMESTAMP}, #{item.modifyUserId,jdbcType=VARCHAR}, #{item.modifyDate,jdbcType=TIMESTAMP},
+      #{item.status,jdbcType=INTEGER})
+    </foreach>
+  </insert>
   <insert id="insertSelective" parameterType="cn.fdongl.point.entity.SysCourse">
     <!--@mbg.generated-->
-    insert into sys_course
+    insert ignore into sys_course
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -331,7 +355,7 @@
       select course_id from sys_course where course_number=${0}
     </select>
   <select id="getAllCourseNum" resultType="java.lang.String">
-    select courseNumber from sys_course
+    select course_number from sys_course
   </select>
 
 </mapper>
