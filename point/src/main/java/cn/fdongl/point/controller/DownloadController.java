@@ -6,9 +6,11 @@ import cn.fdongl.point.entity.SysFile;
 import cn.fdongl.point.mapper.MapTeacherCourseMapper;
 import cn.fdongl.point.mapper.SysFileMapper;
 import cn.fdongl.point.util.ExcelUtils;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -24,6 +26,26 @@ public class DownloadController extends BaseController {
     private MapTeacherCourseMapper mapTeacherCourseMapper;
     @Autowired
     private SysFileMapper sysFileMapper;
+
+    @GetMapping(value = "{id}",produces = MediaType.ALL_VALUE)
+    public void download(@PathVariable("id") String id,HttpServletResponse response){
+        response.setContentType("application/msexcel");
+        response.setHeader("Content-Disposition", "attachment;fileName=" + "file.xlsx");
+        File f = new File("C:\\Users\\LiuFangdong\\Documents\\Tencent Files\\894856599\\FileRecv\\test.xlsx");
+        try {
+            InputStream in = new FileInputStream(f);
+            ServletOutputStream out = response.getOutputStream();
+            final byte[] b = new byte[8192];
+            for (int r; (r = in.read(b)) != -1;) {
+                out.write(b, 0, r);
+            }
+            in.close();
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 下载往期教师评价表
