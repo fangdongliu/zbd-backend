@@ -34,6 +34,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import sun.security.util.Password;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -73,6 +74,9 @@ public class UploadFrameServiceImpl implements UploadFrameService {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    PasswordEncoder encoder;
 
     @Override
     public String uploadProject(MultipartFile projectFile, HttpServletRequest request) throws IOException {
@@ -510,7 +514,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
 
         // 取出所有的用户形成HashMap
         HashMap<String, Integer> sysUserMap = sysUserService.getSysUserMap();
-
+        String encodedPwd = encoder.encode("123456");
         // 第一行是表头
         for (int i = 1; i < list.size(); i++) {
             SysUser newStudent = new SysUser();
@@ -533,7 +537,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
                 newStudent.setWorkId(workIdCell.getRichStringCellValue().getString());
                 newStudent.setRealName(realNameCell.getRichStringCellValue().getString());
                 newStudent.setUserType("student");
-                newStudent.setSecretePwd("123456");
+                newStudent.setSecretePwd(encodedPwd);
                 newStudent.setEducationSystem(Integer.parseInt(educationSystemCell.getRichStringCellValue().getString()));
                 newStudent.setUserDepartment(userDepartmentCell.getRichStringCellValue().getString());
                 newStudent.setTrainLevel(trainLevelCell.getRichStringCellValue().getString());
