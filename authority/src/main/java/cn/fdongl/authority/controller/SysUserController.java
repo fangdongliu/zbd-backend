@@ -82,7 +82,7 @@ public class SysUserController {
             JwtUser userNow,
             @RequestParam("userName") String userName,
             @RequestParam("userType") String userType,
-            @RequestParam("departmentId") String departmentId
+            @RequestParam("departmentName") String departmentName
     ){
         // 1.首先判定是不是存在用户名重复
         if (sysUserService.findUserByUserName(userName)!=null){
@@ -93,7 +93,7 @@ public class SysUserController {
         newUser.setId(UUID.randomUUID().toString());
         newUser.setUserName(userName);
         newUser.setUserType(userType);
-        newUser.setUserDepartment(departmentId);
+        newUser.setUserDepartment(departmentName);
         // 设置默认密码为：123456(加密存储)
         newUser.setSecretePwd("123456");
         newUser.setCreateDate(tmpDate);

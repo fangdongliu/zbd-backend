@@ -20,6 +20,7 @@ import cn.fdongl.point.entity.*;
 import cn.fdongl.point.mapper.*;
 import cn.fdongl.point.service.UploadFrameService;
 import cn.fdongl.point.util.ExcelUtils;
+import cn.fdongl.point.util.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -149,6 +150,10 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         InputStream inputStream = cultivateMatrix.getInputStream();
         // 获取文件名称
         String fileName = cultivateMatrix.getOriginalFilename();
+        // 截取 学院 + 专业 + 年级
+        String department = StringUtils.getDepartment(fileName);
+        String majority = StringUtils.getMajority(fileName);
+        String grade = StringUtils.getGrade(fileName);
         // init工作簿
         Workbook workbook = null;
         // 获取文件后缀
