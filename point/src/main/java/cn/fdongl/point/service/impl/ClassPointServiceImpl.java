@@ -33,10 +33,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.sql.Array;
 import java.sql.Struct;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ClassPointServiceImpl implements ClassPointService {
@@ -214,6 +211,7 @@ public class ClassPointServiceImpl implements ClassPointService {
             sysFile.setFileName(fileName);
             filePath=path+"/"+sysFile.getId();
             sysFile.setFilePath(filePath);
+            sysFile.setModifyDate(new Date());
             sysFileMapper.updateByPrimaryKeySelective(sysFile);
 
         }else{
@@ -224,14 +222,14 @@ public class ClassPointServiceImpl implements ClassPointService {
             filePath=path+"/"+sysFile.getId();
             sysFile.setFilePath(filePath);
             sysFile.setFileName(fileName);
+            sysFile.setCreateUserId(user.getId());
+            sysFile.setStatus(7);
+            sysFile.setModifyDate(new Date());
             mapTeacherCourse.setFileId(id);
             mapTeacherCourse.setStatus(4);
             mapTeacherCourseMapper.updateByPrimaryKeySelective(mapTeacherCourse);
             sysFileMapper.insertSelective(sysFile);
         }
-
-        sysFile.setCreateUserId(user.getId());
-        sysFile.setStatus(7);
         File dest = new File(filePath+"/"+fileName);
         if (!dest.getParentFile().exists()) {
             dest.getParentFile().mkdirs();// 新建文件夹

@@ -194,6 +194,7 @@ public class CourseUploadServiceImp implements CourseUploadService {
         sysFile.setStatus(5);
         sysFile.setFilePath(path);
         sysFile.setCreateUserId(user.getId());
+        sysFile.setModifyDate(new Date());
         sysFileMapper.insertSelective(sysFile);
         File dest = new File(sysFile.getFilePath()+"/"+fileName);
         if (!dest.getParentFile().exists()) {
@@ -359,6 +360,7 @@ public class CourseUploadServiceImp implements CourseUploadService {
         sysFile.setStatus(5);
         sysFile.setFilePath(path);
         sysFile.setCreateUserId(user.getId());
+        sysFile.setModifyDate(new Date());
         sysFileMapper.insertSelective(sysFile);
         File dest = new File(sysFile.getFilePath()+"/"+fileName);
         if (!dest.getParentFile().exists()) {
