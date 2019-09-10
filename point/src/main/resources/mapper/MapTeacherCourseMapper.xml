@@ -366,14 +366,14 @@
         select
         <include refid="Base_Column_List"/>
         from map_teacher_course
-        where teacher_work_id=#{teacherWorkId,jdbcType=VARCHAR}
+        where teacher_work_id=#{teacherWorkId,jdbcType=VARCHAR} and course_semester=#{courseSemester,jdbcType=VARCHAR}
         <if test="page != null">
             limit #{page.pageStart}, #{page.pageSize}
         </if>
     </select>
     <select id="getTotal" parameterType="cn.fdongl.point.entity.MapTeacherCourse" resultType="int">
     select count(*)
-    from map_teacher_course  where teacher_work_id=#{teacherWorkId,jdbcType=VARCHAR}
+    from map_teacher_course  where teacher_work_id=#{teacherWorkId,jdbcType=VARCHAR} and course_semester=#{courseSemester,jdbcType=VARCHAR}
   </select>
     <select id="getOldMapTeacherCourseByPage" parameterType="cn.fdongl.point.entity.MapTeacherCourse"
             resultMap="BaseResultMap">

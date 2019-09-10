@@ -15,6 +15,7 @@ import cn.fdongl.point.mapper.MapTeacherCourseMapper;
 
 import cn.fdongl.point.mapper.SysFileMapper;
 import cn.fdongl.point.service.SysInfoService;
+import cn.fdongl.point.util.AcademicYear;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +87,17 @@ public class InfoController extends BaseController {
     ) {
         MapTeacherCourse mapTeacherCourse = new MapTeacherCourse();
         mapTeacherCourse.setPage(new Page<MapTeacherCourse>());
-
+        String startYear= AcademicYear.getStartYear();//获取学年
+        String endYear=String.valueOf(Integer.parseInt(startYear) +1);
+        String sc=null;
+        String nowYear=AcademicYear.getNowYear();
+        if(nowYear.equals(startYear)){
+            //当前年份为开始年份
+            sc=startYear+"-"+endYear+"-1";
+        }else{
+            sc=String.valueOf(Integer.parseInt(startYear) -1)+"-"+startYear+"-2";
+        }
+        mapTeacherCourse.setCourseSemester(sc);
         mapTeacherCourse.setTeacherWorkId(user.getUsername());
         mapTeacherCourse.getPage().setPageIndex(pageIndex);
         mapTeacherCourse.getPage().setPageSize(pageSize);
