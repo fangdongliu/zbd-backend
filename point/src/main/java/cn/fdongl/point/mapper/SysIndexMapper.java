@@ -2,6 +2,7 @@ package cn.fdongl.point.mapper;
 
 import cn.fdongl.point.entity.SysIndex;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public interface SysIndexMapper {
 
     int updateByPrimaryKey(SysIndex record);
 
-    SysIndex selectByIdAndDate(String number);
+    SysIndex selectByIdAndDate(@Param("number") String number);
 
     SysIndex selectByNumAndDate();
 }

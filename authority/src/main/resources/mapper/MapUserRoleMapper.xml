@@ -37,6 +37,18 @@
       #{createUserId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=VARCHAR}, 
       #{modifyDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER})
   </insert>
+  <insert id="insertBatch" parameterType="cn.fdongl.authority.vo.MapUserRole">
+    <!--@mbg.generated-->
+    replace into map_user_role (id, user_id, role_id,
+    create_user_id, create_date, modify_user_id,
+    modify_date, `status`)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.id,jdbcType=VARCHAR}, #{item.userId,jdbcType=VARCHAR}, #{item.roleId,jdbcType=VARCHAR},
+      #{item.createUserId,jdbcType=VARCHAR}, #{item.createDate,jdbcType=TIMESTAMP}, #{item.modifyUserId,jdbcType=VARCHAR},
+      #{item.modifyDate,jdbcType=TIMESTAMP}, #{item.status,jdbcType=INTEGER})
+    </foreach>
+  </insert>
   <insert id="insertSelective" parameterType="cn.fdongl.authority.vo.MapUserRole">
     <!--@mbg.generated-->
     insert into map_user_role

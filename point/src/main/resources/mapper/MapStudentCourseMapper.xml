@@ -66,6 +66,27 @@
         #{createUserId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=VARCHAR},
         #{modifyDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER})
     </insert>
+    <insert id="insertBatch" parameterType="cn.fdongl.point.entity.MapStudentCourse">
+        replace into map_student_course (id, user_work_id, total_grade,
+        course_name, course_number, course_select_number,
+        course_semester, course_nature, course_property,
+        course_ascription, course_kind, course_hour,
+        course_credit, course_department, input_user_name,
+        grade_sign, exam_nature, supplement_repeat_semester,
+        create_user_id, create_date, modify_user_id,
+        modify_date, `status`)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id,jdbcType=VARCHAR}, #{item.userWorkId,jdbcType=VARCHAR}, #{item.totalGrade,jdbcType=VARCHAR},
+            #{item.courseName,jdbcType=VARCHAR}, #{item.courseNumber,jdbcType=VARCHAR}, #{item.courseSelectNumber,jdbcType=VARCHAR},
+            #{item.courseSemester,jdbcType=VARCHAR}, #{item.courseNature,jdbcType=VARCHAR}, #{item.courseProperty,jdbcType=VARCHAR},
+            #{item.courseAscription,jdbcType=VARCHAR}, #{item.courseKind,jdbcType=VARCHAR}, #{item.courseHour,jdbcType=INTEGER},
+            #{item.courseCredit,jdbcType=DOUBLE}, #{item.courseDepartment,jdbcType=VARCHAR}, #{item.inputUserName,jdbcType=VARCHAR},
+            #{item.gradeSign,jdbcType=VARCHAR}, #{item.examNature,jdbcType=VARCHAR}, #{item.supplementRepeatSemester,jdbcType=VARCHAR},
+            #{item.createUserId,jdbcType=VARCHAR}, #{item.createDate,jdbcType=TIMESTAMP}, #{item.modifyUserId,jdbcType=VARCHAR},
+            #{item.modifyDate,jdbcType=TIMESTAMP}, #{item.status,jdbcType=INTEGER})
+        </foreach>
+    </insert>
     <insert id="insertSelective" parameterType="cn.fdongl.point.entity.MapStudentCourse">
         <!--@mbg.generated-->
         insert into map_student_course

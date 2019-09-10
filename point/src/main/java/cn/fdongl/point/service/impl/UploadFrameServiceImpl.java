@@ -30,6 +30,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.http.HttpRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -69,6 +70,9 @@ public class UploadFrameServiceImpl implements UploadFrameService {
     private SysDictMapper sysDictMapper;
     @Autowired
     private SysDictTypeMapper sysDictTypeMapper;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Override
     public String uploadProject(MultipartFile projectFile, HttpServletRequest request) throws IOException {
@@ -306,6 +310,8 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         Workbook workbook = null;
         // 获取文件后缀
         String fileType = fileName.substring(fileName.lastIndexOf("."));
+
+        String encodedPwd = passwordEncoder.encode("123456");
         // 根据不同后缀init不同的类，是xls还是xlsx
         if (".xls".equals(fileType)) {
             workbook = new HSSFWorkbook(inputStream);
@@ -347,10 +353,12 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         //取出所有的系统用户形成HashMap
         HashMap<String, Integer> sysUserMap = sysUserService.getSysUserMap();
         //新建待插入的用户
-        SysUser newTeacher = new SysUser();
+
+        List<SysUser> users = new ArrayList<>();
         // 前两行是表头
         for (int i = 2; i < list.size(); i++) {
             //lo 是一行
+            SysUser newTeacher = new SysUser();
             List<Object> lo = (List<Object>) list.get(i);
             //0行是工号
             HSSFCell workIdCell = (HSSFCell) lo.get(0);
@@ -365,16 +373,27 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             HSSFCell departmentCell = (HSSFCell) lo.get(3);
 
             newTeacher.setUserName(workIdCell.getRichStringCellValue().getString());
-            newTeacher.setSecretePwd("123456");
+            newTeacher.setSecretePwd(encodedPwd);
             newTeacher.setWorkId(workIdCell.getRichStringCellValue().getString());
             newTeacher.setRealName(realNameCell.getRichStringCellValue().getString());
             newTeacher.setUserDepartment(departmentCell.getRichStringCellValue().getString());
             newTeacher.setUserType("teacher");
 
             //用户赋角色(teacher)
-            mapUtilService.addNewRoleMap(newTeacher.getId(), "teacher");
+//            mapUtilService.addNewRoleMap(newTeacher.getId(), "teacher");
             //插入新的教师
-            sysUserMapper.insertSelective(newTeacher);
+            users.add(newTeacher);
+            if(users.size()>400){
+                mapUtilService.addNewRoleMapBatch(users,"teacher");
+                sysUserMapper.insertBatch(users);
+                users.clear();
+            }
+//            sysUserMapper.insertSelective(newTeacher);
+        }
+        if(users.size()>0){
+            mapUtilService.addNewRoleMapBatch(users,"teacher");
+            sysUserMapper.insertBatch(users);
+//            users.clear();
         }
     }
 
@@ -437,9 +456,11 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         inputStream.close();
 
         //新建待插入的学生(如果学号重复就不新增学生)
-        SysUser newStudent = new SysUser();
+
         //新建student-course关联对象
-        MapStudentCourse newStudentCourse = new MapStudentCourse();
+
+        List<SysUser> users = new ArrayList<>();
+        List<MapStudentCourse>mapStudentCourseList = new ArrayList<>();
 
         // 0列是学号
         HSSFCell workIdCell;
@@ -492,6 +513,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
 
         // 第一行是表头
         for (int i = 1; i < list.size(); i++) {
+            SysUser newStudent = new SysUser();
             // lo是一行
             List<Object> lo = (List<Object>) list.get(i);
 
@@ -517,13 +539,21 @@ public class UploadFrameServiceImpl implements UploadFrameService {
                 newStudent.setTrainLevel(trainLevelCell.getRichStringCellValue().getString());
                 newStudent.setClassName(classNameCell.getRichStringCellValue().getString());
 
+                users.add(newStudent);
+                if(users.size() == 400){
+                    sysUserMapper.insertBatch(users);
+                    mapUtilService.addNewRoleMapBatch(users,"student");
+                    users.clear();
+                }
+
                 // 用户赋角色(student)
-                mapUtilService.addNewRoleMap(newStudent.getId(), "student");
-                // 插入新的学生
-                sysUserMapper.insertSelective(newStudent);
+//                mapUtilService.addNewRoleMap(newStudent.getId(), "student");
+//                // 插入新的学生
+//                sysUserMapper.insertSelective(newStudent);
                 // 记得添加新的map
                 sysUserMap.put(workIdCell.getRichStringCellValue().getString(), 1);
             }
+            MapStudentCourse newStudentCourse = new MapStudentCourse();
 
             courseSemesterCell = (HSSFCell) lo.get(3);
             courseSelectNumber = (HSSFCell) lo.get(24);
@@ -561,7 +591,20 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             newStudentCourse.setExamNature(examNatureCell.getRichStringCellValue().getString());
             newStudentCourse.setSupplementRepeatSemester(supplementRepeatCell.getRichStringCellValue().getString());
 
-            studentCourseMapper.insertSelective(newStudentCourse);
+            mapStudentCourseList.add(newStudentCourse);
+            if(mapStudentCourseList.size()==400){
+                studentCourseMapper.insertBatch(mapStudentCourseList);
+                mapStudentCourseList.clear();
+            }
+
+//            studentCourseMapper.insertSelective(newStudentCourse);
+        }
+        if(users.size()>0){
+            sysUserMapper.insertBatch(users);
+            mapUtilService.addNewRoleMapBatch(users,"student");
+        }
+        if(mapStudentCourseList.size()>0){
+            studentCourseMapper.insertBatch(mapStudentCourseList);
         }
     }
 }

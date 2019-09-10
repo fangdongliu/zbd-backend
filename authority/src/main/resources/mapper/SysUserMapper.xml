@@ -65,6 +65,26 @@
         delete from sys_user
         where id = #{id,jdbcType=VARCHAR}
     </delete>
+    <insert id="insertBatch" parameterType="cn.fdongl.authority.vo.SysUser">
+        <!--@mbg.generated-->
+        replace into sys_user (id, user_name, real_name,
+        work_id, user_type, user_pwd,
+        user_department, class_name, start_year,
+        education_system, train_level, user_title,
+        lastPasswordResetDate, create_user_id,
+        create_date, modify_user_id, modify_date,
+        `status`)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id,jdbcType=VARCHAR}, #{item.userName,jdbcType=VARCHAR}, #{item.realName,jdbcType=VARCHAR},
+            #{item.workId,jdbcType=VARCHAR}, #{item.userType,jdbcType=VARCHAR}, #{item.userPwd,jdbcType=VARCHAR},
+            #{item.userDepartment,jdbcType=VARCHAR}, #{item.className,jdbcType=VARCHAR}, #{item.startYear,jdbcType=VARCHAR},
+            #{item.educationSystem,jdbcType=INTEGER}, #{item.trainLevel,jdbcType=VARCHAR}, #{item.userTitle,jdbcType=VARCHAR},
+            #{item.lastPasswordResetDate,jdbcType=TIMESTAMP}, #{item.createUserId,jdbcType=VARCHAR},
+            #{item.createDate,jdbcType=TIMESTAMP}, #{item.modifyUserId,jdbcType=VARCHAR}, #{item.modifyDate,jdbcType=TIMESTAMP},
+            #{item.status,jdbcType=INTEGER})
+        </foreach>
+    </insert>
     <insert id="insert" parameterType="cn.fdongl.authority.vo.SysUser">
         <!--@mbg.generated-->
         insert into sys_user (id, user_name, real_name,

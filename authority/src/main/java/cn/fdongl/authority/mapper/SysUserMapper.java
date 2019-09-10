@@ -60,5 +60,7 @@ public interface SysUserMapper {
 
     int updateByPrimaryKeySelective(SysUser record);
 
+    int insertBatch(List<SysUser> record);
+
     int updateByPrimaryKey(SysUser record);
 }
