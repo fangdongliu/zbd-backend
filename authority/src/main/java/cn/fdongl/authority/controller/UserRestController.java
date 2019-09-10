@@ -1,7 +1,9 @@
 package cn.fdongl.authority.controller;
 
+import cn.fdongl.authority.mapper.SysUserMapper;
 import cn.fdongl.authority.util.JwtTokenUtil;
 import cn.fdongl.authority.vo.JwtUser;
+import cn.fdongl.authority.vo.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +27,9 @@ public class UserRestController {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private SysUserMapper userMapper;
+
     /**
      * 获取用户认证信息
      *
@@ -34,10 +39,11 @@ public class UserRestController {
      * @date 2019/9/7 13:30
      **/
     @GetMapping(value = "user")
-    public JwtUser getAuthenticatedUser(HttpServletRequest request) {
+    public SysUser getAuthenticatedUser(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader).substring(7);
         String username = jwtTokenUtil.getUsernameFromToken(token);
-        JwtUser jwtUser = (JwtUser) userDetailsService.loadUserByUsername(username);
-        return jwtUser;
+        return userMapper.findUserByUserName(username);
+//        JwtUser jwtUser = (JwtUser) userDetailsService.loadUserByUsername(username);
+//        return jwtUser;
     }
 }

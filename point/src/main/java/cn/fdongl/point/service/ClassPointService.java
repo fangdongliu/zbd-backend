@@ -1,6 +1,6 @@
 package cn.fdongl.point.service;
 
-import cn.fdongl.point.entity.MapStudentEvaluation;
+import cn.fdongl.authority.vo.JwtUser;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,7 +16,7 @@ public interface ClassPointService {
      * @param file 上传的excel文件
      */
 
-    String savePoint(String classId, MultipartFile file) throws  Exception;
+    String savePoint(String classId, MultipartFile file, JwtUser user) throws  Exception;
 
     /**
      * 学生上传新的课程评价

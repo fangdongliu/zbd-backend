@@ -1,6 +1,7 @@
 package cn.fdongl.point.service.impl;
 
 import cn.fdongl.authority.util.IdGen;
+import cn.fdongl.authority.vo.JwtUser;
 import cn.fdongl.point.entity.MapStudentCourse;
 import cn.fdongl.point.entity.MapTeacherCourse;
 import cn.fdongl.point.entity.*;
@@ -59,7 +60,7 @@ public class ClassPointServiceImpl implements ClassPointService {
     private SysFileMapper sysFileMapper;
 
     @Override
-    public String savePoint(String classId, MultipartFile file) throws Exception {
+    public String savePoint(String classId, MultipartFile file, JwtUser user) throws Exception {
 
         // 获取Excel的输出流
         InputStream inputStream = file.getInputStream();
@@ -230,6 +231,8 @@ public class ClassPointServiceImpl implements ClassPointService {
             sysFileMapper.insertSelective(sysFile);
         }
 
+        sysFile.setCreateUserId(user.getId());
+        sysFile.setStatus(7);
         File dest = new File(filePath+"/"+fileName);
         if (!dest.getParentFile().exists()) {
             dest.getParentFile().mkdirs();// 新建文件夹

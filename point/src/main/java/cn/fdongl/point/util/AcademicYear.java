@@ -15,4 +15,11 @@ public class AcademicYear {
         return String.valueOf(year);
 
     }
+
+    //获取当前年份
+    public static String getNowYear(){
+        Calendar now = Calendar.getInstance();
+        int year = now.get(Calendar.YEAR);
+        return String.valueOf(year);
+    }
 }

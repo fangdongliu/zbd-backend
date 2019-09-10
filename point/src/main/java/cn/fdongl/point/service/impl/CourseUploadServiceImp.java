@@ -1,11 +1,14 @@
 package cn.fdongl.point.service.impl;
 
 import cn.fdongl.authority.util.IdGen;
+import cn.fdongl.authority.vo.JwtUser;
 import cn.fdongl.point.entity.MapTeacherCourse;
 import cn.fdongl.point.entity.SysCourse;
 
+import cn.fdongl.point.entity.SysFile;
 import cn.fdongl.point.mapper.MapTeacherCourseMapper;
 import cn.fdongl.point.mapper.SysCourseMapper;
+import cn.fdongl.point.mapper.SysFileMapper;
 import cn.fdongl.point.service.CourseUploadService;
 import cn.fdongl.point.util.ExcelUtils;
 
@@ -20,8 +23,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -36,10 +41,12 @@ public class CourseUploadServiceImp implements CourseUploadService {
     @Autowired
     private MapTeacherCourseMapper mapTeacherCourseMapper;
 
+    @Autowired
+    private SysFileMapper sysFileMapper;
     //上传本学期计划执行列表
     @Transactional
     @Override
-    public String uploadExecuteClass(MultipartFile file) throws IOException {
+    public String uploadExecuteClass(MultipartFile file, JwtUser user) throws IOException {
         // 获取Excel的输出流
         InputStream inputStream = file.getInputStream();
         // 获取文件名称
@@ -178,12 +185,28 @@ public class CourseUploadServiceImp implements CourseUploadService {
         if(courses.size()>0){
             sysCourseMapper.insertBatch(courses);
         }
+
+        //将上传文件保存到服务器
+        SysFile sysFile=new SysFile();
+        String path=  ClassUtils.getDefaultClassLoader().getResource("").getPath()+"/planExecute";
+        sysFile.setId(IdGen.uuid());
+        sysFile.setFileName(file.getOriginalFilename());
+        sysFile.setStatus(5);
+        sysFile.setFilePath(path);
+        sysFile.setCreateUserId(user.getId());
+        sysFileMapper.insertSelective(sysFile);
+        File dest = new File(sysFile.getFilePath()+"/"+fileName);
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdirs();// 新建文件夹
+        }
+
+        file.transferTo(dest);// 文件写入
         return null;
 
     }
 
     @Override
-    public String uploadTeacherCourse(MultipartFile file) throws IOException {
+    public String uploadTeacherCourse(MultipartFile file,JwtUser user) throws IOException {
         // 获取Excel的输出流
         InputStream inputStream = file.getInputStream();
         // 获取文件名称
@@ -327,6 +350,22 @@ public class CourseUploadServiceImp implements CourseUploadService {
             mapTeacherCourse.setStatus(3);
             mapTeacherCourseMapper.insertSelective(mapTeacherCourse);
         }
+
+        //将上传文件保存到服务器
+        SysFile sysFile=new SysFile();
+        String path=  ClassUtils.getDefaultClassLoader().getResource("").getPath()+"/teacherCourse";
+        sysFile.setId(IdGen.uuid());
+        sysFile.setFileName(file.getOriginalFilename());
+        sysFile.setStatus(5);
+        sysFile.setFilePath(path);
+        sysFile.setCreateUserId(user.getId());
+        sysFileMapper.insertSelective(sysFile);
+        File dest = new File(sysFile.getFilePath()+"/"+fileName);
+        if (!dest.getParentFile().exists()) {
+            dest.getParentFile().mkdirs();// 新建文件夹
+        }
+
+        file.transferTo(dest);// 文件写入
 
         return null;
     }

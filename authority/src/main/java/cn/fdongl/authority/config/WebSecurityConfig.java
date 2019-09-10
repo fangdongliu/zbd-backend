@@ -71,7 +71,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 
                 .authorizeRequests()
-                .antMatchers("/download/**").permitAll()
+                .antMatchers("/download/**","/downOldTeacherEvaluation/**").permitAll()
                 // Un-secure H2 Database
                 .antMatchers("/h2-console/**/**").permitAll()
 
