@@ -323,6 +323,7 @@
         <where>
             <if test="page.searchKey != null and page.searchKey != ''">
                 user_name like concat('%', #{page.searchKey,jdbcType=VARCHAR}, '%')
+                or real_name like concat('%', #{page.searchKey,jdbcType=VARCHAR}, '%')
             </if>
         </where>
         <if test="page != null">
