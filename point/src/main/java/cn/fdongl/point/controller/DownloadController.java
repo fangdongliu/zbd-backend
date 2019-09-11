@@ -9,6 +9,7 @@ import cn.fdongl.point.entity.TwoString;
 import cn.fdongl.point.mapper.MapTeacherCourseMapper;
 import cn.fdongl.point.mapper.SysFileMapper;
 import cn.fdongl.point.service.ExportService;
+import cn.fdongl.point.service.ResultService;
 import cn.fdongl.point.util.ExcelUtils;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -37,15 +38,18 @@ public class DownloadController extends BaseController {
     private SysFileMapper sysFileMapper;
     @Autowired
     private ExportService exportService;
+    @Autowired
+    private ResultService resultService;
 
     /**
      * 下载往期教师评价表
+     *
      * @param id
      * @return
      */
-    @GetMapping(value = "downOldTeacherEvaluation",produces = MediaType.ALL_VALUE)
+    @GetMapping(value = "downOldTeacherEvaluation", produces = MediaType.ALL_VALUE)
     public void oldTeacherEvaluation(@RequestParam("id") String id,
-                                       HttpServletResponse response) throws UnsupportedEncodingException {
+                                     HttpServletResponse response) throws UnsupportedEncodingException {
         MapTeacherCourse mapTeacherCourse = mapTeacherCourseMapper.selectByPrimaryKey(id);
         String fileId = mapTeacherCourse.getFileId();
         SysFile file = sysFileMapper.selectByPrimaryKey(fileId);
@@ -57,12 +61,12 @@ public class DownloadController extends BaseController {
             File file1 = new File(filePath, fileName);
             if (file1.exists()) {
                 response.setContentType("application/msexcel");
-                response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(fileName,"UTF-8"));
+                response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(fileName, "UTF-8"));
                 try {
                     InputStream in = new FileInputStream(file1);
                     ServletOutputStream out = response.getOutputStream();
                     final byte[] b = new byte[8192];
-                    for (int r; (r = in.read(b)) != -1;) {
+                    for (int r; (r = in.read(b)) != -1; ) {
                         out.write(b, 0, r);
                     }
                     in.close();
@@ -78,9 +82,9 @@ public class DownloadController extends BaseController {
     /**
      * 下载与该用户所有有关的表
      */
-    @GetMapping(value = "downloadUserTable",produces = MediaType.ALL_VALUE)
+    @GetMapping(value = "downloadUserTable", produces = MediaType.ALL_VALUE)
     public void userTable(@RequestParam("id") String id,
-                                     HttpServletResponse response) throws UnsupportedEncodingException {
+                          HttpServletResponse response) throws UnsupportedEncodingException {
         SysFile file = sysFileMapper.selectByPrimaryKey(id);
 
         String fileName = file.getFileName();
@@ -90,12 +94,12 @@ public class DownloadController extends BaseController {
             File file1 = new File(filePath, fileName);
             if (file1.exists()) {
                 response.setContentType("application/msexcel");
-                response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(fileName,"UTF-8"));
+                response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(fileName, "UTF-8"));
                 try {
                     InputStream in = new FileInputStream(file1);
                     ServletOutputStream out = response.getOutputStream();
                     final byte[] b = new byte[8192];
-                    for (int r; (r = in.read(b)) != -1;) {
+                    for (int r; (r = in.read(b)) != -1; ) {
                         out.write(b, 0, r);
                     }
                     in.close();
@@ -113,7 +117,7 @@ public class DownloadController extends BaseController {
             JwtUser jwtUser,
             HttpServletRequest httpServletRequest,
             HttpServletResponse httpServletResponse
-    ){
+    ) {
         Map<String, Result> stringResult = new HashMap<>();
         Result tmpResult = new Result();
 
@@ -131,7 +135,7 @@ public class DownloadController extends BaseController {
         courseList.add("互联网用用开发基础训练2015-2016学年");
         courseList.add("毕业设计(论文)2014-2015学年");
         courseList.add("毕业设计(论文)2015-2016学年");
-        Map<TwoString,String> relation = new HashMap<>();
+        Map<TwoString, String> relation = new HashMap<>();
         relation.put(new TwoString("思想道德与法律基础2014-2015学年", "7.1能够了解软件工程及相关行业的政策和法律法规势"), "0.3");
         relation.put(new TwoString("思想道德与法律基础2015-2016学年", "7.1能够了解软件工程及相关行业的政策和法律法规势"), "0.3");
         relation.put(new TwoString("知识产权法基础2014-2015学年", "7.2能够理解复杂软件工程问题的专业实践和对环境以及社会可持续的影响"), "0.4");
@@ -148,11 +152,56 @@ public class DownloadController extends BaseController {
         tmpResult.setCourseList(courseList);
         tmpResult.setRelation(relation);
 
-        Map<String,Result> sr = new HashMap<>();
-        sr.put("7",tmpResult);
+        Map<String, Result> sr = new HashMap<>();
+        sr.put("7", tmpResult);
         try {
-            exportService.exportExcelResult(jwtUser, sr,httpServletRequest,httpServletResponse);
+            exportService.exportExcelResult(jwtUser, sr, httpServletRequest, httpServletResponse);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 按年导出指标点excel结果
+     *
+     * @param schoolYear
+     * @return void
+     * @author zm
+     * @date 2019/9/12 0:21
+     **/
+    @GetMapping("bySchoolYear")
+    public void exportByTwoYear(
+            JwtUser jwtUser,
+            @RequestParam("schoolYear") String schoolYear,
+            HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse) {
+        Map<String, Result> resultMap = resultService.getIndexGradeResult(schoolYear);
+        try {
+            exportService.exportExcelResult(jwtUser, resultMap, httpServletRequest, httpServletResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 按学级导出指标点excel结果
+     *
+     * @param grade 年级
+     * @return void
+     * @author zm
+     * @date 2019/9/12 0:21
+     **/
+    @GetMapping("byGrade")
+    public void exportByGrade(
+            JwtUser jwtUser,
+            @RequestParam("grade") String grade,
+            HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse) {
+        Map<String, Result> resultMap = resultService.getIndexGradeResult(grade);
+        try {
+            exportService.exportExcelResult(jwtUser, resultMap, httpServletRequest, httpServletResponse);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
