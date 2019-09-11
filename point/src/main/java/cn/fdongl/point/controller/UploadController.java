@@ -2,6 +2,8 @@ package cn.fdongl.point.controller;
 
 import cn.fdongl.authority.util.BaseController;
 import cn.fdongl.authority.util.MsgType;
+import cn.fdongl.point.entity.MapStudentEvaluation;
+import cn.fdongl.point.entity.StudentEvaluation;
 import cn.fdongl.authority.vo.JwtUser;
 import cn.fdongl.point.mapper.UploadStatusMapper;
 import cn.fdongl.point.service.ClassPointService;
@@ -15,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @RequestMapping("/upload")
@@ -50,32 +53,6 @@ public class UploadController extends BaseController {
         return retMsg.Set(MsgType.SUCCESS);
     }
 
-
-    /**
-     * 上传学生评价
-     *
-     * @param courseSelectNumber 选课课号(from map_teacher_course)
-     * @param data map对象，key为指标点ID，value为分数（1-4）
-     * @param studentWorkId 学生工号/学生用户名
-     * @return java.lang.Object
-     * @author zm
-     * @date 2019/9/9 10:36
-     **/
-    @PostMapping(value = "studentEvaluation")
-    public Object uploadStudentCom(
-            @RequestParam("studentWorkId") String studentWorkId,
-            @RequestParam("courseSelectNumber") String courseSelectNumber,
-            @RequestParam("data") Map<String, Integer> data
-    ) {
-        try {
-            classPointService.savePoint(courseSelectNumber, data, studentWorkId);
-            return retMsg.Set(MsgType.SUCCESS);
-        } catch (Exception e) {
-            return retMsg.Set(MsgType.ERROR);
-        }
-    }
-
-
     //上传培养方案
     @PostMapping(value = "cultivatePlan")
     public Object uploadCultivatePlan(@RequestParam("file") MultipartFile file, HttpServletRequest request,JwtUser user) {
@@ -87,7 +64,6 @@ public class UploadController extends BaseController {
             return retMsg.Set(MsgType.ERROR);
         }
     }
-
 
     /**
      * 上传培养矩阵
@@ -197,4 +173,25 @@ public class UploadController extends BaseController {
         }
         return retMsg.Set(MsgType.SUCCESS);
     }
+
+    /**
+     * 上传学生评价
+     *
+     * @return java.lang.Object
+     * @author zm
+     * @date 2019/9/9 10:36
+     **/
+    @PostMapping(value = "studentEvaluation")
+    public Object uploadStudentEvaluation(@RequestBody StudentEvaluation studentEvaluation) {
+        try {
+            classPointService.savePoint(studentEvaluation.getStudentWorkId(),
+                    studentEvaluation.getCourseSelectNumber(),
+                    studentEvaluation.getEvaluations());
+        }catch (Exception e){
+            e.printStackTrace();
+            return retMsg.Set(MsgType.ERROR, null, "上传学生评价失败");
+        }
+        return retMsg.Set(MsgType.SUCCESS, null, "上传学生评价成功");
+    }
+
 }

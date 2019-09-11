@@ -28,6 +28,11 @@ public class SysIndex {
     private String indexContent;
 
     /**
+     * 指标点评价值
+     */
+    private Integer evaluationValue;
+
+    /**
     * 指标要求父类型 - from sys_index 表
     */
     private String parentId;

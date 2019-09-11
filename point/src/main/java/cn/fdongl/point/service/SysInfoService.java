@@ -2,6 +2,8 @@ package cn.fdongl.point.service;
 
 import cn.fdongl.authority.util.Page;
 import cn.fdongl.authority.util.SearchResult;
+import cn.fdongl.point.entity.MapStudentEvaluation;
+import cn.fdongl.point.entity.SysIndex;
 
 import java.util.List;
 
@@ -52,4 +54,25 @@ public interface SysInfoService {
      * @date 2019/9/10 17:16
      **/
     Page<SearchResult> getStudentCoursePage(String studentWorkId, String courseSemester, int pageIndex, int pageSize);
+
+    /**
+     * 获取学生的历史评价(针对以往上的课)
+     *
+     * @author zm
+     * @param studentWorkId 学生工号
+     * @param courseSelectNumber 选课课号
+     * @return java.util.List<cn.fdongl.point.entity.MapStudentEvaluation>
+     * @date 2019/9/10 20:11
+     **/
+    List<SysIndex> getStudentEvaluation(String studentWorkId, String courseSelectNumber);
+
+    /**
+     * 获取当前时间(学期)的指定课程对应的指标点List
+     *
+     * @author zm
+     * @param courseNumber  选课课号
+     * @return java.util.List<cn.fdongl.point.entity.SysIndex>
+     * @date 2019/9/11 16:19
+     **/
+    List<SysIndex> getNowCourseIndex(String courseNumber);
 }

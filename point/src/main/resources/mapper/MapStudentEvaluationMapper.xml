@@ -4,7 +4,8 @@
   <resultMap id="BaseResultMap" type="cn.fdongl.point.entity.MapStudentEvaluation">
     <!--@mbg.generated-->
     <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="map_student_course_id" jdbcType="VARCHAR" property="mapStudentCourseId" />
+    <result column="student_work_Id" jdbcType="VARCHAR" property="studentWorkId" />
+    <result column="course_select_number" jdbcType="VARCHAR" property="courseSelectNumber" />
     <result column="index_id" jdbcType="VARCHAR" property="indexId" />
     <result column="evaluation_value" jdbcType="INTEGER" property="evaluationValue" />
     <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
@@ -15,8 +16,8 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, map_student_course_id, index_id, evaluation_value, create_user_id, create_date, 
-    modify_user_id, modify_date, `status`
+    id, student_work_Id, course_select_number, index_id, evaluation_value, create_user_id, 
+    create_date, modify_user_id, modify_date, `status`
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     <!--@mbg.generated-->
@@ -32,14 +33,14 @@
   </delete>
   <insert id="insert" parameterType="cn.fdongl.point.entity.MapStudentEvaluation">
     <!--@mbg.generated-->
-    insert into map_student_evaluation (id, map_student_course_id, index_id, 
-      evaluation_value, create_user_id, create_date, 
-      modify_user_id, modify_date, `status`
-      )
-    values (#{id,jdbcType=VARCHAR}, #{mapStudentCourseId,jdbcType=VARCHAR}, #{indexId,jdbcType=VARCHAR}, 
-      #{evaluationValue,jdbcType=INTEGER}, #{createUserId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
-      #{modifyUserId,jdbcType=VARCHAR}, #{modifyDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}
-      )
+    insert into map_student_evaluation (id, student_work_Id, course_select_number, 
+      index_id, evaluation_value, create_user_id, 
+      create_date, modify_user_id, modify_date, 
+      `status`)
+    values (#{id,jdbcType=VARCHAR}, #{studentWorkId,jdbcType=VARCHAR}, #{courseSelectNumber,jdbcType=VARCHAR}, 
+      #{indexId,jdbcType=VARCHAR}, #{evaluationValue,jdbcType=INTEGER}, #{createUserId,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{modifyUserId,jdbcType=VARCHAR}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="cn.fdongl.point.entity.MapStudentEvaluation">
     <!--@mbg.generated-->
@@ -48,8 +49,11 @@
       <if test="id != null">
         id,
       </if>
-      <if test="mapStudentCourseId != null">
-        map_student_course_id,
+      <if test="studentWorkId != null">
+        student_work_Id,
+      </if>
+      <if test="courseSelectNumber != null">
+        course_select_number,
       </if>
       <if test="indexId != null">
         index_id,
@@ -77,8 +81,11 @@
       <if test="id != null">
         #{id,jdbcType=VARCHAR},
       </if>
-      <if test="mapStudentCourseId != null">
-        #{mapStudentCourseId,jdbcType=VARCHAR},
+      <if test="studentWorkId != null">
+        #{studentWorkId,jdbcType=VARCHAR},
+      </if>
+      <if test="courseSelectNumber != null">
+        #{courseSelectNumber,jdbcType=VARCHAR},
       </if>
       <if test="indexId != null">
         #{indexId,jdbcType=VARCHAR},
@@ -107,8 +114,11 @@
     <!--@mbg.generated-->
     update map_student_evaluation
     <set>
-      <if test="mapStudentCourseId != null">
-        map_student_course_id = #{mapStudentCourseId,jdbcType=VARCHAR},
+      <if test="studentWorkId != null">
+        student_work_Id = #{studentWorkId,jdbcType=VARCHAR},
+      </if>
+      <if test="courseSelectNumber != null">
+        course_select_number = #{courseSelectNumber,jdbcType=VARCHAR},
       </if>
       <if test="indexId != null">
         index_id = #{indexId,jdbcType=VARCHAR},
@@ -137,7 +147,8 @@
   <update id="updateByPrimaryKey" parameterType="cn.fdongl.point.entity.MapStudentEvaluation">
     <!--@mbg.generated-->
     update map_student_evaluation
-    set map_student_course_id = #{mapStudentCourseId,jdbcType=VARCHAR},
+    set student_work_Id = #{studentWorkId,jdbcType=VARCHAR},
+      course_select_number = #{courseSelectNumber,jdbcType=VARCHAR},
       index_id = #{indexId,jdbcType=VARCHAR},
       evaluation_value = #{evaluationValue,jdbcType=INTEGER},
       create_user_id = #{createUserId,jdbcType=VARCHAR},

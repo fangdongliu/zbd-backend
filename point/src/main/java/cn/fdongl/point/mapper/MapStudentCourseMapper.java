@@ -39,7 +39,7 @@ public interface MapStudentCourseMapper {
             @Param("userWorkId") String userWorkId);
 
     /**
-     * //TODO
+     * 根据学生学号和学期获取选课课号(分页形式)
      *
      * @param userWorkId
      * @param courseSemester
@@ -54,7 +54,7 @@ public interface MapStudentCourseMapper {
             @Param("pageSize") int pageSize);
 
     /**
-     * //TODO
+     * 根据学生学号和学期选出所有的1.课程名和2.课程选课课号
      *
      * @param userWorkId
      * @param courseSemester
@@ -64,13 +64,26 @@ public interface MapStudentCourseMapper {
      * @author zm
      * @date 2019/9/10 17:04
      **/
-    List<SearchResult> selectCourseNameAndCourseSelectNumberPageByUserWorkIdAndCourseSemester(
+    List<SearchResult> selectCourseInfoPageByUserWorkIdAndCourseSemester(
             @Param("userWorkId") String userWorkId,
             @Param("courseSemester") String courseSemester,
             @Param("pageStart") int pageStart,
             @Param("pageSize") int pageSize);
 
+    /**
+     * 根据学生学号和学期选出课程数
+     *
+     * @param userWorkId
+     * @param courseSemester
+     * @return int
+     * @author zm
+     * @date 2019/9/10 20:17
+     **/
     int selectSearchResultNumByUserWorkIdAndCourseSemester(
             @Param("userWorkId") String userWorkId,
             @Param("courseSemester") String courseSemester);
+
+    List<String> selectIdByCourseSelectNumberAndUserWorkId(
+            @Param("courseSelectNumber")String courseSelectNumber,
+            @Param("userWorkId")String userWorkId);
 }
