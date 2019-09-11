@@ -32,24 +32,8 @@ public class ResultServiceImpl implements ResultService {
         int first = Integer.getInteger(years[0]);
         int second = Integer.getInteger(years[1]);
         List<String> semesters = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            String t = null;
-            switch (i) {
-                case 0:
-                    t = String.valueOf(first) + "-" + String.valueOf(second) + "-1";
-                    break;
-                case 1:
-                    t = String.valueOf(first) + "-" + String.valueOf(second) + "-2";
-                    break;
-                case 2:
-                    t = String.valueOf(second) + "-" + String.valueOf(second + 1) + "-1";
-                    break;
-                case 3:
-                    t = String.valueOf(second) + "-" + String.valueOf(second + 1) + "-2";
-                    break;
-            }
-            semesters.add(t);
-        }
+        semesters.add(String.valueOf(first) + "-" + String.valueOf(second));
+        semesters.add(String.valueOf(second) + "-" + String.valueOf(second + 1) );
         //获取教师关联课程中的所有学期的课程id
         List<String> courseId = mapTeacherCourseMapper.selectIdBySemesters(semesters);
         //根据courseId和指标点获取所有的指标点评价值
@@ -84,23 +68,27 @@ public class ResultServiceImpl implements ResultService {
 
     //合并相同指标点的课程评价
     public List<MapCourseEvaluation> getDifEvaluation(List<MapCourseEvaluation> mapCourseEvaluations) {
-        Map<String, MapCourseEvaluation> map = new HashMap<>();
+        Map<TwoString,MapCourseEvaluation> map=new HashMap<>();
         for (int i = 0; i < mapCourseEvaluations.size(); i++) {
             MapCourseEvaluation mapCourseEvaluation = mapCourseEvaluations.get(i);
             String courseId = mapCourseEvaluations.get(i).getCourseId();
             MapTeacherCourse mapTeacherCourse = mapTeacherCourseMapper.selectByPrimaryKey(courseId);
             String courseNum = mapTeacherCourse.getCourseNumber();
+            TwoString twoString=new TwoString();
+            twoString.setStr1(courseNum);
+            String indexNum=mapCourseEvaluation.getSysIndex().getIndexNumber();
+            twoString.setStr2(indexNum);
             mapCourseEvaluation.setMapTeacherCourse(mapTeacherCourse);
-            if (!map.containsKey(courseNum)) {
+            if (!map.containsKey(twoString)) {
                 //不包含该课程编号
-                map.put(courseNum, mapCourseEvaluation);
+                map.put(twoString, mapCourseEvaluation);
             } else {
                 //包含该课程编号，选择小的添加
-                MapCourseEvaluation m = map.get(courseNum);
+                MapCourseEvaluation m = map.get(twoString);
                 Double v = m.getEvaluationValue();
                 if (v > mapCourseEvaluation.getEvaluationValue()) {
                     //当前指标点要小的话就要替换
-                    map.put(courseNum, mapCourseEvaluation);
+                    map.put(twoString, mapCourseEvaluation);
                 }
             }
         }
@@ -130,11 +118,13 @@ public class ResultServiceImpl implements ResultService {
                 result = new Result();
                 sonIndex = new ArrayList<>();
                 course = new ArrayList<>();
+                tsMap=new HashMap<>();
                 sonIndex.add(indexName);
                 course.add(courseName);
                 result.setCourseList(course);
                 result.setIndexList(sonIndex);
                 result.setRelation(tsMap);
+
                 map.put(parentTitle, result);
             } else {
                 //map中存在该父title
