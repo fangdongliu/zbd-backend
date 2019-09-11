@@ -281,7 +281,7 @@ public class InfoController extends BaseController {
      * @author zm
      * @date 2019/9/11 16:14
      **/
-    @PostMapping(value = "nowCourseIndex")
+        @PostMapping(value = "nowCourseIndex")
     public Object getNowCourseIndex(
         @RequestParam("courseNumber") String courseNumber) {
         List<SysIndex> indexList = new ArrayList<>();
