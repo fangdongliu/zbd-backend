@@ -28,7 +28,7 @@ public class MapStudentCourseMapperTest {
 
     @Test
     public void testSelectCourseNameAndCourseSelectNumberPageByUserWorkIdAndCourseSemester() throws FileNotFoundException {
-        List<SearchResult> searchResults = mapper.selectCourseNameAndCourseSelectNumberPageByUserWorkIdAndCourseSemester(
+        List<SearchResult> searchResults = mapper.selectCourseInfoPageByUserWorkIdAndCourseSemester(
                 "1120161982", "2018-2019-1", 0, 2);
         System.out.println(searchResults);
     }

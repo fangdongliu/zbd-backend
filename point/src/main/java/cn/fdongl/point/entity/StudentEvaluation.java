@@ -34,5 +34,4 @@ public class StudentEvaluation {
      * evaluationValue 评价值(0-4)
      **/
     private List<MapStudentEvaluation> evaluations;
-
 }

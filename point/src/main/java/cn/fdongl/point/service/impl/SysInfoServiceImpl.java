@@ -89,7 +89,7 @@ public class SysInfoServiceImpl implements SysInfoService {
     public Page<SearchResult> getStudentCoursePage(String studentWorkId, String courseSemester, int pageIndex, int pageSize) {
         // 根据学生工号和课程学期分页获得所有的课程的  课程名称和选课课号
         List<SearchResult> searchResultList =
-                mapStudentCourseMapper.selectCourseNameAndCourseSelectNumberPageByUserWorkIdAndCourseSemester(
+                mapStudentCourseMapper.selectCourseInfoPageByUserWorkIdAndCourseSemester(
                         studentWorkId, courseSemester, (pageIndex - 1) * pageSize, pageSize);
         System.out.println("输出课程名称和选课课号");
         System.out.println(searchResultList);

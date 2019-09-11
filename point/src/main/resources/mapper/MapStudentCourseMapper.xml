@@ -366,9 +366,9 @@
         limit #{pageStart},#{pageSize}
     </select>
 
-    <select id="selectCourseNameAndCourseSelectNumberPageByUserWorkIdAndCourseSemester"
+    <select id="selectCourseInfoPageByUserWorkIdAndCourseSemester"
             resultType="cn.fdongl.authority.util.SearchResult">
-        select course_name as str1, course_select_number as str2
+        select course_name as str1, course_select_number as str2, course_number as str3
         from map_student_course
         where user_work_id=#{userWorkId,jdbcType=VARCHAR}
         and course_semester=#{courseSemester,jdbcType=VARCHAR}

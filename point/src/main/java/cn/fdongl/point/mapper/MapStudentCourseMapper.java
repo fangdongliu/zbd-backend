@@ -64,7 +64,7 @@ public interface MapStudentCourseMapper {
      * @author zm
      * @date 2019/9/10 17:04
      **/
-    List<SearchResult> selectCourseNameAndCourseSelectNumberPageByUserWorkIdAndCourseSemester(
+    List<SearchResult> selectCourseInfoPageByUserWorkIdAndCourseSemester(
             @Param("userWorkId") String userWorkId,
             @Param("courseSemester") String courseSemester,
             @Param("pageStart") int pageStart,
