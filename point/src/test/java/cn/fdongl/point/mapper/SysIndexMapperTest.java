@@ -36,4 +36,10 @@ public class SysIndexMapperTest {
         System.out.println("ok");
         System.out.println(sysIndexList);
     }
+
+    @Test
+    public void testSelectByStudentWorkIdAndCourseSelectNumber() throws FileNotFoundException {
+        List<SysIndex> tmp = mapper.selectByStudentWorkIdAndCourseSelectNumber("1120161999","(2017-2018-2)-100081010-6120104090-01");
+        System.out.println(tmp);
+    }
 }
