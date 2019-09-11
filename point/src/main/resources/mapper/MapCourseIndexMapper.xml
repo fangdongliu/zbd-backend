@@ -196,4 +196,7 @@
         order by create_date DESC
         limit 1)
     </select>
+    <select id="getValueByIndexIdAndCourseNum" resultType="java.lang.Double">
+        select evaluation_value from index_point.map_course_index where index_id=#{indexId,jdbcType=VARCHAR} and course_number=#{courseNum,jdbcType=VARCHAR}
+    </select>
 </mapper>
