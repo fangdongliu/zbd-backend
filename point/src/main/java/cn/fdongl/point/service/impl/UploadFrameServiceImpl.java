@@ -135,6 +135,8 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             sysFile.setId(id);
             sysFile.setFileName(fileName);
             sysFile.setFilePath(path);
+            sysFile.setCreateUserId(user.getId());
+            sysFile.setModifyDate(new Date());
             sysFileMapper.insertSelective(sysFile);
             fileId = id;
         }
@@ -305,6 +307,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         sysFile.setStatus(2);
         sysFile.setFilePath(path);
         sysFile.setCreateUserId(user.getId());
+        sysFile.setModifyDate(new Date());
         sysFileMapper.insertSelective(sysFile);
         File dest = new File(sysFile.getFilePath()+"/"+fileName);
         if (!dest.getParentFile().exists()) {
@@ -427,6 +430,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         sysFile.setStatus(3);
         sysFile.setFilePath(path);
         sysFile.setCreateUserId(user.getId());
+        sysFile.setModifyDate(new Date());
         sysFileMapper.insertSelective(sysFile);
         File dest = new File(sysFile.getFilePath()+"/"+fileName);
         if (!dest.getParentFile().exists()) {
@@ -655,6 +659,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         sysFile.setStatus(6);
         sysFile.setFilePath(path);
         sysFile.setCreateUserId(user.getId());
+        sysFile.setModifyDate(new Date());
         sysFileMapper.insertSelective(sysFile);
         File dest = new File(sysFile.getFilePath()+"/"+fileName);
         if (!dest.getParentFile().exists()) {
