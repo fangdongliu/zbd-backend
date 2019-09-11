@@ -415,4 +415,15 @@
             #{courseSelectNumer,jdbcType=VARCHAR}
         </foreach>
     </select>
+    <select id="selectIdBySemesters" resultType="java.lang.String">
+        select id
+        from index_point.map_teacher_course
+        where course_semester in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+
+
 </mapper>

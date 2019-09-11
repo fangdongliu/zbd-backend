@@ -53,4 +53,8 @@ public interface MapTeacherCourseMapper {
      **/
     List<String> selectIdByCourseSelectNumbers(
             @Param("courseSelectNumbers") List<String> courseSelectNumbers);
+
+    List<String> selectIdBySemesters(List<String> semesters);
+
+
 }
