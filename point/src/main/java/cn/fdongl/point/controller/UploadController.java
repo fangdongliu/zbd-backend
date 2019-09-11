@@ -5,6 +5,7 @@ import cn.fdongl.authority.util.MsgType;
 import cn.fdongl.point.entity.MapStudentEvaluation;
 import cn.fdongl.point.entity.StudentEvaluation;
 import cn.fdongl.authority.vo.JwtUser;
+import cn.fdongl.point.mapper.UploadStatusMapper;
 import cn.fdongl.point.service.ClassPointService;
 import cn.fdongl.point.service.CourseUploadService;
 import cn.fdongl.point.service.UploadFrameService;
@@ -30,6 +31,8 @@ public class UploadController extends BaseController {
     @Autowired
     private CourseUploadService courseUploadService;
 
+    @Autowired
+    UploadStatusMapper uploadStatusMapper;
 
     //老师上传评价表
     @PostMapping(value = "/uploadTeacherCom")
@@ -110,6 +113,11 @@ public class UploadController extends BaseController {
         return retMsg.Set(MsgType.SUCCESS, null, "上传教师信息成功");
     }
 
+    @GetMapping("queryStatus")
+    public Object queryStatus(String id){
+        return retMsg.Set(MsgType.SUCCESS,uploadStatusMapper.getStatus(id));
+    }
+
     /**
      * 上传学生选课信息
      *
@@ -121,6 +129,7 @@ public class UploadController extends BaseController {
     @PostMapping(value = "studentCourse")
     public Object uploadStudentCourse(
             @RequestParam("file") MultipartFile studentCourseFile,
+            String id,
             JwtUser user
     ) {
         System.out.println("ooook");
@@ -128,7 +137,7 @@ public class UploadController extends BaseController {
             return retMsg.Set(MsgType.ERROR, null, "文件不能为空");
         }
         try {
-            uploadFrameService.uploadStudentCourse(studentCourseFile,user);
+            uploadFrameService.uploadStudentCourse(studentCourseFile,user,id);
         } catch (Exception e) {
             e.printStackTrace();
             return retMsg.Set(MsgType.SUCCESS, null, "上传学生选课信息失败");

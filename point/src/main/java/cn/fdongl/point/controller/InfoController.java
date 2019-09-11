@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @RestController
@@ -54,8 +55,21 @@ public class InfoController extends BaseController {
         mapTeacherCourse.setTeacherWorkId(user.getUsername());
         mapTeacherCourse.getPage().setPageIndex(pageIndex);
         mapTeacherCourse.getPage().setPageSize(pageSize);
-
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int month = Calendar.getInstance().get(Calendar.MONTH);
+        String t = null;
+        if(month >= 8){
+            t = year + "-" + (year + 1) + "-" + 1;
+        } else if(month < 2){
+            t = (year - 1) + "-" + year + "-" + 1;
+        } else{
+            t = (year - 1) + "-" + year + "-" + 2;
+        }
+        mapTeacherCourse.setCourseSemester(t);
         List<MapTeacherCourse> mapTeacherCourses = mapTeacherCourseMapper.getMapTeacherCourseByPage(mapTeacherCourse);
+
+        System.out.println(year);
+        System.out.println(month);
 
         int total = mapTeacherCourseMapper.getTotal(mapTeacherCourse);
 

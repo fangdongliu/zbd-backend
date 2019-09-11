@@ -95,7 +95,7 @@ public class CourseUploadServiceImp implements CourseUploadService {
                     if(ExcelUtils.isMergedRegion(sheet,j,y)){
                         //是合并单元格
                         String val=ExcelUtils.getMergedRegionValue(sheet,j,y);
-                        String v=val.substring(0,11);
+                        String v=val.substring(1,10);
                         schoolYear=v;
                     }else{
                         if(j>=3){
