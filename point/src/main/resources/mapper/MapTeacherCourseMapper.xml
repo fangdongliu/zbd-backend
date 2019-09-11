@@ -401,7 +401,7 @@
 
     <select id="selectCourseInfoPageByUserWorkIdAndCourseSemester"
             resultType="cn.fdongl.authority.util.SearchResult">
-        select id as str1, course_name as str1, `status` as str4, course_id as str3
+        select id as str1, course_name as str2, `status` as str3, course_number as str4
         from map_teacher_course
         where teacher_work_id=#{userWorkId,jdbcType=VARCHAR}
           and course_semester=#{courseSemester,jdbcType=VARCHAR}
