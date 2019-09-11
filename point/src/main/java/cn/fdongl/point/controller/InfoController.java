@@ -325,10 +325,9 @@ public class InfoController extends BaseController {
     /**
      * 按照学年（两年）获取课程指标点
      * @param sy
-     * @param it
      * @return
      */
-    @GetMapping(value="getIndexYearResult")
+    @PostMapping(value="getIndexYearResult")
     public Object getIndexYearResult(
             @RequestParam("schoolYear") String sy
     ){
@@ -337,16 +336,13 @@ public class InfoController extends BaseController {
         return retMsg.Set(MsgType.SUCCESS, resultMap, "获取成功");
     }
 
-    @GetMapping(value="getIndexGradeResult")
+    @PostMapping(value="getIndexGradeResult")
     public Object getIndexGradeResult(
             @RequestParam("grade") String grade
     ){
         //获取课程评价值
-
         Map<String,Result> resultMap=resultService.getIndexGradeResult(grade);
-
         return retMsg.Set(MsgType.SUCCESS, resultMap, "获取成功");
-
     }
 
 }

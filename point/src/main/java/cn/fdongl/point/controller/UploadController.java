@@ -37,14 +37,13 @@ public class UploadController extends BaseController {
     //老师上传评价表
     @PostMapping(value = "/uploadTeacherCom")
     public Object uploadTeacherCom(
-            @RequestParam("selectID")String selectID,
             @RequestParam("classId")String classId,
                                    @RequestParam("file")MultipartFile file,
                                    JwtUser user){
 
         String msg=null;
         try{
-            msg=classPointService.savePoint(selectID,classId,file,user);
+            msg=classPointService.savePoint(classId,file,user);
             if(msg!=null){
                 return retMsg.Set(MsgType.ERROR,null,msg);
             }
