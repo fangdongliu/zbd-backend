@@ -262,11 +262,11 @@ public class InfoController extends BaseController {
     }
 
     /**
-     * 获取学生的某课程的指标点评价 for solve
+     * 获取学生的某课程的指标点评价
      *
      * @param studentWorkId      学生工号
      * @param courseSelectNumber 选课课号
-     * @return 未评价返回{flag:false}，已评价返回指标点编号，指标点说明，指标点评价值
+     * @return 未评价返回 null，已评价返回指标点编号，指标点说明，指标点评价值
      * @author zm
      * @date 2019/9/10 15:38
      **/
@@ -274,12 +274,17 @@ public class InfoController extends BaseController {
     public Object getCourseIndexEvaluation(
             @RequestParam("studentWorkId") String studentWorkId,
             @RequestParam("courseSelectNumber") String courseSelectNumber) {
+
+        System.out.println("ok");
         List<SysIndex> indexList = new ArrayList<>();
         try {
             indexList = sysInfoService.getStudentEvaluation(studentWorkId, courseSelectNumber);
         } catch (Exception e) {
             e.printStackTrace();
             return retMsg.Set(MsgType.ERROR, null, "获取用户指标点评价失败");
+        }
+        if(indexList == null){
+            return retMsg.Set(MsgType.SUCCESS, null, "未评价");
         }
         return retMsg.Set(MsgType.SUCCESS, indexList, "获取用户指标点评价成功");
     }

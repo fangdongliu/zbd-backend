@@ -56,7 +56,7 @@ public interface SysInfoService {
     Page<SearchResult> getStudentCoursePage(String studentWorkId, String courseSemester, int pageIndex, int pageSize);
 
     /**
-     * 获取学生的历史评价(针对以往上的课)
+     * 获取学生的历史评价(针对以往上的课)没有返回空
      *
      * @author zm
      * @param studentWorkId 学生工号
