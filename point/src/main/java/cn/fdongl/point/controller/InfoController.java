@@ -7,13 +7,13 @@ import cn.fdongl.authority.util.Page;
 
 import cn.fdongl.authority.util.SearchResult;
 import cn.fdongl.authority.vo.JwtUser;
-import cn.fdongl.point.entity.MapTeacherCourse;
-import cn.fdongl.point.entity.SysCourse;
-import cn.fdongl.point.entity.SysFile;
+import cn.fdongl.point.entity.*;
+import cn.fdongl.point.mapper.MapCourseEvaluationMapper;
 import cn.fdongl.point.mapper.MapTeacherCourseMapper;
 
 
 import cn.fdongl.point.mapper.SysFileMapper;
+import cn.fdongl.point.mapper.SysIndexMapper;
 import cn.fdongl.point.service.SysInfoService;
 import cn.fdongl.point.util.AcademicYear;
 import com.fasterxml.jackson.databind.ser.Serializers;
@@ -23,7 +23,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/getInfo")
@@ -36,6 +38,11 @@ public class InfoController extends BaseController {
     private SysInfoService sysInfoService;
     @Autowired
     private SysFileMapper sysFileMapper;
+
+    @Autowired
+    private MapCourseEvaluationMapper mapCourseEvaluationMapper;
+    @Autowired
+    private SysIndexMapper sysIndexMapper;
 
     /**
      * 获取教师评价
@@ -241,20 +248,115 @@ public class InfoController extends BaseController {
     }
 
 
-//    /**
-//     * 按照学年（两年）获取课程指标点
-//     * @param sy
-//     * @param it
-//     * @return
-//     */
-//    @GetMapping(value="getIndexGradeResult")
-//    public Object getIndexGradeResult(
-//            @RequestParam("schoolYear") String sy,
-//            @RequestParam("IndexTitle") String it
-//    ){
-//        String[] years=sy.split("~");
-//
-//
-//    }
+    /**
+     * 按照学年（两年）获取课程指标点
+     * @param sy
+     * @param it
+     * @return
+     */
+    @GetMapping(value="getIndexYearResult")
+    public Object getIndexYearResult(
+            @RequestParam("schoolYear") String sy
+    ){
+        String[] years=sy.split("~");
+        //将选择的两学年转换为学期
+        int first=Integer.getInteger(years[0]);
+        int second=Integer.getInteger(years[1]);
+        List<String> semesters=new ArrayList<>();
+        for(int i=0;i<4;i++){
+            String t=null;
+            switch (i){
+                case 0:t=String.valueOf(first)+"-"+String.valueOf(second)+"-1";break;
+                case 1:t=String.valueOf(first)+"-"+String.valueOf(second)+"-2";break;
+                case 2:t=String.valueOf(second)+"-"+String.valueOf(second+1)+"-1";break;
+                case 3:t=String.valueOf(second)+"-"+String.valueOf(second+1)+"-2";break;
+            }
+            semesters.add(t);
+        }
+       //获取教师关联课程中的所有学期的课程id
+        List<String> courseId=mapTeacherCourseMapper.selectIdBySemesters(semesters);
+        //根据courseId和指标点获取所有的指标点评价值
+        List<MapCourseEvaluation> mapCourseEvaluations=mapCourseEvaluationMapper.getByCourseIdAndIndex(courseId);
+
+        for(int i=0;i<mapCourseEvaluations.size();i++){
+            String indexId=mapCourseEvaluations.get(i).getIndexId();//获取指标点id
+            SysIndex index=sysIndexMapper.selectByPrimaryKey(indexId);
+            mapCourseEvaluations.get(i).setSysIndex(index);
+        }
+        //合并课程编号相同的指标点
+        List<MapCourseEvaluation> results=getDifEvaluation(mapCourseEvaluations);
+        Map<String,List<MapCourseEvaluation>> resultMap=getParentMap(results);
+
+        return retMsg.Set(MsgType.SUCCESS, resultMap, "获取成功");
+    }
+
+    @GetMapping(value="getIndexGradeResult")
+    public Object getIndexGradeResult(
+            @RequestParam("grade") String grade
+    ){
+        //获取课程评价值
+        List<MapCourseEvaluation> mapCourseEvaluations=mapCourseEvaluationMapper.getByGradeAndIndex(grade);
+        for(int i=0;i<mapCourseEvaluations.size();i++){
+            String indexId=mapCourseEvaluations.get(i).getIndexId();//获取指标点id
+            SysIndex index=sysIndexMapper.selectByPrimaryKey(indexId);
+            mapCourseEvaluations.get(i).setSysIndex(index);
+        }
+        //合并课程编号相同课
+        List<MapCourseEvaluation> results=getDifEvaluation(mapCourseEvaluations);
+        Map<String,List<MapCourseEvaluation>> resultMap=getParentMap(results);
+        return retMsg.Set(MsgType.SUCCESS, resultMap, "获取成功");
+
+    }
+
+
+    //合并相同指标点的课程评价
+    public List<MapCourseEvaluation> getDifEvaluation(List<MapCourseEvaluation> mapCourseEvaluations){
+        Map<String,MapCourseEvaluation> map=new HashMap<>();
+        for(int i=0;i<mapCourseEvaluations.size();i++){
+            MapCourseEvaluation mapCourseEvaluation=mapCourseEvaluations.get(i);
+            String courseId=mapCourseEvaluations.get(i).getCourseId();
+            MapTeacherCourse mapTeacherCourse=mapTeacherCourseMapper.selectByPrimaryKey(courseId);
+            String courseNum=mapTeacherCourse.getCourseNumber();
+            mapCourseEvaluation.setMapTeacherCourse(mapTeacherCourse);
+            if(!map.containsKey(courseNum)){
+                //不包含该课程编号
+                map.put(courseNum,mapCourseEvaluation);
+            }else{
+                //包含该课程编号，选择小的添加
+                MapCourseEvaluation m=map.get(courseNum);
+                Double v=m.getEvaluationValue();
+                if(v>mapCourseEvaluation.getEvaluationValue()){
+                    //当前指标点要小的话就要替换
+                    map.put(courseNum,mapCourseEvaluation);
+                }
+            }
+        }
+        List<MapCourseEvaluation> results=new ArrayList<>();
+        for(MapCourseEvaluation value : map.values()){
+            results.add(value);
+        }
+        return results;
+    }
+
+    //将评价值按照父指标点归类
+    public Map<String,List<MapCourseEvaluation>> getParentMap(List<MapCourseEvaluation> list){
+        Map<String,List<MapCourseEvaluation>> map=new HashMap<>();
+        for(int i=0;i<list.size();i++){
+            String parentTitle=list.get(i).getSysIndex().getIndexTitle();
+            List<MapCourseEvaluation> l=null;
+            if(!map.containsKey(parentTitle)){
+                //不包含该父title
+                l=new ArrayList<>();
+                l.add(list.get(i));
+                map.put(parentTitle,l);
+            }else{
+                //包含该父title
+                l=map.get(parentTitle);
+                l.add(list.get(i));
+            }
+        }
+        return map;
+    }
+
 
 }

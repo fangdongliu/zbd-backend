@@ -3,6 +3,7 @@ package cn.fdongl.point.mapper;
 
 import cn.fdongl.point.entity.SysCourse;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -26,4 +27,6 @@ public interface SysCourseMapper {
     String selectIbByNumber(String number);
 
     List<String> getAllCourseNum();
+
+
 }
