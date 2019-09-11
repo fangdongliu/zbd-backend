@@ -1,10 +1,12 @@
 package cn.fdongl.point.service;
 
 import cn.fdongl.authority.vo.JwtUser;
+import cn.fdongl.point.entity.MapStudentEvaluation;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public interface ClassPointService {
@@ -18,10 +20,14 @@ public interface ClassPointService {
     String savePoint(String classId, MultipartFile file, JwtUser user) throws  Exception;
 
     /**
-     * 学生评教
-     * @param courseSelectNumber 选课课号(from map_teacher_course)
-     * @param data map对象，key为指标点ID，value为分数（1-4）
-     * @param studentWorkId 学生工号/学生用户名
+     * 学生上传新的课程评价
+     *
+     * @param studentWorkId         学生工号
+     * @param course_select_number          选课课号
+     * @param studentEvaluationList 评价list -> 用于批量插入
+     *                              courseSelectNumber：选课课号
+     *                              indexId：指标点id
+     *                              evaluationValue：评价值(0-4)
      */
-    void savePoint(String courseSelectNumber, Map<String, Integer> data,String studentWorkId);
+    void savePoint(String studentWorkId, String courseSelectNumber, List<MapStudentEvaluation> studentEvaluationList);
 }

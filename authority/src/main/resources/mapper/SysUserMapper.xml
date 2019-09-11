@@ -67,7 +67,7 @@
     </delete>
     <insert id="insertBatch" parameterType="cn.fdongl.authority.vo.SysUser">
         <!--@mbg.generated-->
-        replace into sys_user (id, user_name, real_name,
+        insert ignore into sys_user (id, user_name, real_name,
         work_id, user_type, user_pwd,
         user_department, class_name, start_year,
         education_system, train_level, user_title,

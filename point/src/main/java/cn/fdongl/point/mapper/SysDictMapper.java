@@ -33,5 +33,5 @@ public interface SysDictMapper {
      * @return void        
      * @date 2019/9/10 14:00
      **/
-    int periodAddOne();
+    void periodAddOne();
 }

@@ -74,12 +74,12 @@ public class UploadFrameServiceImpl implements UploadFrameService {
     private SysDictMapper sysDictMapper;
     @Autowired
     private SysDictTypeMapper sysDictTypeMapper;
+    @Autowired
+    private UploadStatusMapper uploadStatusMapper;
 
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @Autowired
-    PasswordEncoder encoder;
 
     @Override
     public String uploadProject(MultipartFile projectFile, HttpServletRequest request, JwtUser user) throws IOException {
@@ -258,6 +258,8 @@ public class UploadFrameServiceImpl implements UploadFrameService {
                 tmpIndex.setIndexNumber(cellValue.substring(0, cellValue.indexOf(" ")));
                 // 指标点小项的说明
                 tmpIndex.setIndexContent(cellValue.substring(cellValue.indexOf(" ")));
+                // 指标点大项-存在title中
+                tmpIndex.setIndexTitle(cellValue.substring(0,cellValue.indexOf(".")));
                 // 加入指标点小项的list中
                 sysIndexList.add(tmpIndex);
                 // 插入指标点小项目
@@ -268,6 +270,12 @@ public class UploadFrameServiceImpl implements UploadFrameService {
                 mapDepartmentIndexMapper.insertSelective(mapDepartmentIndex);
             }
         }
+
+        // 首先更新字典项中的period信息
+        sysDictMapper.periodAddOne();
+
+        // 获取当前是第几期
+        int pr = sysDictMapper.selectRecentSort();
 
         // 从第3行开始就是课程行
         for (int i = 3; i < list.size() - 2; i++) {
@@ -297,8 +305,6 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             System.out.println("第" + i + "行完成");
         }
         // 课程行后两行是统计行(第一列是空，暂不处理)
-        // 更新字典项中的period信息
-        sysDictMapper.periodAddOne();
         //将上传文件保存到服务器
         SysFile sysFile=new SysFile();
         String path=  ClassUtils.getDefaultClassLoader().getResource("").getPath()+"/cultivateMatrix";
@@ -377,7 +383,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         workbook.close();
         inputStream.close();
         //取出所有的系统用户形成HashMap
-        HashMap<String, Integer> sysUserMap = sysUserService.getSysUserMap();
+//        HashMap<String, Integer> sysUserMap = sysUserService.getSysUserMap();
         //新建待插入的用户
 
         List<SysUser> users = new ArrayList<>();
@@ -389,9 +395,9 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             //0行是工号
             HSSFCell workIdCell = (HSSFCell) lo.get(0);
             //已经有该教师-skip
-            if (sysUserMap.get(workIdCell.getRichStringCellValue().getString()) != null) {
-                continue;
-            }
+//            if (sysUserMap.get(workIdCell.getRichStringCellValue().getString()) != null) {
+//                continue;
+//            }
             newTeacher.setId(IdGen.uuid());
             //2行是姓名
             HSSFCell realNameCell = (HSSFCell) lo.get(2);
@@ -410,14 +416,14 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             //插入新的教师
             users.add(newTeacher);
             if(users.size()>400){
-                mapUtilService.addNewRoleMapBatch(users,"teacher");
+//                mapUtilService.addNewRoleMapBatch(users,"teacher");
                 sysUserMapper.insertBatch(users);
                 users.clear();
             }
 //            sysUserMapper.insertSelective(newTeacher);
         }
         if(users.size()>0){
-            mapUtilService.addNewRoleMapBatch(users,"teacher");
+//            mapUtilService.addNewRoleMapBatch(users,"teacher");
             sysUserMapper.insertBatch(users);
 //            users.clear();
         }
@@ -438,8 +444,6 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         }
 
         teacherFile.transferTo(dest);// 文件写入
-
-
     }
 
     /**
@@ -450,9 +454,9 @@ public class UploadFrameServiceImpl implements UploadFrameService {
      * @author zm
      * @date 2019/9/8 8:56
      **/
-    @Transactional(rollbackFor = Exception.class)
+//    @Transactional(rollbackFor = Exception.class)
     @Override
-    public void uploadStudentCourse(MultipartFile studentCourse,JwtUser user) throws IOException {
+    public void uploadStudentCourse(MultipartFile studentCourse,JwtUser user,String statusId) throws IOException {
         // 获取Excel的输出流
         InputStream inputStream = studentCourse.getInputStream();
         // 获取文件名称
@@ -476,6 +480,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         Cell cell = null;
         // 定义读取的容器 行集合
         List list = new ArrayList<>();
+        uploadStatusMapper.insert(statusId,0);
         //循环 sheet
         for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
             sheet = workbook.getSheetAt(i);
@@ -500,13 +505,14 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         workbook.close();
         inputStream.close();
 
+        // 获取此时的指标点期数
+        int pr = sysDictMapper.selectRecentSort();
+
         //新建待插入的学生(如果学号重复就不新增学生)
-
         //新建student-course关联对象
-
         List<SysUser> users = new ArrayList<>();
         List<MapStudentCourse>mapStudentCourseList = new ArrayList<>();
-
+        uploadStatusMapper.update(statusId,-1);
         // 0列是学号
         HSSFCell workIdCell;
         // 1列是姓名(realName)
@@ -554,8 +560,8 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         HSSFCell courseSelectNumber = null;
 
         // 取出所有的用户形成HashMap
-        HashMap<String, Integer> sysUserMap = sysUserService.getSysUserMap();
-        String encodedPwd = encoder.encode("123456");
+        HashMap<String, Integer> sysUserMap = new HashMap<>();
+        String encodedPwd = passwordEncoder.encode("123456");
         // 第一行是表头
         for (int i = 1; i < list.size(); i++) {
             SysUser newStudent = new SysUser();
@@ -587,7 +593,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
                 users.add(newStudent);
                 if(users.size() == 400){
                     sysUserMapper.insertBatch(users);
-                    mapUtilService.addNewRoleMapBatch(users,"student");
+//                    mapUtilService.addNewRoleMapBatch(users,"student");
                     users.clear();
                 }
 
@@ -619,7 +625,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
 
             newStudentCourse.setUUId();
             newStudentCourse.setUserWorkId(workIdCell.getRichStringCellValue().getString());
-            newStudentCourse.setCourseSemester(courseSemesterCell.getRichStringCellValue().getString());
+            newStudentCourse.setCourseSemester(courseSemesterCell.getRichStringCellValue().getString().substring(0,9));
             newStudentCourse.setCourseNumber(courseNumberCell.getRichStringCellValue().getString());
             newStudentCourse.setCourseSelectNumber(courseSelectNumber.getRichStringCellValue().getString());
             newStudentCourse.setCourseName(courseNameCell.getRichStringCellValue().getString());
@@ -635,23 +641,26 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             newStudentCourse.setInputUserName(inputUserNameCell.getRichStringCellValue().getString());
             newStudentCourse.setExamNature(examNatureCell.getRichStringCellValue().getString());
             newStudentCourse.setSupplementRepeatSemester(supplementRepeatCell.getRichStringCellValue().getString());
+            //设置指标点期数
+            newStudentCourse.setStatus(pr);
 
             mapStudentCourseList.add(newStudentCourse);
             if(mapStudentCourseList.size()==400){
                 studentCourseMapper.insertBatch(mapStudentCourseList);
+                uploadStatusMapper.update(statusId,i);
                 mapStudentCourseList.clear();
             }
 
-//            studentCourseMapper.insertSelective(newStudentCourse);
+            //studentCourseMapper.insertSelective(newStudentCourse);
         }
         if(users.size()>0){
             sysUserMapper.insertBatch(users);
-            mapUtilService.addNewRoleMapBatch(users,"student");
+//            mapUtilService.addNewRoleMapBatch(users,"student");
         }
         if(mapStudentCourseList.size()>0){
             studentCourseMapper.insertBatch(mapStudentCourseList);
         }
-
+        uploadStatusMapper.update(statusId,-2);
         SysFile sysFile=new SysFile();
         String path=  ClassUtils.getDefaultClassLoader().getResource("").getPath()+"/studentInfo";
         sysFile.setId(IdGen.uuid());

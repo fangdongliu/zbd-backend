@@ -6,6 +6,7 @@ import cn.fdongl.authority.util.MsgType;
 import cn.fdongl.authority.util.Page;
 
 import cn.fdongl.authority.util.SearchResult;
+import cn.fdongl.point.entity.*;
 import cn.fdongl.authority.vo.JwtUser;
 import cn.fdongl.point.entity.*;
 import cn.fdongl.point.mapper.MapCourseEvaluationMapper;
@@ -24,16 +25,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/getInfo")
 public class InfoController extends BaseController {
-
     @Autowired
     private MapTeacherCourseMapper mapTeacherCourseMapper;
-
     @Autowired
     private SysInfoService sysInfoService;
     @Autowired
@@ -65,8 +65,21 @@ public class InfoController extends BaseController {
         mapTeacherCourse.setTeacherWorkId(user.getUsername());
         mapTeacherCourse.getPage().setPageIndex(pageIndex);
         mapTeacherCourse.getPage().setPageSize(pageSize);
-
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        int month = Calendar.getInstance().get(Calendar.MONTH);
+        String t = null;
+        if(month >= 8){
+            t = year + "-" + (year + 1) + "-" + 1;
+        } else if(month < 2){
+            t = (year - 1) + "-" + year + "-" + 1;
+        } else{
+            t = (year - 1) + "-" + year + "-" + 2;
+        }
+        mapTeacherCourse.setCourseSemester(t);
         List<MapTeacherCourse> mapTeacherCourses = mapTeacherCourseMapper.getMapTeacherCourseByPage(mapTeacherCourse);
+
+        System.out.println(year);
+        System.out.println(month);
 
         int total = mapTeacherCourseMapper.getTotal(mapTeacherCourse);
 
@@ -94,15 +107,15 @@ public class InfoController extends BaseController {
     ) {
         MapTeacherCourse mapTeacherCourse = new MapTeacherCourse();
         mapTeacherCourse.setPage(new Page<MapTeacherCourse>());
-        String startYear= AcademicYear.getStartYear();//获取学年
-        String endYear=String.valueOf(Integer.parseInt(startYear) +1);
-        String sc=null;
-        String nowYear=AcademicYear.getNowYear();
-        if(nowYear.equals(startYear)){
+        String startYear = AcademicYear.getStartYear();//获取学年
+        String endYear = String.valueOf(Integer.parseInt(startYear) + 1);
+        String sc = null;
+        String nowYear = AcademicYear.getNowYear();
+        if (nowYear.equals(startYear)) {
             //当前年份为开始年份
-            sc=startYear+"-"+endYear+"-1";
-        }else{
-            sc=String.valueOf(Integer.parseInt(startYear) -1)+"-"+startYear+"-2";
+            sc = startYear + "-" + endYear + "-1";
+        } else {
+            sc = String.valueOf(Integer.parseInt(startYear) - 1) + "-" + startYear + "-2";
         }
         mapTeacherCourse.setCourseSemester(sc);
         mapTeacherCourse.setTeacherWorkId(user.getUsername());
@@ -128,18 +141,18 @@ public class InfoController extends BaseController {
      */
     @PostMapping(value = "getAllUserTables")
     public Object getAllUserTable(@RequestParam("pageIndex") int pageIndex,
-                                @RequestParam("pageSize") int pageSize,
-                                @RequestParam("keyWord") String keyWord,
-                                JwtUser user){
-        SysFile sysFile=new SysFile();
+                                  @RequestParam("pageSize") int pageSize,
+                                  @RequestParam("keyWord") String keyWord,
+                                  JwtUser user) {
+        SysFile sysFile = new SysFile();
         sysFile.setPage(new Page<SysFile>());
         sysFile.setCreateUserId(user.getId());
         sysFile.getPage().setPageIndex(pageIndex);
         sysFile.getPage().setPageSize(pageSize);
         sysFile.setFileName(keyWord);
 
-        List<SysFile> sysFiles=sysFileMapper.getSysFileByPage(sysFile);
-        int total=sysFileMapper.getTotal(sysFile);
+        List<SysFile> sysFiles = sysFileMapper.getSysFileByPage(sysFile);
+        int total = sysFileMapper.getTotal(sysFile);
 
         Page<SysFile> filePage = new Page<>();
         filePage.setResultList(sysFiles);
@@ -201,15 +214,41 @@ public class InfoController extends BaseController {
     }
 
     /**
-     * 获取学生某学期所有的课程分页 for test
+     * 获取本学期的所有课程分页
      *
+     * @param studentWorkId
+     * @param pageIndex
+     * @param pageSize
+     * @return java.lang.Object
      * @author zm
-     * @param studentWorkId 学生工号
+     * @date 2019/9/11 15:32
+     **/
+    @PostMapping(value = "nowTermPage")
+    public Object getNowTermCoursePage(
+            @RequestParam("studentWorkId") String studentWorkId,
+            @RequestParam("pageIndex") int pageIndex,
+            @RequestParam("pageSize") int pageSize) {
+        Page<SearchResult> coursePage = new Page<>();
+        try {
+            String courseSemester = AcademicYear.getNowSemester();
+            coursePage = sysInfoService.getStudentCoursePage(
+                    studentWorkId, courseSemester, pageIndex, pageSize);
+        } catch (Exception e) {
+            return retMsg.Set(MsgType.ERROR, "获取本学期课程失败失败");
+        }
+        return retMsg.Set(MsgType.SUCCESS, coursePage, "获取本学期课程成功");
+    }
+
+    /**
+     * 获取学生某学期所有的课程分页
+     *
+     * @param studentWorkId  学生工号
      * @param courseSemester 课程学期
-     * @return java.lang.Object        
+     * @return java.lang.Object
+     * @author zm
      * @date 2019/9/10 15:45
      **/
-    @PostMapping(value = "getCoursePage")
+    @PostMapping(value = "coursePage")
     public Object getCoursePage(
             @RequestParam("studentWorkId") String studentWorkId,
             @RequestParam("courseSemester") String courseSemester,
@@ -218,33 +257,60 @@ public class InfoController extends BaseController {
         Page<SearchResult> coursePage = new Page<>();
         try {
             coursePage = sysInfoService.getStudentCoursePage(
-                    studentWorkId,courseSemester,pageIndex, pageSize);
+                    studentWorkId, courseSemester, pageIndex, pageSize);
         } catch (Exception e) {
             return retMsg.Set(MsgType.ERROR, "获取学生课程失败失败");
         }
         return retMsg.Set(MsgType.SUCCESS, coursePage, "获取学生课程成功");
     }
 
-    /**a
-     * 获取用户的某课程的指标点评价 for finish
+
+    /**
+     * 获取当前时间(学期)课程对应的指标点并返回
      *
-     * @param userWorkId
-     * @param courseSelectNumber
-     * @return 未评价返回{flag:false}
+     * @param courseNumber  课程编号
+     * @return java.lang.Object
+     * @author zm
+     * @date 2019/9/11 16:14
+     **/
+    @PostMapping(value = "nowCourseIndex")
+    public Object getNowCourseIndex(
+            @RequestParam("courseNumber") String courseNumber) {
+        List<SysIndex> indexList = new ArrayList<>();
+        try {
+            indexList = sysInfoService.getNowCourseIndex(courseNumber);
+        } catch (Exception e) {
+            return retMsg.Set(MsgType.ERROR, "获取当前课程指标点失败");
+        }
+        return retMsg.Set(MsgType.SUCCESS, indexList, "获取当前课程指标点成功");
+    }
+
+    /**
+     * 获取学生的某课程的指标点评价
+     *
+     * @param studentWorkId      学生工号
+     * @param courseSelectNumber 选课课号
+     * @return 未评价返回 null，已评价返回指标点编号，指标点说明，指标点评价值
      * @author zm
      * @date 2019/9/10 15:38
      **/
-    @PostMapping(value = "getCourseIndexEvaluation")
+    @PostMapping(value = "courseIndexEvaluation")
     public Object getCourseIndexEvaluation(
-            @RequestParam("userWorkId") String userWorkId,
-            @RequestParam("userType") String userType,
+            @RequestParam("studentWorkId") String studentWorkId,
             @RequestParam("courseSelectNumber") String courseSelectNumber) {
-        try {
 
+        System.out.println("ok");
+        List<SysIndex> indexList = new ArrayList<>();
+        try {
+            indexList = sysInfoService.getStudentEvaluation(studentWorkId, courseSelectNumber);
         } catch (Exception e) {
-            return retMsg.Set(MsgType.ERROR, null, "获取学期失败");
+            e.printStackTrace();
+            return retMsg.Set(MsgType.ERROR, null, "获取用户指标点评价失败");
         }
-        return retMsg.Set(MsgType.SUCCESS, null, "获取学期成功");
+        if(indexList == null){
+            return retMsg.Set(MsgType.SUCCESS, null, "未评价");
+        }
+        return retMsg.Set(MsgType.SUCCESS, indexList, "获取用户指标点评价成功");
     }
 
 
