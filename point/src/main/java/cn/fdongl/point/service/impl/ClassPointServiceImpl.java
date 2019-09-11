@@ -244,7 +244,7 @@ public class ClassPointServiceImpl implements ClassPointService {
      * 学生上传新的课程评价
      *
      * @param studentWorkId         学生工号
-     * @param courseNumber          课程编号
+     * @param courseSelectNumber          课程编号
      * @param studentEvaluationList 评价list -> 用于批量插入
      *                              courseSelectNumber：选课课号
      *                              indexId：指标点id
@@ -254,12 +254,12 @@ public class ClassPointServiceImpl implements ClassPointService {
      * @date 2019/9/10 20:49
      **/
     @Override
-    public void savePoint(String studentWorkId, String courseNumber, List<MapStudentEvaluation> studentEvaluationList) {
+    public void savePoint(String studentWorkId, String courseSelectNumber, List<MapStudentEvaluation> studentEvaluationList) {
         for (MapStudentEvaluation studentEvaluation :
                 studentEvaluationList) {
             studentEvaluation.setUUId();
             studentEvaluation.setStudentWorkId(studentWorkId);
-            studentEvaluation.setCourseSelectNumber(courseNumber);
+            studentEvaluation.setCourseSelectNumber(courseSelectNumber);
             studentEvaluation.setCreateUserId(studentWorkId);
             studentEvaluation.setModifyUserId(studentWorkId);
             studentEvaluation.setCreateDate(DateUtils.getNowDate());

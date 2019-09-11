@@ -23,11 +23,11 @@ public interface ClassPointService {
      * 学生上传新的课程评价
      *
      * @param studentWorkId         学生工号
-     * @param courseNumber    选课课号
+     * @param course_select_number          选课课号
      * @param studentEvaluationList 评价list -> 用于批量插入
      *                              courseSelectNumber：选课课号
      *                              indexId：指标点id
      *                              evaluationValue：评价值(0-4)
      */
-    void savePoint(String studentWorkId, String courseNumber, List<MapStudentEvaluation> studentEvaluationList);
+    void savePoint(String studentWorkId, String courseSelectNumber, List<MapStudentEvaluation> studentEvaluationList);
 }

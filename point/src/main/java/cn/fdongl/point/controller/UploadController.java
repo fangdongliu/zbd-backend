@@ -176,7 +176,7 @@ public class UploadController extends BaseController {
     public Object uploadStudentEvaluation(@RequestBody StudentEvaluation studentEvaluation) {
         try {
             classPointService.savePoint(studentEvaluation.getStudentWorkId(),
-                    studentEvaluation.getCourseNumber(),
+                    studentEvaluation.getCourseSelectNumber(),
                     studentEvaluation.getEvaluations());
         }catch (Exception e){
             e.printStackTrace();
