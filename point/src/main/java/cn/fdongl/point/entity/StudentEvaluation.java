@@ -28,6 +28,8 @@ public class StudentEvaluation {
      **/
     private String courseSelectNumber;
 
+    private String selectID;
+
     /**
      * 学生评价：
      * indexId 指标点主键id

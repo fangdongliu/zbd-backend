@@ -10,6 +10,7 @@ import cn.fdongl.point.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -74,6 +75,29 @@ public class SysInfoServiceImpl implements SysInfoService {
         return mapTeacherCourseMapper.selectDistinctCourseSemesterByTeacherWorkIdDeOrderByCourseSemester(teacherWorkId);
     }
 
+    @Override
+    public Page<SearchResult> getTeacherCoursePage(String workId, String courseSemester){
+        if(courseSemester == null) {
+            int year = Calendar.getInstance().get(Calendar.YEAR);
+            int month = Calendar.getInstance().get(Calendar.MONTH);
+            if(month >= 8){
+                courseSemester = year + "-" + (year+1);
+            } else {
+                courseSemester = (year - 1)+ "-" + year;
+            }
+        }
+        List<SearchResult> searchResultList =
+                mapTeacherCourseMapper.selectCourseInfoPageByUserWorkIdAndCourseSemester(workId, courseSemester);
+        System.out.println("输出课程名称和选课课号");
+        System.out.println(searchResultList);
+
+        Page<SearchResult> resultPage = new Page<SearchResult>();
+        resultPage.setResultList(searchResultList);
+
+        System.out.println(resultPage);
+        return resultPage;
+    }
+
     /***
      * 获取学生课程分页
      *
@@ -88,6 +112,15 @@ public class SysInfoServiceImpl implements SysInfoService {
     @Override
     public Page<SearchResult> getStudentCoursePage(String studentWorkId, String courseSemester, int pageIndex, int pageSize) {
         // 根据学生工号和课程学期分页获得所有的课程的  课程名称和选课课号
+        if(courseSemester == null) {
+            int year = Calendar.getInstance().get(Calendar.YEAR);
+            int month = Calendar.getInstance().get(Calendar.MONTH);
+            if(month >= 8){
+                courseSemester = year + "-" + (year+1);
+            } else {
+                courseSemester = (year - 1)+ "-" + year;
+            }
+        }
         List<SearchResult> searchResultList =
                 mapStudentCourseMapper.selectCourseInfoPageByUserWorkIdAndCourseSemester(
                         studentWorkId, courseSemester, (pageIndex - 1) * pageSize, pageSize);
