@@ -192,19 +192,18 @@ public class InfoController extends BaseController {
      * @author zm
      * @date 2019/9/9 18:50
      **/
-    @PostMapping(value = "semester")
+    @GetMapping(value = "semester")
     public Object getUserSemesters(
-            @RequestParam("userWorkId") String userWorkId,
-            @RequestParam("userType") String userType
+            JwtUser jwtUser
     ) {
         List<String> semesterList = new ArrayList<>();
         try {
-            if ("student".equals(userType)) {
+            if ("student".equals(jwtUser.getUserType())) {
                 // 学生就去 学生-课程关联表去找所有的学期
-                semesterList = sysInfoService.getStudentSemesters(userWorkId);
-            } else if ("teacher".equals(userType)) {
+                semesterList = sysInfoService.getStudentSemesters(jwtUser.getWorkId());
+            } else if ("teacher".equals(jwtUser.getUserType())) {
                 // 老师就去 教师-课程关联表去找所有的学期
-                semesterList = sysInfoService.getTeacherSemesters(userWorkId);
+                semesterList = sysInfoService.getTeacherSemesters(jwtUser.getWorkId());
             }
         } catch (Exception e) {
             e.printStackTrace();
