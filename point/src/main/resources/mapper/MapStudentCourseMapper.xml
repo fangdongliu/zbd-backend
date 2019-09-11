@@ -67,7 +67,7 @@
         #{modifyDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER})
     </insert>
     <insert id="insertBatch" parameterType="cn.fdongl.point.entity.MapStudentCourse">
-        replace into map_student_course (id, user_work_id, total_grade,
+        insert ignore into map_student_course (id, user_work_id, total_grade,
         course_name, course_number, course_select_number,
         course_semester, course_nature, course_property,
         course_ascription, course_kind, course_hour,

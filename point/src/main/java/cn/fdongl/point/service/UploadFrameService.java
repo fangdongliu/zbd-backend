@@ -6,6 +6,7 @@ import org.springframework.http.HttpRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -36,5 +37,5 @@ public interface UploadFrameService {
      * 上传学生选课信息
      * @param studentCourse
      */
-    void uploadStudentCourse(MultipartFile studentCourse,JwtUser user,String id) throws IOException;
+    void uploadStudentCourse(MultipartFile studentCourse, JwtUser user, String id) throws IOException;
 }

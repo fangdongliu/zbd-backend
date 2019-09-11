@@ -1,22 +1,29 @@
 package cn.fdongl.point.controller;
 
 import cn.fdongl.authority.util.BaseController;
+import cn.fdongl.authority.util.IdGen;
 import cn.fdongl.authority.util.MsgType;
 import cn.fdongl.point.entity.MapStudentEvaluation;
 import cn.fdongl.point.entity.StudentEvaluation;
 import cn.fdongl.authority.vo.JwtUser;
+import cn.fdongl.point.entity.SysFile;
+import cn.fdongl.point.mapper.SysFileMapper;
 import cn.fdongl.point.mapper.UploadStatusMapper;
 import cn.fdongl.point.service.ClassPointService;
 import cn.fdongl.point.service.CourseUploadService;
 import cn.fdongl.point.service.UploadFrameService;
 import io.swagger.annotations.ApiOperation;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +37,9 @@ public class UploadController extends BaseController {
     private UploadFrameService uploadFrameService;
     @Autowired
     private CourseUploadService courseUploadService;
+
+    @Autowired
+    private SysFileMapper sysFileMapper;
 
     @Autowired
     UploadStatusMapper uploadStatusMapper;
@@ -129,21 +139,23 @@ public class UploadController extends BaseController {
      **/
     @PostMapping(value = "studentCourse")
     public Object uploadStudentCourse(
-            @RequestParam("file") MultipartFile studentCourseFile,
+            @RequestParam("file") MultipartFile studentCourse,
             String id,
             JwtUser user
     ) {
         System.out.println("ooook");
-        if (studentCourseFile == null || studentCourseFile.isEmpty()) {
+        if (studentCourse == null || studentCourse.isEmpty()) {
             return retMsg.Set(MsgType.ERROR, null, "文件不能为空");
         }
-        try {
-            uploadFrameService.uploadStudentCourse(studentCourseFile,user,id);
-        } catch (Exception e) {
-            uploadStatusMapper.update(id,-3);
-            e.printStackTrace();
-            return retMsg.Set(MsgType.SUCCESS, null, "上传学生选课信息失败");
-        }
+
+        try{
+//                    File f= new File(dest.getPath());
+                    uploadFrameService.uploadStudentCourse(studentCourse, user, id);
+                } catch (IOException e) {
+                    uploadStatusMapper.update(id,-3);
+                    e.printStackTrace();
+                    return retMsg.Set(MsgType.ERROR);
+                }
         System.out.println("上传学生选课信息成功");
         return retMsg.Set(MsgType.SUCCESS, null, "上传学生选课信息成功");
     }

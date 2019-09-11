@@ -31,6 +31,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.http.HttpRequest;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,10 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 
 
@@ -456,6 +454,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
      **/
 //    @Transactional(rollbackFor = Exception.class)
     @Override
+//    @Async
     public void uploadStudentCourse(MultipartFile studentCourse,JwtUser user,String statusId) throws IOException {
         // 获取Excel的输出流
         InputStream inputStream = studentCourse.getInputStream();
@@ -645,7 +644,10 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             newStudentCourse.setStatus(pr);
 
             mapStudentCourseList.add(newStudentCourse);
-            if(mapStudentCourseList.size()==400){
+            if(i>=9600){
+                System.out.println("9600");
+            }
+            if(mapStudentCourseList.size()>=400){
                 studentCourseMapper.insertBatch(mapStudentCourseList);
                 uploadStatusMapper.update(statusId,i);
                 mapStudentCourseList.clear();
@@ -661,6 +663,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             studentCourseMapper.insertBatch(mapStudentCourseList);
         }
         uploadStatusMapper.update(statusId,-2);
+        inputStream.close();
         SysFile sysFile=new SysFile();
         String path=  ClassUtils.getDefaultClassLoader().getResource("").getPath()+"/studentInfo";
         sysFile.setId(IdGen.uuid());

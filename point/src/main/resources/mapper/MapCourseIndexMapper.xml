@@ -49,7 +49,7 @@
     </insert>
     <insert id="insertSelective" parameterType="cn.fdongl.point.entity.MapCourseIndex">
         <!--@mbg.generated-->
-        insert into map_course_index
+        replace into map_course_index
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 id,
