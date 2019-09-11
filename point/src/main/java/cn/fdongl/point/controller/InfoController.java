@@ -83,15 +83,15 @@ public class InfoController extends BaseController {
     ) {
         MapTeacherCourse mapTeacherCourse = new MapTeacherCourse();
         mapTeacherCourse.setPage(new Page<MapTeacherCourse>());
-        String startYear= AcademicYear.getStartYear();//获取学年
-        String endYear=String.valueOf(Integer.parseInt(startYear) +1);
-        String sc=null;
-        String nowYear=AcademicYear.getNowYear();
-        if(nowYear.equals(startYear)){
+        String startYear = AcademicYear.getStartYear();//获取学年
+        String endYear = String.valueOf(Integer.parseInt(startYear) + 1);
+        String sc = null;
+        String nowYear = AcademicYear.getNowYear();
+        if (nowYear.equals(startYear)) {
             //当前年份为开始年份
-            sc=startYear+"-"+endYear+"-1";
-        }else{
-            sc=String.valueOf(Integer.parseInt(startYear) -1)+"-"+startYear+"-2";
+            sc = startYear + "-" + endYear + "-1";
+        } else {
+            sc = String.valueOf(Integer.parseInt(startYear) - 1) + "-" + startYear + "-2";
         }
         mapTeacherCourse.setCourseSemester(sc);
         mapTeacherCourse.setTeacherWorkId(user.getUsername());
@@ -117,18 +117,18 @@ public class InfoController extends BaseController {
      */
     @PostMapping(value = "getAllUserTables")
     public Object getAllUserTable(@RequestParam("pageIndex") int pageIndex,
-                                @RequestParam("pageSize") int pageSize,
-                                @RequestParam("keyWord") String keyWord,
-                                JwtUser user){
-        SysFile sysFile=new SysFile();
+                                  @RequestParam("pageSize") int pageSize,
+                                  @RequestParam("keyWord") String keyWord,
+                                  JwtUser user) {
+        SysFile sysFile = new SysFile();
         sysFile.setPage(new Page<SysFile>());
         sysFile.setCreateUserId(user.getId());
         sysFile.getPage().setPageIndex(pageIndex);
         sysFile.getPage().setPageSize(pageSize);
         sysFile.setFileName(keyWord);
 
-        List<SysFile> sysFiles=sysFileMapper.getSysFileByPage(sysFile);
-        int total=sysFileMapper.getTotal(sysFile);
+        List<SysFile> sysFiles = sysFileMapper.getSysFileByPage(sysFile);
+        int total = sysFileMapper.getTotal(sysFile);
 
         Page<SysFile> filePage = new Page<>();
         filePage.setResultList(sysFiles);
@@ -192,11 +192,11 @@ public class InfoController extends BaseController {
     /**
      * 获取本学期的所有课程分页
      *
-     * @author zm
      * @param studentWorkId
      * @param pageIndex
      * @param pageSize
      * @return java.lang.Object
+     * @author zm
      * @date 2019/9/11 15:32
      **/
     @PostMapping(value = "nowTermPage")
@@ -240,10 +240,34 @@ public class InfoController extends BaseController {
         return retMsg.Set(MsgType.SUCCESS, coursePage, "获取学生课程成功");
     }
 
+
     /**
-     * 获取学生的某课程的指标点评价
+     * 获取当前时间课程对应的指标点并返回
+     * step1：首先去 map_course_index 查询最近的课程编号对应的index_id
+     * step2：根据获取的 index_id 查询返回指标点list
      *
      * @param studentWorkId 学生工号
+     * @param courseNumber  课程编号
+     * @return java.lang.Object
+     * @author zm
+     * @date 2019/9/11 16:14
+     **/
+    public Object getNowCourseIndex(
+            @RequestParam("studentWorkId") String studentWorkId,
+            @RequestParam("courseNumber") String courseNumber) {
+        List<SysIndex> indexList = new ArrayList<>();
+        try {
+            indexList = sysInfoService.getNowCourseIndex(studentWorkId, courseNumber);
+        } catch (Exception e) {
+            return retMsg.Set(MsgType.ERROR, "获取当前课程指标点失败");
+        }
+        return retMsg.Set(MsgType.SUCCESS, indexList, "获取当前课程指标点成功");
+    }
+
+    /**
+     * 获取学生的某课程的指标点评价 for solve
+     *
+     * @param studentWorkId      学生工号
      * @param courseSelectNumber 选课课号
      * @return 未评价返回{flag:false}，已评价返回指标点编号，指标点说明，指标点评价值
      * @author zm

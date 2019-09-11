@@ -18,4 +18,14 @@ public interface MapCourseIndexMapper {
     int updateByPrimaryKeySelective(MapCourseIndex record);
 
     int updateByPrimaryKey(MapCourseIndex record);
+
+    /**
+     * 根据课程编号获取最近的对应的指标点
+     *
+     * @author zm
+     * @param courseNumber  课程编号
+     * @return java.util.List<java.lang.String>
+     * @date 2019/9/11 16:25
+     **/
+    List<String> selectRecentIndexIdByCourseNumber(String courseNumber);
 }

@@ -65,4 +65,15 @@ public interface SysInfoService {
      * @date 2019/9/10 20:11
      **/
     List<SysIndex> getStudentEvaluation(String studentWorkId, String courseSelectNumber);
+
+    /**
+     * 获取学生当前时间(学期)的指定课程对应的指标点List
+     *
+     * @author zm
+     * @param studentWorkId 学生工号
+     * @param courseNumber  选课课号
+     * @return java.util.List<cn.fdongl.point.entity.SysIndex>
+     * @date 2019/9/11 16:19
+     **/
+    List<SysIndex> getNowCourseIndex(String studentWorkId, String courseNumber);
 }

@@ -18,11 +18,6 @@ public class MapCourseIndex {
     private String courseNumber;
 
     /**
-     * 对应的指标点期数
-     */
-    private Integer period;
-
-    /**
      * 指标要求id
      */
     private String indexId;

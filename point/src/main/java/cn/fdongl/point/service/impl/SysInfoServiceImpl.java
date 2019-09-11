@@ -31,11 +31,9 @@ public class SysInfoServiceImpl implements SysInfoService {
     @Autowired
     private MapTeacherCourseMapper mapTeacherCourseMapper;
     @Autowired
-    private SysCourseMapper sysCourseMapper;
-    @Autowired
-    private MapStudentEvaluationMapper mapStudentEvaluationMapper;
-    @Autowired
     private SysIndexMapper sysIndexMapper;
+    @Autowired
+    private MapCourseIndexMapper mapCourseIndexMapper;
 
     /**
      * 获取所有学院信息
@@ -124,5 +122,21 @@ public class SysInfoServiceImpl implements SysInfoService {
     @Override
     public List<SysIndex> getStudentEvaluation(String studentWorkId, String courseSelectNumber) {
         return  sysIndexMapper.selectByStudentWorkIdAndCourseSelectNumber(studentWorkId, courseSelectNumber);
+    }
+
+    /**
+     * 获取学生当前时间(学期)的指定课程对应的指标点List
+     *
+     * @param studentWorkId 学生工号
+     * @param courseNumber  选课课号
+     * @return java.util.List<cn.fdongl.point.entity.SysIndex>
+     * @author zm
+     * @date 2019/9/11 16:19
+     **/
+    @Override
+    public List<SysIndex> getNowCourseIndex(String studentWorkId, String courseNumber) {
+        //step1：首先在 map_course_index 中获取 courseNumber 对应的最新的 index_id
+        List<String> indexList = mapCourseIndexMapper.selectRecentIndexIdByCourseNumber(courseNumber);
+        return null;
     }
 }
