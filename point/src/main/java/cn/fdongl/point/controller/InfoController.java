@@ -242,7 +242,6 @@ public class InfoController extends BaseController {
     /**
      * 获取学生某学期所有的课程分页
      *
-     * @param studentWorkId  学生工号
      * @param courseSemester 课程学期
      * @return java.lang.Object
      * @author zm

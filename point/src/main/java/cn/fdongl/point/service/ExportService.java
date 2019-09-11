@@ -1,24 +1,27 @@
 package cn.fdongl.point.service;
 
 import cn.fdongl.authority.vo.JwtUser;
-import cn.fdongl.point.entity.MapCourseEvaluation;
-import cn.fdongl.point.entity.SysIndex;
+import cn.fdongl.point.entity.Result;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
+@Service
 public interface ExportService {
 
     /**
      * 导出2学年的信息
+     *
      * @param user 当前用户信息
      */
-    void exportResultByTwoYear(JwtUser user, Map<String, Map<String, List<MapCourseEvaluation>>> complexParam);
-
-    /**
-     * 导出一届的信息
-     * @param user 当前用户信息·1
-     */
-    void exportNormalResult(JwtUser user, Map<String, Map<String, List<MapCourseEvaluation>>> complexParam);
-
+    void exportExcelResult(
+            JwtUser user,
+            Map<String, Result> stringResultMap,
+            HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse
+    ) throws IOException;
 }
