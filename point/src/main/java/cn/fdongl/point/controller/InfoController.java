@@ -189,8 +189,6 @@ public class InfoController extends BaseController {
     /**
      * 根据用户类型获取用户的所有学期List
      *
-     * @param userWorkId 用户名/用户工号
-     * @param userType   用户类型
      * @return java.lang.Object
      * @author zm
      * @date 2019/9/9 18:50
@@ -335,6 +333,14 @@ public class InfoController extends BaseController {
         return retMsg.Set(MsgType.SUCCESS, resultMap, "获取成功");
     }
 
+    /**
+     * 按照年级获取课程指标点
+     *
+     * @author hl
+     * @param grade 年级
+     * @return java.lang.Object
+     * @date 2019/9/12 0:16
+     **/
     @PostMapping(value="getIndexGradeResult")
     public Object getIndexGradeResult(
             @RequestParam("grade") String grade
@@ -343,5 +349,4 @@ public class InfoController extends BaseController {
         Map<String,Result> resultMap=resultService.getIndexGradeResult(grade);
         return retMsg.Set(MsgType.SUCCESS, resultMap, "获取成功");
     }
-
 }

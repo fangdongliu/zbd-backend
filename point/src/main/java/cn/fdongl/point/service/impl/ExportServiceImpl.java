@@ -63,7 +63,7 @@ public class ExportServiceImpl implements ExportService {
         // 宋体
         font.setFontName("宋体");
         // 设置字体大小
-        font.setFontHeightInPoints((short) 12);
+        font.setFontHeightInPoints((short) 10);
         style1.setFont(font);
         // 水平居中
         style1.setAlignment(HorizontalAlignment.CENTER);
@@ -80,7 +80,7 @@ public class ExportServiceImpl implements ExportService {
             HSSFSheet sheet = wb.createSheet("毕业要求(" + bigIndexNumber + ")");
             // 合并单元格（title）
             sheet.addMergedRegion(new CellRangeAddress(0, 0, 0,
-                    mapValue.getIndexList().size() + 1));
+                    mapValue.getIndexList().size()));
             // 设置列宽度(像素)
             for (int i = 0; i < mapValue.getIndexList().size() + 1; i++) {
                 sheet.setColumnWidth(i, 32 * singleColumnWidth);
@@ -142,9 +142,10 @@ public class ExportServiceImpl implements ExportService {
         }
         httpServletResponse.setContentType("application/vnd.ms-excel");
 
-        String oralName = "毕业要求大程度" + DateUtils.nyrFormat(new Date());
+        String oralName = "毕业要求达成程度" + DateUtils.nyrFormat(new Date());
         String fileName = new String( oralName.getBytes( "gb2312" ), "ISO8859-1" );
         httpServletResponse.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xls");
+        httpServletResponse.setContentType("application/x-download; charset=UTF-8");
 
         OutputStream ouputStream = httpServletResponse.getOutputStream();
         wb.write(ouputStream);
