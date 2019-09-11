@@ -17,7 +17,7 @@ public interface ClassPointService {
      * @param file 上传的excel文件
      */
 
-    String savePoint(String classId, MultipartFile file, JwtUser user) throws  Exception;
+    String savePoint(String selectID, String classId, MultipartFile file, JwtUser user) throws  Exception;
 
     /**
      * 学生上传新的课程评价
@@ -29,5 +29,5 @@ public interface ClassPointService {
      *                              indexId：指标点id
      *                              evaluationValue：评价值(0-4)
      */
-    void savePoint(String studentWorkId, String courseSelectNumber, List<MapStudentEvaluation> studentEvaluationList);
+    void savePoint(String selectID, String studentWorkId, String courseSelectNumber, List<MapStudentEvaluation> studentEvaluationList);
 }

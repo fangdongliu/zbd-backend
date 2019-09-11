@@ -56,8 +56,11 @@ public class ClassPointServiceImpl implements ClassPointService {
     @Autowired
     private SysFileMapper sysFileMapper;
 
+    @Autowired
+    private UploadStatusMapper uploadStatusMapper;
+
     @Override
-    public String savePoint(String classId, MultipartFile file, JwtUser user) throws Exception {
+    public String savePoint(String selectID, String classId, MultipartFile file, JwtUser user) throws Exception {
 
         // 获取Excel的输出流
         InputStream inputStream = file.getInputStream();
@@ -200,7 +203,7 @@ public class ClassPointServiceImpl implements ClassPointService {
             }
         }
 
-
+        uploadStatusMapper.updateStudentCourseStatus(selectID);
         //将文件保存到服务器
         MapTeacherCourse mapTeacherCourse=mapTeacherCourseMapper.selectByPrimaryKey(classId);
         SysFile sysFile=null;
@@ -254,7 +257,7 @@ public class ClassPointServiceImpl implements ClassPointService {
      * @date 2019/9/10 20:49
      **/
     @Override
-    public void savePoint(String studentWorkId, String courseSelectNumber, List<MapStudentEvaluation> studentEvaluationList) {
+    public void savePoint(String selectID, String studentWorkId, String courseSelectNumber, List<MapStudentEvaluation> studentEvaluationList) {
         for (MapStudentEvaluation studentEvaluation :
                 studentEvaluationList) {
             studentEvaluation.setUUId();
@@ -266,6 +269,7 @@ public class ClassPointServiceImpl implements ClassPointService {
             studentEvaluation.setModifyDate(DateUtils.getNowDate());
             mapStudentEvaluationMapper.insertSelective(studentEvaluation);
         }
+        uploadStatusMapper.updateTeacherCourseStatus(selectID);
     }
 
     class ExcelContent{

@@ -36,13 +36,15 @@ public class UploadController extends BaseController {
 
     //老师上传评价表
     @PostMapping(value = "/uploadTeacherCom")
-    public Object uploadTeacherCom(@RequestParam("classId")String classId,
+    public Object uploadTeacherCom(
+            @RequestParam("selectID")String selectID,
+            @RequestParam("classId")String classId,
                                    @RequestParam("file")MultipartFile file,
                                    JwtUser user){
 
         String msg=null;
         try{
-            msg=classPointService.savePoint(classId,file,user);
+            msg=classPointService.savePoint(selectID,classId,file,user);
             if(msg!=null){
                 return retMsg.Set(MsgType.ERROR,null,msg);
             }
@@ -185,7 +187,7 @@ public class UploadController extends BaseController {
     @PostMapping(value = "studentEvaluation")
     public Object uploadStudentEvaluation(@RequestBody StudentEvaluation studentEvaluation) {
         try {
-            classPointService.savePoint(studentEvaluation.getStudentWorkId(),
+            classPointService.savePoint(studentEvaluation.getSelectID(),studentEvaluation.getStudentWorkId(),
                     studentEvaluation.getCourseSelectNumber(),
                     studentEvaluation.getEvaluations());
         }catch (Exception e){
