@@ -280,7 +280,7 @@ public class InfoController extends BaseController {
      **/
     @PostMapping(value = "nowCourseIndex")
     public Object getNowCourseIndex(
-            @RequestParam("courseNumber") String courseNumber) {
+        @RequestParam("courseNumber") String courseNumber) {
         List<SysIndex> indexList = new ArrayList<>();
         try {
             indexList = sysInfoService.getNowCourseIndex(courseNumber);

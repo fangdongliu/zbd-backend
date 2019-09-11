@@ -134,6 +134,7 @@ public class UploadController extends BaseController {
             String id,
             JwtUser user
     ) {
+        System.out.println("ooook");
         if (studentCourseFile == null || studentCourseFile.isEmpty()) {
             return retMsg.Set(MsgType.ERROR, null, "文件不能为空");
         }
