@@ -241,4 +241,20 @@ public class InfoController extends BaseController {
     }
 
 
+//    /**
+//     * 按照学年（两年）获取课程指标点
+//     * @param sy
+//     * @param it
+//     * @return
+//     */
+//    @GetMapping(value="getIndexGradeResult")
+//    public Object getIndexGradeResult(
+//            @RequestParam("schoolYear") String sy,
+//            @RequestParam("IndexTitle") String it
+//    ){
+//        String[] years=sy.split("~");
+//
+//
+//    }
+
 }
