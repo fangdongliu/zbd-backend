@@ -29,4 +29,14 @@ public interface SysIndexMapper {
     List<SysIndex> selectByStudentWorkIdAndCourseSelectNumber(
             @Param("studentWorkId") String studentWorkId,
             @Param("courseSelectNumber") String courseSelectNumber);
+
+    /**
+     * 根据id集合查询返回SysIndex
+     *
+     * @author zm
+     * @param indexIds
+     * @return java.util.List<cn.fdongl.point.entity.SysIndex>        
+     * @date 2019/9/11 16:53
+     **/
+    List<SysIndex> selectByIds(List<String> indexIds);
 }

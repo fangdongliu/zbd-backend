@@ -242,22 +242,19 @@ public class InfoController extends BaseController {
 
 
     /**
-     * 获取当前时间课程对应的指标点并返回
-     * step1：首先去 map_course_index 查询最近的课程编号对应的index_id
-     * step2：根据获取的 index_id 查询返回指标点list
+     * 获取当前时间(学期)课程对应的指标点并返回
      *
-     * @param studentWorkId 学生工号
      * @param courseNumber  课程编号
      * @return java.lang.Object
      * @author zm
      * @date 2019/9/11 16:14
      **/
+    @PostMapping(value = "nowCourseIndex")
     public Object getNowCourseIndex(
-            @RequestParam("studentWorkId") String studentWorkId,
             @RequestParam("courseNumber") String courseNumber) {
         List<SysIndex> indexList = new ArrayList<>();
         try {
-            indexList = sysInfoService.getNowCourseIndex(studentWorkId, courseNumber);
+            indexList = sysInfoService.getNowCourseIndex(courseNumber);
         } catch (Exception e) {
             return retMsg.Set(MsgType.ERROR, "获取当前课程指标点失败");
         }

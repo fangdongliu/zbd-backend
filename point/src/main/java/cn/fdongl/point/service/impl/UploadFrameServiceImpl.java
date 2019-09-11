@@ -294,7 +294,6 @@ public class UploadFrameServiceImpl implements UploadFrameService {
                 MapCourseIndex mapCourseIndex = new MapCourseIndex();
                 // 设置课程编号
                 mapCourseIndex.setCourseNumber(courseNumber);
-                mapCourseIndex.setPeriod(pr);
                 mapCourseIndex.setSchoolGrade(grade);
                 mapCourseIndex.setCreateDate(DateUtils.getNowDate());
                 mapCourseIndex.setModifyDate(DateUtils.getNowDate());

@@ -205,16 +205,26 @@
     </insert>
 
     <select id="selectByStudentWorkIdAndCourseSelectNumber" resultMap="ResultMapWithEvaluationValue">
-      select
+        select
         a.evaluation_value,
         b.*
-      from (
-      select index_id,evaluation_value
-      from index_point.map_student_evaluation
-      where student_work_id = #{studentWorkId,jdbcType=VARCHAR}
-      and course_select_number = #{courseSelectNumber,jdbcType=VARCHAR}) a
-      left join index_point.sys_index b
-      on a.index_id = b.id
-  </select>
+        from (
+        select index_id,evaluation_value
+        from index_point.map_student_evaluation
+        where student_work_id = #{studentWorkId,jdbcType=VARCHAR}
+        and course_select_number = #{courseSelectNumber,jdbcType=VARCHAR}) a
+        left join index_point.sys_index b
+        on a.index_id = b.id
+    </select>
+
+    <select id="selectByIds" resultMap="BaseResultMap">
+        select *
+        from index_point.sys_index
+        where id in (
+        <foreach collection="list" item="singleId" separator=",">
+            #{singleId,jdbcType=VARCHAR}
+        </foreach>
+        )
+    </select>
 
 </mapper>
