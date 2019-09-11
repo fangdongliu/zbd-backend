@@ -267,7 +267,7 @@ public class CourseUploadServiceImp implements CourseUploadService {
                 switch(j){
                     case 0: {
                         //选课课号
-                        String schoolYear=val.substring(1,12);
+                        String schoolYear=val.substring(1,10);
                         String s=val.substring(14);
                         String[] ls=s.split("-");//第一个是课号，第二个是老师工号
                         mapTeacherCourse.setCourseNumber(ls[0]);

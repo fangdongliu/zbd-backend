@@ -55,6 +55,17 @@ public interface SysInfoService {
      **/
     Page<SearchResult> getStudentCoursePage(String studentWorkId, String courseSemester, int pageIndex, int pageSize);
 
+    /***
+     * 获取老师课程分页
+     *
+     * @author zm
+     * @param workId
+     * @param courseSemester
+     * @return cn.fdongl.authority.util.Page<cn.fdongl.authority.util.SearchResult>
+     * @date 2019/9/10 17:16
+     **/
+    Page<SearchResult> getTeacherCoursePage(String workId, String courseSemester);
+
     /**
      * 获取学生的历史评价(针对以往上的课)没有返回空
      *

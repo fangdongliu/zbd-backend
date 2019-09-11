@@ -1,5 +1,6 @@
 package cn.fdongl.point.mapper;
 
+import cn.fdongl.authority.util.SearchResult;
 import org.apache.ibatis.annotations.Param;
 
 import cn.fdongl.point.entity.MapTeacherCourse;
@@ -39,7 +40,9 @@ public interface MapTeacherCourseMapper {
      **/
     List<String> selectDistinctCourseSemesterByTeacherWorkIdDeOrderByCourseSemester(
             @Param("teacherWorkId") String teacherWorkId);
-
+    List<SearchResult> selectCourseInfoPageByUserWorkIdAndCourseSemester(
+            @Param("userWorkId") String userWorkId,
+            @Param("courseSemester") String courseSemester);
     /**
      * 根据选课课号获取id
      *
