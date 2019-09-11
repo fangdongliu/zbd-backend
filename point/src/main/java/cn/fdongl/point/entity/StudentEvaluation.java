@@ -19,6 +19,11 @@ public class StudentEvaluation {
     private String studentWorkId;
 
     /**
+     * 课程编号
+     **/
+    private String courseNumber;
+
+    /**
      * 选课课号
      **/
     private String courseSelectNumber;

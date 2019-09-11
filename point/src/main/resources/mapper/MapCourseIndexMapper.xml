@@ -5,6 +5,7 @@
     <!--@mbg.generated-->
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="course_number" jdbcType="VARCHAR" property="courseNumber" />
+    <result column="period" jdbcType="INTEGER" property="period" />
     <result column="index_id" jdbcType="VARCHAR" property="indexId" />
     <result column="index_number" jdbcType="VARCHAR" property="indexNumber" />
     <result column="proportion_value" jdbcType="DOUBLE" property="proportionValue" />
@@ -18,7 +19,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, course_number, index_id, index_number, proportion_value, school_grade, statistic_year,
+    id, course_number, period, index_id, index_number, proportion_value, school_grade, statistic_year,
     create_user_id, create_date, modify_user_id, modify_date, `status`
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -35,12 +36,12 @@
   </delete>
   <insert id="insert" parameterType="cn.fdongl.point.entity.MapCourseIndex">
     <!--@mbg.generated-->
-    insert into map_course_index (id, course_number, index_id,
+    insert into map_course_index (id, course_number, period, ,
       index_number, proportion_value, school_grade, 
       statistic_year, create_user_id, create_date, 
       modify_user_id, modify_date, `status`
       )
-    values (#{id,jdbcType=VARCHAR}, #{courseId,jdbcType=VARCHAR}, #{indexId,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=VARCHAR}, #{courseNumber,jdbcType=VARCHAR}, #{period,jdbcType=INTEGER}, #{indexId,jdbcType=VARCHAR},
       #{indexNumber,jdbcType=VARCHAR}, #{proportionValue,jdbcType=DOUBLE}, #{schoolGrade,jdbcType=VARCHAR}, 
       #{statisticYear,jdbcType=VARCHAR}, #{createUserId,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
       #{modifyUserId,jdbcType=VARCHAR}, #{modifyDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}
@@ -55,6 +56,9 @@
       </if>
       <if test="courseNumber != null">
         course_number,
+      </if>
+      <if test="period != null ">
+        period,
       </if>
       <if test="indexId != null">
         index_id,
@@ -93,6 +97,9 @@
       </if>
       <if test="courseNumber != null">
         #{courseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="period != null ">
+        #{period,jdbcType=INTEGER},
       </if>
       <if test="indexId != null">
         #{indexId,jdbcType=VARCHAR},
@@ -133,6 +140,9 @@
       <if test="courseNumber != null">
         course_number = #{courseNumber,jdbcType=VARCHAR},
       </if>
+      <if test="period != null">
+        period = #{period,jdbcType=INTEGER},
+      </if>
       <if test="indexId != null">
         index_id = #{indexId,jdbcType=VARCHAR},
       </if>
@@ -170,6 +180,7 @@
     <!--@mbg.generated-->
     update map_course_index
     set course_number = #{courseNumber,jdbcType=VARCHAR},
+      period = #{period,jdbcType=INTEGER},
       index_id = #{indexId,jdbcType=VARCHAR},
       index_number = #{indexNumber,jdbcType=VARCHAR},
       proportion_value = #{proportionValue,jdbcType=DOUBLE},

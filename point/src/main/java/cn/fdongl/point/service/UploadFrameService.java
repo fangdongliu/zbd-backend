@@ -32,8 +32,6 @@ public interface UploadFrameService {
      */
     void uploadTeacherInfo(MultipartFile teacherFile,JwtUser user) throws IOException;
 
-
-
     /**
      * 上传学生选课信息
      * @param studentCourse

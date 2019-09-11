@@ -50,28 +50,6 @@ public class UploadController extends BaseController {
         return retMsg.Set(MsgType.SUCCESS);
     }
 
-    /**
-     * 上传学生评价
-     *
-     * @return java.lang.Object
-     * @author zm
-     * @date 2019/9/9 10:36
-     **/
-    @PostMapping(value = "studentEvaluation")
-    public Object uploadStudentEvaluation(@RequestBody StudentEvaluation studentEvaluation) {
-        try {
-            classPointService.savePoint(
-                    studentEvaluation.getStudentWorkId(),
-                    studentEvaluation.getCourseSelectNumber(),
-                    studentEvaluation.getEvaluations());
-        }catch (Exception e){
-            e.printStackTrace();
-            return retMsg.Set(MsgType.ERROR, null, "上传学生评价失败");
-        }
-        return retMsg.Set(MsgType.SUCCESS, null, "上传学生评价成功");
-    }
-
-
     //上传培养方案
     @PostMapping(value = "cultivatePlan")
     public Object uploadCultivatePlan(@RequestParam("file") MultipartFile file, HttpServletRequest request,JwtUser user) {
@@ -186,4 +164,25 @@ public class UploadController extends BaseController {
         }
         return retMsg.Set(MsgType.SUCCESS);
     }
+
+    /**
+     * 上传学生评价
+     *
+     * @return java.lang.Object
+     * @author zm
+     * @date 2019/9/9 10:36
+     **/
+    @PostMapping(value = "studentEvaluation")
+    public Object uploadStudentEvaluation(@RequestBody StudentEvaluation studentEvaluation) {
+        try {
+            classPointService.savePoint(studentEvaluation.getStudentWorkId(),
+                    studentEvaluation.getCourseNumber(),
+                    studentEvaluation.getEvaluations());
+        }catch (Exception e){
+            e.printStackTrace();
+            return retMsg.Set(MsgType.ERROR, null, "上传学生评价失败");
+        }
+        return retMsg.Set(MsgType.SUCCESS, null, "上传学生评价成功");
+    }
+
 }

@@ -6,11 +6,8 @@ import cn.fdongl.authority.util.MsgType;
 import cn.fdongl.authority.util.Page;
 
 import cn.fdongl.authority.util.SearchResult;
-import cn.fdongl.point.entity.MapStudentEvaluation;
+import cn.fdongl.point.entity.*;
 import cn.fdongl.authority.vo.JwtUser;
-import cn.fdongl.point.entity.MapTeacherCourse;
-import cn.fdongl.point.entity.SysCourse;
-import cn.fdongl.point.entity.SysFile;
 import cn.fdongl.point.mapper.MapTeacherCourseMapper;
 
 
@@ -193,6 +190,32 @@ public class InfoController extends BaseController {
     }
 
     /**
+     * 获取本学期的所有课程分页
+     *
+     * @author zm
+     * @param studentWorkId
+     * @param pageIndex
+     * @param pageSize
+     * @return java.lang.Object
+     * @date 2019/9/11 15:32
+     **/
+    @PostMapping(value = "nowTermPage")
+    public Object getNowTermCoursePage(
+            @RequestParam("studentWorkId") String studentWorkId,
+            @RequestParam("pageIndex") int pageIndex,
+            @RequestParam("pageSize") int pageSize) {
+        Page<SearchResult> coursePage = new Page<>();
+        try {
+            String courseSemester = AcademicYear.getNowSemester();
+            coursePage = sysInfoService.getStudentCoursePage(
+                    studentWorkId, courseSemester, pageIndex, pageSize);
+        } catch (Exception e) {
+            return retMsg.Set(MsgType.ERROR, "获取本学期课程失败失败");
+        }
+        return retMsg.Set(MsgType.SUCCESS, coursePage, "获取本学期课程成功");
+    }
+
+    /**
      * 获取学生某学期所有的课程分页
      *
      * @param studentWorkId  学生工号
@@ -220,21 +243,23 @@ public class InfoController extends BaseController {
     /**
      * 获取学生的某课程的指标点评价
      *
-     * @param studentWorkId
-     * @return 未评价返回{flag:false}
+     * @param studentWorkId 学生工号
+     * @param courseSelectNumber 选课课号
+     * @return 未评价返回{flag:false}，已评价返回指标点编号，指标点说明，指标点评价值
      * @author zm
      * @date 2019/9/10 15:38
      **/
-   /* @PostMapping(value = "courseIndexEvaluation")
+    @PostMapping(value = "courseIndexEvaluation")
     public Object getCourseIndexEvaluation(
             @RequestParam("studentWorkId") String studentWorkId,
-            @RequestParam("evaluationValue") List<MapStudentEvaluation> evaluationValue) {
+            @RequestParam("courseSelectNumber") String courseSelectNumber) {
+        List<SysIndex> indexList = new ArrayList<>();
         try {
-
+            indexList = sysInfoService.getStudentEvaluation(studentWorkId, courseSelectNumber);
         } catch (Exception e) {
             e.printStackTrace();
             return retMsg.Set(MsgType.ERROR, null, "获取用户指标点评价失败");
         }
-        return retMsg.Set(MsgType.SUCCESS, null, "获取用户指标点评价成功");
-    }*/
+        return retMsg.Set(MsgType.SUCCESS, indexList, "获取用户指标点评价成功");
+    }
 }

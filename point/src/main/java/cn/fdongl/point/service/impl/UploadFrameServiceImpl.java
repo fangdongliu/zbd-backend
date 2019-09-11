@@ -258,6 +258,8 @@ public class UploadFrameServiceImpl implements UploadFrameService {
                 tmpIndex.setIndexNumber(cellValue.substring(0, cellValue.indexOf(" ")));
                 // 指标点小项的说明
                 tmpIndex.setIndexContent(cellValue.substring(cellValue.indexOf(" ")));
+                // 指标点大项-存在title中
+                tmpIndex.setIndexTitle(cellValue.substring(0,cellValue.indexOf(".")));
                 // 加入指标点小项的list中
                 sysIndexList.add(tmpIndex);
                 // 插入指标点小项目
@@ -268,6 +270,12 @@ public class UploadFrameServiceImpl implements UploadFrameService {
                 mapDepartmentIndexMapper.insertSelective(mapDepartmentIndex);
             }
         }
+
+        // 首先更新字典项中的period信息
+        sysDictMapper.periodAddOne();
+
+        // 获取当前是第几期
+        int pr = sysDictMapper.selectRecentSort();
 
         // 从第3行开始就是课程行
         for (int i = 3; i < list.size() - 2; i++) {
@@ -286,6 +294,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
                 MapCourseIndex mapCourseIndex = new MapCourseIndex();
                 // 设置课程编号
                 mapCourseIndex.setCourseNumber(courseNumber);
+                mapCourseIndex.setPeriod(pr);
                 mapCourseIndex.setSchoolGrade(grade);
                 mapCourseIndex.setCreateDate(DateUtils.getNowDate());
                 mapCourseIndex.setModifyDate(DateUtils.getNowDate());
@@ -297,8 +306,6 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             System.out.println("第" + i + "行完成");
         }
         // 课程行后两行是统计行(第一列是空，暂不处理)
-        // 更新字典项中的period信息
-        sysDictMapper.periodAddOne();
         //将上传文件保存到服务器
         SysFile sysFile=new SysFile();
         String path=  ClassUtils.getDefaultClassLoader().getResource("").getPath()+"/cultivateMatrix";
@@ -438,8 +445,6 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         }
 
         teacherFile.transferTo(dest);// 文件写入
-
-
     }
 
     /**
@@ -500,10 +505,11 @@ public class UploadFrameServiceImpl implements UploadFrameService {
         workbook.close();
         inputStream.close();
 
+        // 获取此时的指标点期数
+        int pr = sysDictMapper.selectRecentSort();
+
         //新建待插入的学生(如果学号重复就不新增学生)
-
         //新建student-course关联对象
-
         List<SysUser> users = new ArrayList<>();
         List<MapStudentCourse>mapStudentCourseList = new ArrayList<>();
 
@@ -635,6 +641,8 @@ public class UploadFrameServiceImpl implements UploadFrameService {
             newStudentCourse.setInputUserName(inputUserNameCell.getRichStringCellValue().getString());
             newStudentCourse.setExamNature(examNatureCell.getRichStringCellValue().getString());
             newStudentCourse.setSupplementRepeatSemester(supplementRepeatCell.getRichStringCellValue().getString());
+            //设置指标点期数
+            newStudentCourse.setStatus(pr);
 
             mapStudentCourseList.add(newStudentCourse);
             if(mapStudentCourseList.size()==400){
@@ -642,7 +650,7 @@ public class UploadFrameServiceImpl implements UploadFrameService {
                 mapStudentCourseList.clear();
             }
 
-//            studentCourseMapper.insertSelective(newStudentCourse);
+            //studentCourseMapper.insertSelective(newStudentCourse);
         }
         if(users.size()>0){
             sysUserMapper.insertBatch(users);

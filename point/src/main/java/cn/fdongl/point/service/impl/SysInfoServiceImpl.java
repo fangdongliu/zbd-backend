@@ -3,6 +3,7 @@ package cn.fdongl.point.service.impl;
 import cn.fdongl.authority.util.Page;
 import cn.fdongl.authority.util.SearchResult;
 import cn.fdongl.point.entity.MapStudentEvaluation;
+import cn.fdongl.point.entity.SysIndex;
 import cn.fdongl.point.mapper.*;
 import cn.fdongl.point.service.SysInfoService;
 import cn.fdongl.point.util.DateUtils;
@@ -33,6 +34,8 @@ public class SysInfoServiceImpl implements SysInfoService {
     private SysCourseMapper sysCourseMapper;
     @Autowired
     private MapStudentEvaluationMapper mapStudentEvaluationMapper;
+    @Autowired
+    private SysIndexMapper sysIndexMapper;
 
     /**
      * 获取所有学院信息
@@ -114,13 +117,12 @@ public class SysInfoServiceImpl implements SysInfoService {
      *
      * @param studentWorkId      学生工号
      * @param courseSelectNumber 选课课号
-     * @param evaluationValue    对本课程的评价值(1-4)
      * @return java.util.List<cn.fdongl.point.entity.MapStudentEvaluation>
      * @author zm
      * @date 2019/9/10 20:11
      **/
     @Override
-    public List<MapStudentEvaluation> getStudentEvaluation(String studentWorkId, String courseSelectNumber, String evaluationValue) {
-        return null;
+    public List<SysIndex> getStudentEvaluation(String studentWorkId, String courseSelectNumber) {
+        return  sysIndexMapper.selectByStudentWorkIdAndCourseSelectNumber(studentWorkId, courseSelectNumber);
     }
 }

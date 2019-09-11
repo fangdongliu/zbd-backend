@@ -3,6 +3,7 @@ package cn.fdongl.point.service;
 import cn.fdongl.authority.util.Page;
 import cn.fdongl.authority.util.SearchResult;
 import cn.fdongl.point.entity.MapStudentEvaluation;
+import cn.fdongl.point.entity.SysIndex;
 
 import java.util.List;
 
@@ -55,16 +56,13 @@ public interface SysInfoService {
     Page<SearchResult> getStudentCoursePage(String studentWorkId, String courseSemester, int pageIndex, int pageSize);
 
     /**
-     * 获取学生的历史评价(针对以往上的课) for solve
-     * step1：根据选课课号和学生工号在 map_student_course 中确定主键 id
-     * step2：根据主键id在 map_student_evaluation 中插入新的数据
+     * 获取学生的历史评价(针对以往上的课)
      *
      * @author zm
      * @param studentWorkId 学生工号
      * @param courseSelectNumber 选课课号
-     * @param evaluationValue 对本课程的评价值(1-4)
-     * @return java.util.List<cn.fdongl.point.entity.MapStudentEvaluation>        
+     * @return java.util.List<cn.fdongl.point.entity.MapStudentEvaluation>
      * @date 2019/9/10 20:11
      **/
-    List<MapStudentEvaluation> getStudentEvaluation(String studentWorkId, String courseSelectNumber, String evaluationValue);
+    List<SysIndex> getStudentEvaluation(String studentWorkId, String courseSelectNumber);
 }

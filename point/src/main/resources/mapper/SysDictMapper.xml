@@ -180,8 +180,10 @@
     <select id="selectRecentSort" resultType="int">
         select sort
         from index_point.sys_dict
-        where sort =(
-        select max(sort) from index_point.sys_dict)
+        where type_id = (
+        select id
+        from index_point.sys_dict_type
+        where type_name = '培养矩阵期数')
     </select>
 
     <select id="periodAddOne">

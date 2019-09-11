@@ -25,4 +25,8 @@ public interface SysIndexMapper {
     SysIndex selectByIdAndDate(@Param("number") String number);
 
     SysIndex selectByNumAndDate();
+
+    List<SysIndex> selectByStudentWorkIdAndCourseSelectNumber(
+            @Param("studentWorkId") String studentWorkId,
+            @Param("courseSelectNumber") String courseSelectNumber);
 }
