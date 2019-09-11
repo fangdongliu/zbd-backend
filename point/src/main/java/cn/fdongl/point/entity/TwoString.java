@@ -1,7 +1,10 @@
 package cn.fdongl.point.entity;
 
+import lombok.Data;
+
 import java.util.Objects;
 
+@Data
 public class TwoString {
     String str1;
 
