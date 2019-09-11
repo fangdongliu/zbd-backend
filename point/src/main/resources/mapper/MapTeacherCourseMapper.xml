@@ -398,6 +398,15 @@
         order by course_semester desc
     </select>
 
+
+    <select id="selectCourseInfoPageByUserWorkIdAndCourseSemester"
+            resultType="cn.fdongl.authority.util.SearchResult">
+        select course_name as str1, course_select_number as str2, course_number as str3
+        from map_teacher_course
+        where teacher_work_id=#{userWorkId,jdbcType=VARCHAR}
+          and course_semester=#{courseSemester,jdbcType=VARCHAR}
+    </select>
+
     <select id="selectIdByCourseSelectNumbers" resultType="java.lang.String">
         select id
         from index_point.map_teacher_course

@@ -138,6 +138,7 @@ public class UploadController extends BaseController {
         try {
             uploadFrameService.uploadStudentCourse(studentCourseFile,user,id);
         } catch (Exception e) {
+            uploadStatusMapper.update(id,-3);
             e.printStackTrace();
             return retMsg.Set(MsgType.SUCCESS, null, "上传学生选课信息失败");
         }

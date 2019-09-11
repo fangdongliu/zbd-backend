@@ -240,14 +240,20 @@ public class InfoController extends BaseController {
      **/
     @PostMapping(value = "coursePage")
     public Object getCoursePage(
-            @RequestParam("studentWorkId") String studentWorkId,
-            @RequestParam("courseSemester") String courseSemester,
+            JwtUser jwtUser,
+            @RequestParam(value = "courseSemester",required = false) String courseSemester,
             @RequestParam("pageIndex") int pageIndex,
             @RequestParam("pageSize") int pageSize) {
         Page<SearchResult> coursePage = new Page<>();
+        String workId = jwtUser.getWorkId();
         try {
-            coursePage = sysInfoService.getStudentCoursePage(
-                    studentWorkId, courseSemester, pageIndex, pageSize);
+            if(jwtUser.getUserType().equals("student")) {
+                coursePage = sysInfoService.getStudentCoursePage(
+                        workId, courseSemester, pageIndex, pageSize);
+            }else{
+                coursePage = sysInfoService.getTeacherCoursePage(
+                        workId, courseSemester);
+            }
         } catch (Exception e) {
             return retMsg.Set(MsgType.ERROR, "获取学生课程失败失败");
         }
