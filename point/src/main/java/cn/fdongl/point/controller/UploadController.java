@@ -123,6 +123,7 @@ public class UploadController extends BaseController {
             @RequestParam("file") MultipartFile studentCourseFile,
             JwtUser user
     ) {
+        System.out.println("ooook");
         if (studentCourseFile == null || studentCourseFile.isEmpty()) {
             return retMsg.Set(MsgType.ERROR, null, "文件不能为空");
         }
