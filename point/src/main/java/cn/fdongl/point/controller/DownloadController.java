@@ -1,10 +1,14 @@
 package cn.fdongl.point.controller;
 
 import cn.fdongl.authority.util.BaseController;
+import cn.fdongl.authority.vo.JwtUser;
 import cn.fdongl.point.entity.MapTeacherCourse;
+import cn.fdongl.point.entity.Result;
 import cn.fdongl.point.entity.SysFile;
+import cn.fdongl.point.entity.TwoString;
 import cn.fdongl.point.mapper.MapTeacherCourseMapper;
 import cn.fdongl.point.mapper.SysFileMapper;
+import cn.fdongl.point.service.ExportService;
 import cn.fdongl.point.util.ExcelUtils;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -15,9 +19,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/download")
@@ -26,7 +35,8 @@ public class DownloadController extends BaseController {
     private MapTeacherCourseMapper mapTeacherCourseMapper;
     @Autowired
     private SysFileMapper sysFileMapper;
-
+    @Autowired
+    private ExportService exportService;
 
     /**
      * 下载往期教师评价表
@@ -98,5 +108,52 @@ public class DownloadController extends BaseController {
         }
     }
 
-//    public void export
+    @GetMapping("exportTest")
+    public void exportTest(
+            JwtUser jwtUser,
+            HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse
+    ){
+        Map<String, Result> stringResult = new HashMap<>();
+        Result tmpResult = new Result();
+
+        List<String> indexList = new ArrayList<>();
+        indexList.add("7.1能够了解软件工程及相关行业的政策和法律法规势");
+        indexList.add("7.2能够理解复杂软件工程问题的专业实践和对环境以及社会可持续的影响");
+        List<String> courseList = new ArrayList<>();
+        courseList.add("思想道德与法律基础2014-2015学年");
+        courseList.add("思想道德与法律基础2015-2016学年");
+        courseList.add("知识产权法基础2014-2015学年");
+        courseList.add("知识产权法基础2015-2016学年");
+        courseList.add("大类专业导论2014-2015学年");
+        courseList.add("大类专业导论2015-2016学年");
+        courseList.add("互联网应用开发基础训练2014-2015学年");
+        courseList.add("互联网用用开发基础训练2015-2016学年");
+        courseList.add("毕业设计(论文)2014-2015学年");
+        courseList.add("毕业设计(论文)2015-2016学年");
+        Map<TwoString,String> relation = new HashMap<>();
+        relation.put(new TwoString("思想道德与法律基础2014-2015学年", "7.1能够了解软件工程及相关行业的政策和法律法规势"), "0.3");
+        relation.put(new TwoString("思想道德与法律基础2015-2016学年", "7.1能够了解软件工程及相关行业的政策和法律法规势"), "0.3");
+        relation.put(new TwoString("知识产权法基础2014-2015学年", "7.2能够理解复杂软件工程问题的专业实践和对环境以及社会可持续的影响"), "0.4");
+        relation.put(new TwoString("知识产权法基础2015-2016学年", "7.2能够理解复杂软件工程问题的专业实践和对环境以及社会可持续的影响"), "0.4");
+
+        relation.put(new TwoString("大类专业导论2014-2015学年", "7.1能够了解软件工程及相关行业的政策和法律法规势"), "0.3");
+        relation.put(new TwoString("大类专业导论2015-2016学年", "7.1能够了解软件工程及相关行业的政策和法律法规势"), "0.3");
+        relation.put(new TwoString("互联网应用开发基础训练2014-2015学年", "7.2能够理解复杂软件工程问题的专业实践和对环境以及社会可持续的影响"), "0.6");
+        relation.put(new TwoString("互联网用用开发基础训练2015-2016学年", "7.2能够理解复杂软件工程问题的专业实践和对环境以及社会可持续的影响"), "0.6");
+        relation.put(new TwoString("毕业设计(论文)2014-2015学年", "7.1能够了解软件工程及相关行业的政策和法律法规势"), "0.4");
+        relation.put(new TwoString("毕业设计(论文)2015-2016学年", "7.1能够了解软件工程及相关行业的政策和法律法规势"), "0.4");
+
+        tmpResult.setIndexList(indexList);
+        tmpResult.setCourseList(courseList);
+        tmpResult.setRelation(relation);
+
+        Map<String,Result> sr = new HashMap<>();
+        sr.put("7",tmpResult);
+        try {
+            exportService.exportExcelResult(jwtUser, sr,httpServletRequest,httpServletResponse);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -23,4 +23,12 @@ public class TwoString {
     public int hashCode() {
         return Objects.hash(str1, str2);
     }
+
+    public TwoString(){
+
+    }
+    public TwoString(String str1, String str2) {
+        this.str1 = str1;
+        this.str2 = str2;
+    }
 }
