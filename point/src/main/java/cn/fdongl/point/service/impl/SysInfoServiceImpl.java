@@ -77,7 +77,7 @@ public class SysInfoServiceImpl implements SysInfoService {
 
     @Override
     public Page<SearchResult> getTeacherCoursePage(String workId, String courseSemester){
-        if(courseSemester == null) {
+        if(courseSemester == null || courseSemester.trim().equals("")) {
             int year = Calendar.getInstance().get(Calendar.YEAR);
             int month = Calendar.getInstance().get(Calendar.MONTH);
             year = 2018;
@@ -114,7 +114,7 @@ public class SysInfoServiceImpl implements SysInfoService {
     @Override
     public Page<SearchResult> getStudentCoursePage(String studentWorkId, String courseSemester, int pageIndex, int pageSize) {
         // 根据学生工号和课程学期分页获得所有的课程的  课程名称和选课课号
-        if(courseSemester == null) {
+        if(courseSemester == null || courseSemester.trim().equals("")) {
             int year = 2018;
             int month = Calendar.getInstance().get(Calendar.MONTH);
             month = 8;
