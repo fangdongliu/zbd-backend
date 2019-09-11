@@ -64,4 +64,8 @@ public class MapCourseEvaluation {
     private Integer status;
 
     private String courseId;
+
+    private SysIndex sysIndex;
+
+    private MapTeacherCourse mapTeacherCourse;
 }

@@ -208,4 +208,19 @@
       #{courseId,jdbcType=VARCHAR})
     </foreach>
   </insert>
+    <select id="getByCourseIdAndIndex" resultMap="BaseResultMap">
+      select
+      <include refid="Base_Column_List" />
+        from index_point.map_course_evaluation
+        where course_id in
+        <foreach collection="courseIds" item="item" open="(" separator="," close=")">
+          #{item,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+  <select id="getByGradeAndIndex" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from index_point.map_course_evaluation
+    where student_grade=#{grade,jdbcType=VARCHAR}
+  </select>
 </mapper>
