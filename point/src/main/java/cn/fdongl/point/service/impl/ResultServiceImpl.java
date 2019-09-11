@@ -2,6 +2,7 @@ package cn.fdongl.point.service.impl;
 
 import cn.fdongl.point.entity.*;
 import cn.fdongl.point.mapper.MapCourseEvaluationMapper;
+import cn.fdongl.point.mapper.MapCourseIndexMapper;
 import cn.fdongl.point.mapper.MapTeacherCourseMapper;
 import cn.fdongl.point.mapper.SysIndexMapper;
 import cn.fdongl.point.service.ResultService;
@@ -24,6 +25,8 @@ public class ResultServiceImpl implements ResultService {
 
     @Autowired
     private SysIndexMapper sysIndexMapper;
+    @Autowired
+    private MapCourseIndexMapper mapCourseIndexMapper;
 
     @Override
     public Map<String, Result> getIndexYearResult(String schoolYear) {
@@ -158,7 +161,7 @@ public class ResultServiceImpl implements ResultService {
             TwoString ts = new TwoString();
             ts.setStr1(indexName);
             ts.setStr2(courseName);
-            String val = String.valueOf(m.getEvaluationValue()) + "(" + String.valueOf(sysIndex.getEvaluationValue()) + ")";
+            String val = String.valueOf(m.getEvaluationValue()) + "(" + String.valueOf(mapCourseIndexMapper.getValueByIndexIdAndCourseNum(sysIndex.getId(),mtc.getCourseNumber())) + ")";
             tsMap.put(ts, val);
         }
         return map;

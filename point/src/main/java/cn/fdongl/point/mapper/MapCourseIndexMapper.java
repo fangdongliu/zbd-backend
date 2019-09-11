@@ -2,6 +2,7 @@ package cn.fdongl.point.mapper;
 
 import cn.fdongl.point.entity.MapCourseIndex;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -28,4 +29,6 @@ public interface MapCourseIndexMapper {
      * @date 2019/9/11 16:25
      **/
     List<String> selectRecentIndexIdByCourseNumber(String courseNumber);
+
+    Double getValueByIndexIdAndCourseNum(@Param("indexId")String indexId,@Param("courseNum")String courseNum);
 }
