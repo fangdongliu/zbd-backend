@@ -269,7 +269,7 @@ public class ClassPointServiceImpl implements ClassPointService {
             studentEvaluation.setModifyDate(DateUtils.getNowDate());
             mapStudentEvaluationMapper.insertSelective(studentEvaluation);
         }
-        uploadStatusMapper.updateTeacherCourseStatus(selectID);
+        uploadStatusMapper.updateStudentCourseStatus(selectID);
     }
 
     class ExcelContent{
